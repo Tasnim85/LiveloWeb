@@ -12,7 +12,8 @@ class User
 {
 
     #[ORM\Id]
-    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue] // Add this for auto-increment
+    #[ORM\Column(name: "idUser", type: "integer")] // Explicitly map to "idUser" column
     private int $idUser;
 
     #[ORM\Column(type: "string", length: 100)]
