@@ -27,12 +27,12 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Livelo</title>
+    <title>Register Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
 
-   <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('bo/img/favicon/favicon.ico') }}" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -45,22 +45,23 @@
     <!-- Icons. Uncomment required icon fonts -->
     <link rel="stylesheet" href="{{ asset('bo/vendor/fonts/boxicons.css') }}">
 
-   <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/core.css') }}">
-    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/theme-default.css') }}">
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/core.css') }}" class="template-customizer-core-css">
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" >
     <link rel="stylesheet" href="{{ asset('bo/assets/css/demo.css') }}">
+
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('bo/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}">
 
     <!-- Page CSS -->
-    <!-- Page CSS -->
+    <!-- Page -->
     <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/pages/page-auth.css') }}">
     <!-- Helpers -->
     <script src="{{ asset('bo/assets/vendor/js/helpers.js') }}"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="{{ asset('bo/assets/js/config.js') }}"></script>
+    <script src="../assets/js/config.js"></script>
   </head>
 
   <body>
@@ -69,11 +70,12 @@
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
-          <!-- Register -->
+          <!-- Register Card -->
           <div class="card">
             <div class="card-body">
+              <!-- Logo -->
               <div class="app-brand justify-content-center">
-                <a href="{{ path('app_homeAdmin') }}" class="app-brand-link gap-2">
+                <a href="index.html" class="app-brand-link gap-2">
                   <span class="app-brand-logo demo">
                     <svg
                       width="25"
@@ -133,71 +135,113 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-2">Welcome to Sneat! 👋</h4>
-              <p class="mb-4">Please sign-in to your account and start the adventure</p>
+              <h4 class="mb-2">Adventure starts here 🚀</h4>
+              <p class="mb-4">Make your app management easy and fun!</p>
 
-            <form id="formAuthentication" class="mb-3" action="{{ path('app_login_check') }}" method="POST">
-                <div class="mb-3">
-                  <label for="cin" class="form-label">CIN</label>
-                  <input type="text" class="form-control" id="cin" name="cin" placeholder="Enter your CIN" autofocus />
+        <form id="formAuthentication" class="mb-3" action="{{ path('app_sign_up') }}" method="POST">
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="prenom" class="form-label">First name</label>
+                        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Enter your first name" autofocus />
+                    </div>
+                    <div class="mb-3">
+                        <label for="cin" class="form-label">Cin</label>
+                        <input type="text" class="form-control" id="cin" name="cin" placeholder="Enter your CIN" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="adresse" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Enter your address" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-control" id="role" name="role">
+                            <option value="client">Client</option>
+                            <option value="admin">Admin</option>
+                            <option value="delivery_person">Delivery Person</option>
+                            <option value="partner">Partner</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                    </div>
                 </div>
-                <div class="mb-3 form-password-toggle">
-                  <div class="d-flex justify-content-between">
-                    <label class="form-label" for="password">Password</label>
-                    <a href="auth-forgot-password-basic.html">
-                      <small>Forgot Password?</small>
-                    </a>
-                  </div>
-                  <div class="input-group input-group-merge">
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                      aria-describedby="password"
-                    />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  </div>
+
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">Last name</label>
+                        <input type="text" class="form-control" id="nom" name="nom" placeholder="Enter your last name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="num_tel" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="num_tel" name="num_tel" placeholder="Enter your phone number" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="url_image" class="form-label">Photo URL</label>
+                        <input type="text" class="form-control" id="url_image" name="url_image" placeholder="Enter photo URL" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="type_vehicule" class="form-label">Vehicle Type</label>
+                        <select class="form-control" id="type_vehicule" name="type_vehicule">
+                            <option value="Bike">Bike</option>
+                            <option value="e_bike">E-Bike</option>
+                            <option value="e_scooter">E-Scooter</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 form-password-toggle">
+                        <label class="form-label" for="password">Password</label>
+                        <div class="input-group input-group-merge">
+                            <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" />
+                            <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="remember-me" />
-                    <label class="form-check-label" for="remember-me"> Remember Me </label>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
-                </div>
-              </form>
+            </div>
+            <button class="btn btn-primary d-grid w-100">Sign up</button>
+        </form>
+
 
               <p class="text-center">
-                <span>New on our platform?</span>
-                <a href="{{ path('sigup') }}">
-                  <span>Create an account</span>
+                <span>Already have an account?</span>
+                <a href="auth-login-basic.html">
+                  <span>Sign in instead</span>
                 </a>
               </p>
             </div>
           </div>
-          <!-- /Register -->
+          <!-- Register Card -->
         </div>
       </div>
     </div>
 
     <!-- / Content -->
 
-   
+    <div class="buy-now">
+      <a
+        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
+        target="_blank"
+        class="btn btn-danger btn-buy-now"
+        >Upgrade to Pro</a
+      >
+    </div>
 
     <!-- Core JS -->
-    <script src="{{ asset('bo/assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('bo/assets/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('bo/assets/vendor/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('bo/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../assets/vendor/js/bootstrap.js"></script>
+    <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
-    <script src="{{ asset('bo/vendor/js/menu.js') }}"></script>
+    <script src="../assets/vendor/js/menu.js"></script>
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
 
     <!-- Main JS -->
-    <script src="{{ asset('bo/js/main.js') }}"></script>
+    <script src="../assets/js/main.js"></script>
 
     <!-- Page JS -->
 
