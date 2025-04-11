@@ -3,47 +3,66 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Livraison;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity]
-class User
-{
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 
+{
     #[ORM\Id]
-    #[ORM\GeneratedValue] // Add this for auto-increment
-    #[ORM\Column(name: "idUser", type: "integer")] // Explicitly map to "idUser" column
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: "idUser", type: "integer")]
+
     private int $idUser;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
+    #[Assert\Length(min: 3, max: 100, minMessage: "Le nom doit contenir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
     private string $nom;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
+    #[Assert\Length(min: 3, max: 100, minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
     private string $prenom;
 
     #[ORM\Column(type: "string")]
+    #[Assert\NotBlank(message: "Le rôle ne peut pas être vide.")]
+    #[Assert\Choice(choices: ['client', 'admin','delivery_person','partner'])]
     private string $role;
 
     #[ORM\Column(type: "boolean")]
     private bool $verified;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "L'adresse ne peut pas être vide.")]
     private string $adresse;
 
     #[ORM\Column(type: "string")]
+    #[Assert\Choice(choices: ['e_bike', 'Bike','e_scooter'])]
     private string $type_vehicule;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "L'email ne peut pas être vide.")]
+    #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
     private string $email;
 
     #[ORM\Column(type: "string", length: 300)]
+    #[Assert\NotBlank(message: "Le mot de passe ne peut pas être vide.")]
+    #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
     private string $password;
 
     #[ORM\Column(type: "string", length: 8)]
+    #[Assert\NotBlank(message: "Le numéro de téléphone ne peut pas être vide.")]
+    #[Assert\Regex(pattern: "/^\d{8}$/", message: "Le numéro de téléphone doit comporter exactement 8 chiffres.")]
     private string $num_tel;
 
     #[ORM\Column(type: "string", length: 8)]
+    #[Assert\NotBlank(message: "Le CIN ne peut pas être vide.")]
+    #[Assert\Length(exactly: 8, message: "Le CIN doit comporter exactement {{ limit }} caractères.")]
     private string $cin;
 
     #[ORM\Column(type: "string", length: 500)]
@@ -129,10 +148,10 @@ class User
         $this->email = $value;
     }
 
-    public function getPassword()
-    {
-        return $this->password;
-    }
+    public function getPassword(): string
+{
+    return $this->password;
+}
 
     public function setPassword($value)
     {
@@ -300,4 +319,22 @@ class User
     
             return $this;
         }
+
+        //edhouma teb3in l'interface mta3 hachage
+        public function getRoles(): array
+        {
+            return [$this->role];
+        }
+
+        public function getUserIdentifier(): string
+        {
+            return $this->cin; // ou le champ que tu utilises comme identifiant
+        }
+
+        // Nécessaire pour UserInterface
+        public function eraseCredentials()
+        {
+            // Si tu stockes des données temporaires sensibles, nettoie-les ici
+        }
+
 }
