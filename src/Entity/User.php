@@ -20,49 +20,52 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $idUser;
 
     #[ORM\Column(type: "string", length: 100)]
-    #[Assert\NotBlank(message: "Le nom ne peut pas être vide.")]
-    #[Assert\Length(min: 3, max: 100, minMessage: "Le nom doit contenir au moins {{ limit }} caractères.", maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\NotBlank(message: "First name cannot be empty.")]
+    #[Assert\Length(min: 3, max: 100, minMessage: "First name must be at least {{ limit }} characters long.", maxMessage: "First name cannot exceed {{ limit }} characters.")]
     private string $nom;
 
     #[ORM\Column(type: "string", length: 100)]
-    #[Assert\NotBlank(message: "Le prénom ne peut pas être vide.")]
-    #[Assert\Length(min: 3, max: 100, minMessage: "Le prénom doit contenir au moins {{ limit }} caractères.", maxMessage: "Le prénom ne peut pas dépasser {{ limit }} caractères.")]
+    #[Assert\NotBlank(message: "Last name cannot be empty.")]
+    #[Assert\Length(min: 3, max: 100, minMessage: "Last name must be at least {{ limit }} characters long.", maxMessage: "Last name cannot exceed {{ limit }} characters.")]
     private string $prenom;
 
     #[ORM\Column(type: "string")]
-    #[Assert\NotBlank(message: "Le rôle ne peut pas être vide.")]
-    #[Assert\Choice(choices: ['client', 'admin','delivery_person','partner'])]
+    #[Assert\NotBlank(message: "Role cannot be empty.")]
+    #[Assert\Choice(choices: ['client', 'admin', 'delivery_person', 'partner'], message: "Choose a valid role.")]
     private string $role;
 
     #[ORM\Column(type: "boolean")]
     private bool $verified;
 
     #[ORM\Column(type: "string", length: 100)]
-    #[Assert\NotBlank(message: "L'adresse ne peut pas être vide.")]
+    #[Assert\NotBlank(message: "Address cannot be empty.")]
     private string $adresse;
 
-    #[ORM\Column(type: "string")]
-    #[Assert\Choice(choices: ['e_bike', 'Bike','e_scooter'])]
-    private string $type_vehicule;
+    #[ORM\Column(type: "string", nullable: true)]
+    #[Assert\Choice(choices: ['e_bike', 'Bike','e_scooter', null])]
+    private ?string $type_vehicule = null;
+
 
     #[ORM\Column(type: "string", length: 100)]
-    #[Assert\NotBlank(message: "L'email ne peut pas être vide.")]
-    #[Assert\Email(message: "L'email '{{ value }}' n'est pas valide.")]
+    #[Assert\NotBlank(message: "Email cannot be empty.")]
+    #[Assert\Email(message: "The email '{{ value }}' is not valid.")]
     private string $email;
 
     #[ORM\Column(type: "string", length: 300)]
-    #[Assert\NotBlank(message: "Le mot de passe ne peut pas être vide.")]
-    #[Assert\Length(min: 8, minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères.")]
+    #[Assert\NotBlank(message: "Password cannot be empty.")]
+    #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long.")]
     private string $password;
 
     #[ORM\Column(type: "string", length: 8)]
-    #[Assert\NotBlank(message: "Le numéro de téléphone ne peut pas être vide.")]
-    #[Assert\Regex(pattern: "/^\d{8}$/", message: "Le numéro de téléphone doit comporter exactement 8 chiffres.")]
     private string $num_tel;
 
     #[ORM\Column(type: "string", length: 8)]
     #[Assert\NotBlank(message: "Le CIN ne peut pas être vide.")]
-    #[Assert\Length(exactly: 8, message: "Le CIN doit comporter exactement {{ limit }} caractères.")]
+    #[Assert\Length(
+        min: 8,
+        max: 8,
+        exactMessage: "Le CIN doit comporter exactement 8 caractères."
+    )]
     private string $cin;
 
     #[ORM\Column(type: "string", length: 500)]
@@ -158,12 +161,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $value;
     }
 
-    public function getNum_tel()
+    public function getNumTel()
     {
         return $this->num_tel;
     }
 
-    public function setNum_tel($value)
+    public function setNumTel($value)
     {
         $this->num_tel = $value;
     }
@@ -178,12 +181,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->cin = $value;
     }
 
-    public function getUrl_image()
+    public function getUrlImage()
     {
         return $this->url_image;
     }
 
-    public function setUrl_image($value)
+    public function setUrlImage($value)
     {
         $this->url_image = $value;
     }
