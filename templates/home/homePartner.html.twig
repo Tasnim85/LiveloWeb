@@ -70,7 +70,7 @@
         <!-- Menu -->
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-        <a href="{{ path('app_homeAdmin') }}">
+        <a href="{{ path('app_homePartner') }}">
            <div class="app-brand justify-content-center">
                   <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
             </div>
@@ -80,73 +80,40 @@
           <ul class="menu-inner py-1">
             
 
-            <!-- Layouts -->
-            <li class="menu-item">
-              <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout">
-                  <img src="{{ asset('bo/assets/img/icons/user(1).png') }}" width="28" height="28" />
-                </i>
-                <div data-i18n="Layouts">Users</div>
-              </a>
-
-              <ul class="menu-sub">
-                <li class="menu-item">
-                  <a href="{{ path('app_not_verified_users') }}" class="menu-link">
-                    <div data-i18n="Without menu">Pending users</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="{{ path('app_list_users') }}" class="menu-link">
-                    <div data-i18n="Without navbar">All users</div>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            
-            <li class="menu-item">
-              <a
-                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                target="_blank"
-                class="menu-link"
-              >
-                <i class="menu-icon tf-icons bx bx-file">
-                  <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
-                </i>
-                <div data-i18n="Documentation">Categories</div>
+             <li class="menu-item">
+              <a href="{{ path('app_admin_commande') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-file">
+                    <img src="{{ asset('bo/assets/img/icons/approve.png') }}" width="28" height="28" />
+                  </i>
+                  <div data-i18n="Documentation">Categories</div>
               </a>
             </li>
-            <li class="menu-item">
-              <a
-                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                target="_blank"
-                class="menu-link"
-              >
-                <i class="menu-icon tf-icons bx bx-file">
-                  <img src="{{ asset('bo/assets/img/icons/radar.png') }}" width="28" height="28" />
-                </i>
-                <div data-i18n="Documentation">Coverage areas</div>
-              </a>
-            </li>
-            <li class="menu-item">
+             <li class="menu-item">
               <a
                 href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
                 target="_blank"
                 class="menu-link"
               >
                 <i class="menu-icon tf-icons bx bx-support">
-                  <img src="{{ asset('bo/assets/img/icons/helmet-removebg-preview.png') }}" width="28" height="28" /><p>  </p>
+                  <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" /><p>  </p>
                 </i>
-                <div data-i18n="Support">Riders performance</div>
+                <div data-i18n="Support">Statistics</div>
               </a>
             </li>
-             <li class="menu-item">
-              <a href="{{ path('app_admin_commande') }}" class="menu-link">
-                  <i class="menu-icon tf-icons bx bx-file">
-                    <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
-                  </i>
-                  <div data-i18n="Documentation">Orders report</div>
+            <li class="menu-item">
+              <a
+                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-file">
+                  <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
+                </i>
+                <div data-i18n="Documentation">Others' products</div>
               </a>
             </li>
+           
+            
           </ul>
         </aside>
         <!-- / Menu -->
@@ -260,32 +227,32 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-             <br><br><br><br><br><br>
+             <br><br><br><br><br><br><br>
               <center>
-              <B><h3 class="pb-1 mb-4">Welcome to Livelo!</h3></B>
+              <B><h3 class="pb-1 mb-4">Welcome to Livelo!</h3></B><br>
               <!-- Style variation -->
               <h6 class="pb-1 mb-4">With livelo, every delivery is a step towards a greener future</h6>
               </center>
-              <!-- Outline -->
+              <!-- Outline --><br><br>
               <div class="row">
                 <div class="col-md-6 col-xl-4">
                   <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
-                  <a href="{{ path('app_not_verified_users') }}">
+                  <a href="">
                     <div class="card-body">
                       <center>
-                        <img src="{{ asset('bo/assets/img/icons/verification.png') }}" width="48" height="52" /><br><br>
-                        <p class="card-text">Verify pending users' list</p>
+                        <img src="{{ asset('bo/assets/img/icons/approve.png') }}" width="48" height="52" /><br><br>
+                        <p class="card-text">View categories</p>
                       </center>
                     </div>
                   </a>
                   </div>
-                </div>
+                </div>      
                 <div class="col-md-6 col-xl-4">
                   <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
                     <div class="card-body">
                       <center>
-                        <img src="{{ asset('bo/assets/img/icons/user(1).png') }}" width="48" height="52" /><br><br>
-                        <p class="card-text">View the list of users</p>
+                        <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="48" height="52" /><br><br>
+                        <p class="card-text"> View statistics on products</p>
                       </center>
                     </div>
                   </div>
@@ -294,44 +261,14 @@
                   <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
                     <div class="card-body">
                       <center>
-                        <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="48" height="52" /><br><br>
-                        <p class="card-text">View categories list</p>
+                        <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="48" height="52" /><br><br>
+                        <p class="card-text">Others products</p>
                       </center>
                     </div>
                   </div>
                 </div>
-                <div class="col-md-6 col-xl-4">
-                  <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
-                    <div class="card-body">
-                      <center>
-                        <img src="{{ asset('bo/assets/img/icons/helmet-removebg-preview.png') }}" width="48" height="52" /><br><br>
-                        <p class="card-text">View the delivery persons performance history</p>
-                      </center>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                <a href="{{ path('app_admin_commande') }}">
-                  <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
-                    <div class="card-body">
-                      <center>
-                        <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="48" height="52" /><br><br>
-                        <p class="card-text"> View reports on orders</p>
-                      </center>
-                    </div>
-                  </a>
-                  </div>
-                </div>
-                <div class="col-md-6 col-xl-4">
-                  <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
-                    <div class="card-body">
-                      <center>
-                        <img src="{{ asset('bo/assets/img/icons/radar.png') }}" width="48" height="52" /><br><br>
-                        <p class="card-text"> View coverage areas</p>
-                      </center>
-                    </div>
-                  </div>
-                </div>
+                
+                
                 </div>
               </div>
               <!--/ Style variation -->
