@@ -1,0 +1,30 @@
+{% extends 'home/homeAdmin.html.twig' %}
+
+{% block title %}Avis{% endblock %}
+
+{% block body %}
+    <h1>Avis</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdAvis</th>
+                <td>{{ avi.idAvis }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ avi.created_at ? avi.created_at|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ avi.description }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_avis_index') }}">back to list</a>
+
+    <a href="{{ path('app_avis_edit', {'idAvis': avi.idAvis}) }}">edit</a>
+
+    {{ include('avis/_delete_form.html.twig') }}
+{% endblock %}

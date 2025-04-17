@@ -19,6 +19,7 @@ final class LoginController extends AbstractController
             'controller_name' => 'LoginController',
         ]);
     }
+
     #[Route('/login_check', name: 'app_login_check', methods: ['POST'])]
     public function loginCheck(Request $request, EntityManagerInterface $em): Response
     {
@@ -51,6 +52,7 @@ final class LoginController extends AbstractController
     {
         return $this->render('home/homeAdmin.html.twig');
     }
+
     #[Route('/homeClient', name: 'app_homeClient')]
     public function homeClientPage(): Response
     {

@@ -35,12 +35,12 @@ class Commande
     #[ORM\Column(type: "string")]
     private string $statut;
 
-    public function getId_commande()
+    public function getIdCommande()
     {
         return $this->id_commande;
     }
 
-    public function setId_commande($value)
+    public function setIdCommande($value)
     {
         $this->id_commande = $value;
     }
