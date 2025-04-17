@@ -35,6 +35,7 @@ final class LivraisonController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // $livraison->setCreatedAt(new \DateTime());
             $entityManager->persist($livraison);
             $entityManager->flush();
 
@@ -98,5 +99,6 @@ final class LivraisonController extends AbstractController{
 
         return $this->redirectToRoute('app_livraison_index', [], Response::HTTP_SEE_OTHER);
     }
+
 
 }
