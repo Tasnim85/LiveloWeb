@@ -13,8 +13,10 @@ class Facture
 {
 
     #[ORM\Id]
-    #[ORM\Column(type: "integer")]
-    private int $idFacture;
+#[ORM\GeneratedValue]
+#[ORM\Column(type: "integer")]
+private int $idFacture;
+
 
     #[ORM\Column(type: "float")]
     private float $montant;

@@ -10,10 +10,11 @@ use App\Entity\Livraison;
 #[ORM\Entity]
 class User
 {
-
+   
     #[ORM\Id]
-    #[ORM\Column(type: "integer")]
-    private int $idUser;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: "idUser", type: "integer")] 
+    private int $idUser ;
 
     #[ORM\Column(type: "string", length: 100)]
     private string $nom;
@@ -48,7 +49,7 @@ class User
     #[ORM\Column(type: "string", length: 500)]
     private string $url_image;
 
-    public function getIdUser()
+    public function getIdUser(): int
     {
         return $this->idUser;
     }

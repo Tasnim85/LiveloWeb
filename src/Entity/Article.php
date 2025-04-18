@@ -13,14 +13,16 @@ class Article
 {
 
     #[ORM\Id]
-    #[ORM\Column(type: "integer")]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(name: "id_article", type: "integer")]
     private int $id_article;
+ 
 
         #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: "articles")]
     #[ORM\JoinColumn(name: 'id_categorie', referencedColumnName: 'id_categorie', onDelete: 'CASCADE')]
     private Categorie $id_categorie;
 
-        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "articles")]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "articles")]
     #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'idUser', onDelete: 'CASCADE')]
     private User $created_by;
 
@@ -41,12 +43,14 @@ class Article
 
     #[ORM\Column(type: "string")]
     private string $statut;
+    
+    #[ORM\Column(type: "date", name: "createdAt")]
+private \DateTimeInterface $createdAt;
 
-    #[ORM\Column(type: "date")]
-    private \DateTimeInterface $createdAt;
+    
 
-    #[ORM\Column(type: "integer")]
-    private int $nbViews;
+#[ORM\Column(name: "nbViews", type: "integer", options: ["default" => 0])]
+private int $nbViews = 0;
 
     public function getId_article()
     {
@@ -147,7 +151,6 @@ class Article
     {
         $this->createdAt = $value;
     }
-
     public function getNbViews()
     {
         return $this->nbViews;
