@@ -3,47 +3,70 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Collection;
 use App\Entity\Livraison;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
+
 {
-   
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: "idUser", type: "integer")] 
-    private int $idUser ;
+    #[ORM\Column(name: "idUser", type: "integer")]
+
+    private int $idUser;
+
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "First name cannot be empty.")]
+    #[Assert\Length(min: 3, max: 100, minMessage: "First name must be at least {{ limit }} characters long.", maxMessage: "First name cannot exceed {{ limit }} characters.")]
     private string $nom;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "Last name cannot be empty.")]
+    #[Assert\Length(min: 3, max: 100, minMessage: "Last name must be at least {{ limit }} characters long.", maxMessage: "Last name cannot exceed {{ limit }} characters.")]
     private string $prenom;
 
     #[ORM\Column(type: "string")]
+    #[Assert\NotBlank(message: "Role cannot be empty.")]
+    #[Assert\Choice(choices: ['client', 'admin', 'delivery_person', 'partner'], message: "Choose a valid role.")]
     private string $role;
 
     #[ORM\Column(type: "boolean")]
     private bool $verified;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "Address cannot be empty.")]
     private string $adresse;
 
-    #[ORM\Column(type: "string")]
-    private string $type_vehicule;
+    #[ORM\Column(type: "string", nullable: true)]
+    #[Assert\Choice(choices: ['e_bike', 'Bike','e_scooter', null])]
+    private ?string $type_vehicule = null;
+
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "Email cannot be empty.")]
+    #[Assert\Email(message: "The email '{{ value }}' is not valid.")]
     private string $email;
 
     #[ORM\Column(type: "string", length: 300)]
+    #[Assert\NotBlank(message: "Password cannot be empty.")]
+    #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long.")]
     private string $password;
 
     #[ORM\Column(type: "string", length: 8)]
     private string $num_tel;
 
     #[ORM\Column(type: "string", length: 8)]
+    #[Assert\NotBlank(message: "Le CIN ne peut pas être vide.")]
+    #[Assert\Length(
+        min: 8,
+        max: 8,
+        exactMessage: "Le CIN doit comporter exactement 8 caractères."
+    )]
     private string $cin;
 
     #[ORM\Column(type: "string", length: 500)]
@@ -129,22 +152,22 @@ class User
         $this->email = $value;
     }
 
-    public function getPassword()
-    {
-        return $this->password;
-    }
+    public function getPassword(): string
+{
+    return $this->password;
+}
 
     public function setPassword($value)
     {
         $this->password = $value;
     }
 
-    public function getNum_tel()
+    public function getNumTel()
     {
         return $this->num_tel;
     }
 
-    public function setNum_tel($value)
+    public function setNumTel($value)
     {
         $this->num_tel = $value;
     }
@@ -159,12 +182,12 @@ class User
         $this->cin = $value;
     }
 
-    public function getUrl_image()
+    public function getUrlImage()
     {
         return $this->url_image;
     }
 
-    public function setUrl_image($value)
+    public function setUrlImage($value)
     {
         $this->url_image = $value;
     }
@@ -300,4 +323,22 @@ class User
     
             return $this;
         }
+
+        //edhouma teb3in l'interface mta3 hachage
+        public function getRoles(): array
+        {
+            return [$this->role];
+        }
+
+        public function getUserIdentifier(): string
+        {
+            return $this->cin; // ou le champ que tu utilises comme identifiant
+        }
+
+        // Nécessaire pour UserInterface
+        public function eraseCredentials()
+        {
+            // Si tu stockes des données temporaires sensibles, nettoie-les ici
+        }
+
 }
