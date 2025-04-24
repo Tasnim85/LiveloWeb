@@ -62,7 +62,17 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('bo/assets/js/config.js') }}"></script>
   </head>
-
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userJson = localStorage.getItem('user_data');
+    if (userJson) {
+      const user = JSON.parse(userJson);
+      console.log('👤 Restored User Data:', user);
+    } else {
+      console.log('⚠️ No user_data in localStorage');
+    }
+  });
+</script>
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">

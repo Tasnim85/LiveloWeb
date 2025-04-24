@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Psr\Log\LoggerInterface;
 
 final class LoginController extends AbstractController
 {
@@ -19,41 +22,63 @@ final class LoginController extends AbstractController
             'controller_name' => 'LoginController',
         ]);
     }
+
     #[Route('/login_check', name: 'app_login_check', methods: ['POST'])]
-    public function loginCheck(Request $request, EntityManagerInterface $em): Response
-    {
+    public function loginCheck(
+        Request $request,
+        EntityManagerInterface $em,
+        JWTTokenManagerInterface $jwtManager,
+        UrlGeneratorInterface $urlGenerator,
+        LoggerInterface $logger,
+        SerializerInterface $serializer
+    ): Response {
         $cin = $request->request->get('cin');
         $plainPassword = $request->request->get('password');
 
         $user = $em->getRepository(User::class)->findOneBy(['cin' => $cin]);
 
         if (!$user) {
-            $this->addFlash('error', 'CIN not found.');
-            return $this->redirectToRoute('app_login');
+            return $this->json([
+                'success' => false,
+                'message' => 'CIN not found.'
+            ], Response::HTTP_UNAUTHORIZED);
         }
 
-        if (password_verify($plainPassword, $user->getPassword())) {
-            if (!$user->getVerified()) {
-                return match ($user->getRole()) {
-                    'delivery_person' => $this->redirectToRoute('app_homeLivreurNotVerified'),
-                    'admin' => $this->redirectToRoute('app_homeAdminNotVerified'),
-                    'delivery_person' => $this->redirectToRoute('app_homeLivreurNotVerified'),
-                    'partner' => $this->redirectToRoute('app_homePartnerNotVerified'),
-                    default => $this->redirectToRoute('app_login'),
-                };
-            }
+        if (!password_verify($plainPassword, $user->getPassword())) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Incorrect password.'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
 
-            return match ($user->getRole()) {
-                'client' => $this->redirectToRoute('app_homeClient'),
-                'admin' => $this->redirectToRoute('app_homeAdmin'),
-                'delivery_person' => $this->redirectToRoute('app_homeLivreur'),
-                'partner' => $this->redirectToRoute('app_homePartner'),
-                default => $this->redirectToRoute('app_login'),
+        $token = $jwtManager->create($user);
+        $userJson = $serializer->serialize($user, 'json', ['groups' => 'user:read']);
+        $userData = json_decode($userJson, true);
+        $logger->info('Generated JWT Token: ' . $token);
+            
+        dump($token);
+        $redirectRoute = $user->getVerified() ? 
+            match ($user->getRole()) {
+                'client' => 'app_homeClient',
+                'admin' => 'app_homeAdmin',
+                'delivery_person' => 'app_homeLivreur',
+                'partner' => 'app_homePartner',
+                default => 'app_login',
+            } : 
+            match ($user->getRole()) {
+                'delivery_person' => 'app_homeLivreurNotVerified',
+                'admin' => 'app_homeAdminNotVerified',
+                'partner' => 'app_homePartnerNotVerified',
+                default => 'app_login',
             };
-        }
-
-        $this->addFlash('error', 'Incorrect password.');
-        return $this->redirectToRoute('app_login');
+            $redirectUrl = $urlGenerator->generate($redirectRoute, [], UrlGeneratorInterface::ABSOLUTE_PATH);
+        return $this->json([
+            'success' => true,
+            'token' => $token,
+            'user' => $userData,
+            'redirect' => $redirectUrl
+        ]);
+       
     }
 
 
