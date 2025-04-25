@@ -3,6 +3,7 @@
 namespace App\Controller;
 use App\Entity\User;
 use App\Repository\ArticleRepository;
+use App\Repository\CategorieRepository;
 
 use App\Entity\Categorie;
 use App\Form\CategorieType;
@@ -29,75 +30,119 @@ final class CategorieController extends AbstractController
     
         return $this->render('categorie/index.html.twig', [
             'categories' => $categories,
+            
         ]);
     }
   
     
-
-    #[Route('/categorie/new', name: 'app_categorie_new')]
+    #[Route('/new', name: 'app_categorie_new')]
     public function new(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
+        $categorie = new Categorie();
+        $form = $this->createForm(CategorieType::class, $categorie);
+    
+        // Affiche un message si le formulaire est soumis ou non
         if ($request->isMethod('POST')) {
-            $categorie = new Categorie();
-    
-            $categorie->setNom($request->request->get('nom'));
-            $categorie->setDescription($request->request->get('description'));
-    
-            // Gestion de l'image
-            $imageFile = $request->files->get('url_image');
-            if ($imageFile) {
-                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-    
-                // Spécifier directement le dossier où sauvegarder l'image
-                $destination = $this->getParameter('kernel.project_dir') . '/public/img';
-                $imageFile->move(
-                    $destination,
-                    $newFilename
-                );
-    
-                $categorie->setUrl_image('/img/' . $newFilename);
-            }
-    
-            // Ajout manuel d'un utilisateur temporaire pour le champ created_by
-            $user = $em->getRepository(User::class)->find(62); // ID temporaire
-            $categorie->setCreated_by($user);
-    
-            $em->persist($categorie);
-            $em->flush();
-    
-            // Rediriger vers la liste des catégories
-            return $this->redirectToRoute('app_categorie_index');
+            dump("Le formulaire catégorie a été soumis !");
         }
     
-        return $this->render('categorie/index.html.twig', [
-            'categorie' => new Categorie(), // éviter variable undefined
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted()) {
+            if (!$form->isValid()) {
+                dump("Le formulaire catégorie n'est pas valide !");
+                foreach ($form->getErrors(true) as $error) {
+                    dump($error->getMessage());
+                }
+            } else {
+                dump("Le formulaire catégorie est valide, on persiste !");
+    
+                // Gestion de l'image
+                $imageFile = $form->get('url_image')->getData();
+                if ($imageFile) {
+                    $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+    
+                    try {
+                        $destination = $this->getParameter('kernel.project_dir').'/public/img';
+                        $imageFile->move($destination, $newFilename);
+                        $categorie->setUrl_image('/img/'.$newFilename);
+                    } catch (FileException $e) {
+                        $this->addFlash('error', 'Erreur lors du téléchargement de l\'image');
+                        return $this->redirectToRoute('app_categorie_new');
+                    }
+                }
+    
+                // Ajout de l'utilisateur
+                $user = $em->getRepository(User::class)->find(62); // À remplacer par l’utilisateur connecté
+                $categorie->setCreated_by($user);
+    
+                $em->persist($categorie);
+                $em->flush();
+    
+                $this->addFlash('success', 'Catégorie ajoutée avec succès !');
+                return $this->redirectToRoute('app_categorie_index');
+            }
+        }
+    
+        return $this->render('categorie/new.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
     
     
     
 
-    #[Route('/categorie/{id_categorie}/edit', name: 'app_categorie_edit', methods: ['GET', 'POST'])]
-public function edit(Request $request, Categorie $categorie, EntityManagerInterface $entityManager): Response
-{
-    $form = $this->createForm(CategorieType::class, $categorie);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->flush();
-        return $this->redirectToRoute('app_categorie_index');
+    #[Route('/categorie/{id_categorie}/edit', name: 'app_categorie_edit')]
+    public function edit(
+        Request $request,
+        CategorieRepository $categorieRepository,
+        EntityManagerInterface $em,
+        int $id_categorie
+    ): Response {
+        $categorie = $categorieRepository->find($id_categorie);
+        
+        if (!$categorie) {
+            throw $this->createNotFoundException('Catégorie introuvable.');
+        }
+    
+        $form = $this->createForm(CategorieType::class, $categorie);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion de l'image si elle a été modifiée
+            $imageFile = $form->get('url_image')->getData();
+    
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+    
+                try {
+                    $imageFile->move(
+                        $this->getParameter('images_directory'), // à configurer dans services.yaml
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    $this->addFlash('danger', 'Erreur lors de l\'upload de l\'image.');
+                }
+    
+                $categorie->setUrlImage($newFilename);
+            }
+    
+            $em->flush();
+    
+            $this->addFlash('success', 'Catégorie mise à jour avec succès !');
+            return $this->redirectToRoute('app_categorie_index');
+        }
+    
+        return $this->render('categorie/edit.html.twig', [
+            'form' => $form->createView(),
+            'categorie' => $categorie,
+        ]);
     }
-
-    $categories = $entityManager->getRepository(Categorie::class)->findAll();
-
-    return $this->render('categorie/index.html.twig', [
-        'categories' => $categories,
-        'categorieToEdit' => $categorie,
-        'formEdit' => $form->createView(),
-    ]);
-}
+    
 
     
     

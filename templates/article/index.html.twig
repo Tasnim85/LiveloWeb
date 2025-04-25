@@ -70,96 +70,85 @@
       <div class="layout-container">
         <!-- Menu -->
 
-        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-          <div class="app-brand demo">
-            <a href="index.html" class="app-brand-link">
-              <span class="app-brand-logo demo">
-                <svg
-                  width="25"
-                  viewBox="0 0 25 42"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                >
-                  <defs>
-                    <path
-                      d="M13.7918663,0.358365126 L3.39788168,7.44174259 C0.566865006,9.69408886 -0.379795268,12.4788597 0.557900856,15.7960551 C0.68998853,16.2305145 1.09562888,17.7872135 3.12357076,19.2293357 C3.8146334,19.7207684 5.32369333,20.3834223 7.65075054,21.2172976 L7.59773219,21.2525164 L2.63468769,24.5493413 C0.445452254,26.3002124 0.0884951797,28.5083815 1.56381646,31.1738486 C2.83770406,32.8170431 5.20850219,33.2640127 7.09180128,32.5391577 C8.347334,32.0559211 11.4559176,30.0011079 16.4175519,26.3747182 C18.0338572,24.4997857 18.6973423,22.4544883 18.4080071,20.2388261 C17.963753,17.5346866 16.1776345,15.5799961 13.0496516,14.3747546 L10.9194936,13.4715819 L18.6192054,7.984237 L13.7918663,0.358365126 Z"
-                      id="path-1"
-                    ></path>
-                    <path
-                      d="M5.47320593,6.00457225 C4.05321814,8.216144 4.36334763,10.0722806 6.40359441,11.5729822 C8.61520715,12.571656 10.0999176,13.2171421 10.8577257,13.5094407 L15.5088241,14.433041 L18.6192054,7.984237 C15.5364148,3.11535317 13.9273018,0.573395879 13.7918663,0.358365126 C13.5790555,0.511491653 10.8061687,2.3935607 5.47320593,6.00457225 Z"
-                      id="path-3"
-                    ></path>
-                    <path
-                      d="M7.50063644,21.2294429 L12.3234468,23.3159332 C14.1688022,24.7579751 14.397098,26.4880487 13.008334,28.506154 C11.6195701,30.5242593 10.3099883,31.790241 9.07958868,32.3040991 C5.78142938,33.4346997 4.13234973,34 4.13234973,34 C4.13234973,34 2.75489982,33.0538207 2.37032616e-14,31.1614621 C-0.55822714,27.8186216 -0.55822714,26.0572515 -4.05231404e-15,25.8773518 C0.83734071,25.6075023 2.77988457,22.8248993 3.3049379,22.52991 C3.65497346,22.3332504 5.05353963,21.8997614 7.50063644,21.2294429 Z"
-                      id="path-4"
-                    ></path>
-                    <path
-                      d="M20.6,7.13333333 L25.6,13.8 C26.2627417,14.6836556 26.0836556,15.9372583 25.2,16.6 C24.8538077,16.8596443 24.4327404,17 24,17 L14,17 C12.8954305,17 12,16.1045695 12,15 C12,14.5672596 12.1403557,14.1461923 12.4,13.8 L17.4,7.13333333 C18.0627417,6.24967773 19.3163444,6.07059163 20.2,6.73333333 C20.3516113,6.84704183 20.4862915,6.981722 20.6,7.13333333 Z"
-                      id="path-5"
-                    ></path>
-                  </defs>
-                  <g id="g-app-brand" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="Brand-Logo" transform="translate(-27.000000, -15.000000)">
-                      <g id="Icon" transform="translate(27.000000, 15.000000)">
-                        <g id="Mask" transform="translate(0.000000, 8.000000)">
-                          <mask id="mask-2" fill="white">
-                            <use xlink:href="#path-1"></use>
-                          </mask>
-                          <use fill="#696cff" xlink:href="#path-1"></use>
-                          <g id="Path-3" mask="url(#mask-2)">
-                            <use fill="#696cff" xlink:href="#path-3"></use>
-                            <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-3"></use>
-                          </g>
-                          <g id="Path-4" mask="url(#mask-2)">
-                            <use fill="#696cff" xlink:href="#path-4"></use>
-                            <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-4"></use>
-                          </g>
-                        </g>
-                        <g
-                          id="Triangle"
-                          transform="translate(19.000000, 11.000000) rotate(-300.000000) translate(-19.000000, -11.000000) "
-                        >
-                          <use fill="#696cff" xlink:href="#path-5"></use>
-                          <use fill-opacity="0.2" fill="#FFFFFF" xlink:href="#path-5"></use>
-                        </g>
-                      </g>
-                    </g>
-                  </g>
-                </svg>
-              </span>
-              <span class="app-brand-text demo menu-text fw-bolder ms-2">Livelo</span>
-            </a>
-
-            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-              <i class="bx bx-chevron-left bx-sm align-middle"></i>
-            </a>
-          </div>
-
+       <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <a href="{{ path('app_homeAdmin') }}">
+           <div class="app-brand justify-content-center">
+                  <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
+            </div>
+        </a>
           <div class="menu-inner-shadow"></div>
 
-        
+          <ul class="menu-inner py-1">
+            
+
+            <!-- Layouts -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div data-i18n="Misc">Articles</div>
+                
+                  <img src="{{ asset('bo/assets/img/icons/user(1).png') }}" width="28" height="28" />
+               
+                <div data-i18n="Layouts">Users</div>
               </a>
+
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="pages-misc-error.html" class="menu-link">
-                    <div data-i18n="Error">Error</div>
+                  <a href="{{ path('app_not_verified_users') }}" class="menu-link">
+                    <div data-i18n="Without menu">Pending users</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="pages-misc-under-maintenance.html" class="menu-link">
-                    <div data-i18n="Under Maintenance">Under Maintenance</div>
+                  <a href="{{ path('app_list_users') }}" class="menu-link">
+                    <div data-i18n="Without navbar">All users</div>
                   </a>
                 </li>
               </ul>
             </li>
             
+           <li class="menu-item">
+  <a
+    href="{{ path('app_categorie_index') }}"
+    class="menu-link"
+  >
+    
+      <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
+  
+    <div data-i18n="Documentation">Categories</div>
+  </a>
+</li>
 
-            
+            <li class="menu-item">
+              <a
+                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                target="_blank"
+                class="menu-link"
+              >
+                
+                  <img src="{{ asset('bo/assets/img/icons/radar.png') }}" width="28" height="28" />
+                
+                <div data-i18n="Documentation">Coverage areas</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                target="_blank"
+                class="menu-link"
+              >
+                
+                  <img src="{{ asset('bo/assets/img/icons/helmet-removebg-preview.png') }}" width="28" height="28" /><p>  </p>
+               
+                <div data-i18n="Support">Riders performance</div>
+              </a>
+            </li>
+             <li class="menu-item">
+              <a href="{{ path('app_admin_commande') }}" class="menu-link">
+                 
+                    <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
+                  
+                  <div data-i18n="Documentation">Orders report</div>
+              </a>
+            </li>
+          </ul>
         </aside>
         <!-- / Menu -->
 
@@ -278,15 +267,8 @@
     {% if categorie is defined %}
       <h2 class="my-4">Articles de la catégorie : {{ categorie.nom }}</h2>
     {% endif %}
-    <button 
-  type="button" 
-  class="btn rounded-pill btn-dark" 
-  data-bs-toggle="modal" 
-  data-bs-target="#modalArticle"
-  {% if categorie is defined %}onclick="setCategoryId({{ categorie.idCategorie }})"{% endif %}
->
-  Ajouter article
-</button>
+    
+
     {% set articles = categorie.articles is defined ? categorie.articles.toArray() : [] %}
     <div class="row">
       <div class="col-md">
@@ -300,101 +282,88 @@
             {% endfor %}
           </ol>
 
-          <!-- Slides -->
-          <div class="carousel-inner">
-            {% for article in articles %}
-              <div class="carousel-item {% if loop.first %}active{% endif %}">
-                <img class="d-block w-100" 
-                     style="height: 500px; object-fit: cover;"
-                     src="{{ article.getUrl_image() ? asset( article.getUrl_image()) : asset('image/default.png') }}"
-                     alt="Image de l'article {{ article.nom }}"
-                     onerror="this.src='{{ asset('image/default.png') }}'">
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-4" style="color: #f8f9fa;">
-                  <h3 class="fw-bold">{{ article.nom }}</h3>
-                  <p class="mb-3">{{ article.description|slice(0, 150) ~ '...' }}</p>
-                    
-               <!-- Conteneur positionné en absolute pour le dropdown -->
-        <div class="position-absolute top-0 end-0 m-2">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i class="bx bx-dots-vertical-rounded"></i>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-    <button type="button"
-            class="dropdown-item d-flex align-items-center"
-            style="border: none; background: none; padding: 0; width: 100%; text-align: left;"
-            data-bs-toggle="modal"
-            data-bs-target="#modalEditArticle"
-            onclick="prepareEditModal({{ article.id_article }})">
-        <i class="bx bx-edit-alt scaleX-n1-rtl"></i>
-        <span style="margin-left: 5px;">Modifier</span>
-    </button>
-</li>
-              <li>
-        <form method="POST" 
-              action="{{ path('app_article_delete', {'id_article': article.id_article}) }}"
-              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');"
-              class="d-inline">
-            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id_article) }}">
-            <button type="submit" class="dropdown-item d-flex align-items-center gap-2" 
-                    style="border: none; background: none; width: 100%; text-align: left;">
-                <i class="bx bx-trash me-1"></i> Supprimer
-            </button>
-        </form>
-    </li>
-            </ul>
+      <!-- Slides -->
+<div class="carousel-inner">
+  {% for article in articles %}
+    <div class="carousel-item {% if loop.first %}active{% endif %}">
+      <img class="d-block w-100" 
+           style="height: 500px; object-fit: cover;"
+           src="{{ article.getUrl_image() ? asset( article.getUrl_image()) : asset('image/default.png') }}"
+           alt="Image de l'article {{ article.nom }}"
+           onerror="this.src='{{ asset('image/default.png') }}'">
+      <div class="carousel-caption d-none d-md-block rounded p-4" 
+           style="background-color: #228B22; 
+                  background-opacity: 0.9;
+                  color: white;
+                  text-shadow: 1px 1px 2px rgba(200, 230, 182, 0.53);">
+        <h3 class="fw-bold">{{ article.nom }}</h3>
+        <p class="mb-3">{{ article.description|slice(0, 150) ~ '...' }}</p>
+          
+        <!-- Article attributes -->
+        <div class="d-flex flex-wrap justify-content-between mt-3" style="color: white;">
+          <div class="me-3 mb-2">
+            <i class="bx bx-dollar"></i>
+            <span class="ms-1">{{ article.prix|number_format(2, ',', ' ') }} €</span>
+          </div>
+          <div class="me-3 mb-2">
+            <i class="bx bx-package"></i>
+            <span class="ms-1">{{ article.quantite }} en stock</span>
+          </div>
+          <div class="me-3 mb-2">
+            <i class="bx bx-badge-check"></i>
+            <span class="ms-1">{{ article.statut }}</span>
+          </div>
+          <div class="mb-2">
+            <i class="bx bx-calendar"></i>
+            <span class="ms-1">{{ article.createdAt|date('d/m/Y') }}</span>
           </div>
         </div>
-                  <!-- Nouveaux attributs -->
-                  <div class="d-flex flex-wrap justify-content-between mt-3" style="color: #f8f9fa;">
-                    <div class="me-3 mb-2">
-                      <i class="bx bx-dollar" style="color: #f8f9fa;"></i>
-                      <span class="ms-1">{{ article.prix|number_format(2, ',', ' ') }} €</span>
-                    </div>
-                    <div class="me-3 mb-2">
-                      <i class="bx bx-package" style="color: #f8f9fa;"></i>
-                      <span class="ms-1">{{ article.quantite }} en stock</span>
-                    </div>
-                    <div class="me-3 mb-2">
-                      <i class="bx bx-badge-check" style="color: #f8f9fa;"></i>
-                      <span class="ms-1">{{ article.statut }}</span>
-                    </div>
-                    <div class="mb-2">
-                      <i class="bx bx-calendar" style="color: #f8f9fa;"></i>
-                      <span class="ms-1">{{ article.createdAt|date('d/m/Y') }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            {% else %}
-              <div class="carousel-item active">
-                <img class="d-block w-100" 
-                     style="height: 500px; object-fit: cover;"
-                     src="{{ asset('image/default.png') }}" 
-                     alt="Aucun article">
-                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-4" style="color: #f8f9fa;">
-                  <h3>Aucun article disponible</h3>
-                  <p>Aucun contenu pour cette catégorie</p>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="carousel-item active">
+      <img class="d-block w-100" 
+           style="height: 500px; object-fit: cover;"
+           src="{{ asset('image/default.png') }}" 
+           alt="Aucun article">
+      <div class="carousel-caption d-none d-md-block rounded p-4" 
+           style="background-color: #228B22;
+                  color: white;
+                  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+        <h3>Aucun article disponible</h3>
+        <p>Aucun contenu pour cette catégorie</p>
+      </div>
+    </div>
+  {% endfor %}
+</div>
 
-          <!-- Contrôles -->
-          <a class="carousel-control-prev" href="#carouselArticles" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Précédent</span>
-          </a>
-          <a class="carousel-control-next" href="#carouselArticles" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Suivant</span>
-          </a>
+<!-- Controls - Styled to match the green theme -->
+<a class="carousel-control-prev" href="#carouselArticles" role="button" data-bs-slide="prev"
+   style="filter: invert(77%) sepia(29%) saturate(1183%) hue-rotate(46deg) brightness(97%) contrast(84%);">
+  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+  <span class="visually-hidden">Précédent</span>
+</a>
+<a class="carousel-control-next" href="#carouselArticles" role="button" data-bs-slide="next"
+   style="filter: invert(77%) sepia(29%) saturate(1183%) hue-rotate(46deg) brightness(97%) contrast(84%);">
+  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+  <span class="visually-hidden">Suivant</span>
+</a>
+
+<style>
+  /* Optional: Style for carousel indicators */
+  .carousel-indicators [data-bs-target] {
+    background-color: #228B22;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+  }
+  
+  /* Ensure icons are white */
+  .carousel-caption .bx {
+    color: white;
+  }
+</style>
         </div>
       </div>
     </div>
@@ -403,310 +372,7 @@
   <div class="content-backdrop fade"></div>
 </div>
 <!-- / Layout wrapper -->
-<!-- Modal -->
-<div class="modal fade" id="modalArticle" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalArticleTitle">Veuillez remplir ce formulaire pour ajouter un article</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-          <form method="POST" enctype="multipart/form-data" 
-              action="{{ path('app_article_new') }}"> 
-          <!-- Nom -->
-          <div class="row">
-            <div class="col mb-3">
-              <div class="form-floating">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="articleNom"
-                  name="nom"
-                  placeholder="Nom de l'article"
-                  required
-                />
-                <label for="articleNom">Nom</label>
-                <div id="articleNomHelp" class="form-text">
-                  Le nom de l'article (max 1000 caractères)
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- Description -->
-          <div class="row">
-            <div class="col mb-3">
-              <div class="form-floating">
-                <textarea
-                  class="form-control"
-                  id="articleDescription"
-                  name="description"
-                  placeholder="Description de l'article"
-                  style="height: 100px"
-                  required
-                ></textarea>
-                <label for="articleDescription">Description</label>
-                <div id="articleDescriptionHelp" class="form-text">
-                  Description détaillée (max 10000 caractères)
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Prix et Quantité -->
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <div class="form-floating">
-                <input
-                  type="number"
-                  class="form-control"
-                  id="articlePrix"
-                  name="prix"
-                  placeholder="Prix"
-                  step="0.01"
-                  min="0"
-                  required
-                />
-                <label for="articlePrix">Prix (€)</label>
-              </div>
-            </div>
-            <div class="col-md-6 mb-3">
-    <div class="form-floating">
-      <input
-        type="number"
-        class="form-control"
-        id="articleQuantite"
-        name="quantite"
-        placeholder="Quantité"
-        min="0"
-        required
-        onchange="updateStatut()"
-      />
-      <label for="articleQuantite">Quantité</label>
-    </div>
-  </div>
-</div>
-
-          <!-- Statut et Catégorie -->
-         <div class="row">
-  <div class="col-md-6 mb-3">
-    <div class="form-floating">
-      <select class="form-control" id="articleStatut" name="statut" required>
-        <option value="on_stock" selected>En stock</option>
-        <option value="out_of_stock">Rupture</option>
-      </select>
-      <label for="articleStatut">Statut</label>
-    </div>
-  </div>
-
-          <!-- Image -->
-          <div class="mb-3">
-            <label class="form-label">Image de l'article</label>
-            <input type="file" class="form-control" id="articleImage" name="url_image" accept="image/*" required>
-            <div class="mt-2">
-              <img id="articleImagePreview" src="#" alt="Aperçu de l'image" style="max-height: 150px; display: none;">
-            </div>
-          </div>
-            <script>
-  function updateStatut() {
-    const quantite = document.getElementById('articleQuantite').value;
-    const statutSelect = document.getElementById('articleStatut');
-    
-    if (quantite == 0) {
-      statutSelect.value = 'out_of_stock';
-      statutSelect.disabled = true; // Désactive le champ
-      statutSelect.classList.add('bg-light'); // Style visuel
-    } else {
-      statutSelect.value = 'on_stock';
-      statutSelect.disabled = false;
-      statutSelect.classList.remove('bg-light');
-    }
-  }
-
-  // Exécuter au chargement si valeur existante
-  document.addEventListener('DOMContentLoaded', function() {
-    updateStatut();
-  });
-</script>
-          
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-              Fermer
-            </button>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  // Prévisualisation de l'image
-  document.getElementById('articleImage').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-      const preview = document.getElementById('articleImagePreview');
-      preview.src = URL.createObjectURL(file);
-      preview.style.display = 'block';
-    }
-  });
-</script>
-<!-- Modal d'édition d'article -->
-{% if articleToEdit is defined %}
-<div class="modal fade show" id="modalEditArticle" style="display:block;" tabindex="-1" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modifier l'article</h5>
-        <a href="{{ path('app_article_index') }}" class="btn-close"></a>
-      </div>
-
-      <div class="modal-body">
-        {{ form_start(formEdit, {
-          'attr': {'enctype': 'multipart/form-data'},
-          'action': path('app_article_edit', {'id_article': articleToEdit.id_article})
-        }) }}
-
-        <!-- Nom -->
-        <div class="row">
-          <div class="col mb-3">
-            <div class="form-floating">
-              {{ form_widget(formEdit.nom, {'attr': {
-                'class': 'form-control',
-                'placeholder': 'Nom de l\'article',
-                'id': 'editArticleNom'
-              }}) }}
-              <label for="editArticleNom">Nom</label>
-              <div class="form-text">Le nom de l'article (max 1000 caractères)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Description -->
-        <div class="row">
-          <div class="col mb-3">
-            <div class="form-floating">
-              {{ form_widget(formEdit.description, {'attr': {
-                'class': 'form-control',
-                'placeholder': 'Description',
-                'style': 'height: 100px',
-                'id': 'editArticleDescription'
-              }}) }}
-              <label for="editArticleDescription">Description</label>
-              <div class="form-text">Description détaillée (max 10000 caractères)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Prix et Quantité -->
-        <div class="row g-3">
-          <div class="col-md-6 mb-3">
-            <div class="form-floating">
-              {{ form_widget(formEdit.prix, {'attr': {
-                'class': 'form-control',
-                'placeholder': 'Prix',
-                'step': '0.01',
-                'min': '0',
-                'id': 'editArticlePrix'
-              }}) }}
-              <label for="editArticlePrix">Prix (€)</label>
-            </div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <div class="form-floating">
-              {{ form_widget(formEdit.quantite, {'attr': {
-                'class': 'form-control',
-                'placeholder': 'Quantité',
-                'min': '0',
-                'id': 'editArticleQuantite',
-                'onchange': 'updateEditStatut()'
-              }}) }}
-              <label for="editArticleQuantite">Quantité</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Statut -->
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <div class="form-floating">
-              {{ form_widget(formEdit.statut, {'attr': {
-                'class': 'form-control',
-                'id': 'editArticleStatut'
-              }}) }}
-              <label for="editArticleStatut">Statut</label>
-            </div>
-          </div>
-        </div>
-
-        <!-- Image -->
-        <div class="mb-3">
-          <label class="form-label">Image de l'article</label>
-          {{ form_widget(formEdit.url_image, {'attr': {
-            'class': 'form-control',
-            'accept': 'image/*',
-            'id': 'editArticleImage'
-          }}) }}
-          
-          {% if articleToEdit.url_image %}
-            <div class="mt-2">
-              <img id="editArticleImagePreview" src="{{ asset(articleToEdit.url_image) }}" alt="Image actuelle" style="max-height: 150px;" class="img-thumbnail">
-            </div>
-          {% else %}
-            <div class="mt-2">
-              <img id="editArticleImagePreview" src="#" alt="Aperçu de l'image" style="max-height: 150px; display: none;" class="img-thumbnail">
-            </div>
-          {% endif %}
-        </div>
-
-        <script>
-          // Gestion du statut
-          function updateEditStatut() {
-            const quantite = document.getElementById('editArticleQuantite').value;
-            const statutSelect = document.getElementById('editArticleStatut');
-            
-            if (quantite == 0) {
-              statutSelect.value = 'out_of_stock';
-              statutSelect.disabled = true;
-              statutSelect.classList.add('bg-light');
-            } else {
-              statutSelect.value = 'on_stock';
-              statutSelect.disabled = false;
-              statutSelect.classList.remove('bg-light');
-            }
-          }
-
-          // Prévisualisation de l'image
-          document.getElementById('editArticleImage').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const preview = document.getElementById('editArticleImagePreview');
-            
-            if (file) {
-              preview.src = URL.createObjectURL(file);
-              preview.style.display = 'block';
-            }
-          });
-
-          // Initialisation
-          document.addEventListener('DOMContentLoaded', function() {
-            updateEditStatut();
-          });
-        </script>
-
-      </div>
-
-      <div class="modal-footer">
-        <a href="{{ path('app_article_index') }}" class="btn btn-outline-secondary">Fermer</a>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
-      </div>
-
-      {{ form_end(formEdit) }}
-    </div>
-  </div>
-</div>
-{% endif %}
     <div class="buy-now">
       <a
         href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"

@@ -21,41 +21,43 @@ class Categorie
     #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'idUser', onDelete: 'CASCADE')]
     private User $created_by ;
 
-    #[ORM\Column(type: "string", length: 1000)]
+    #[ORM\Column(type: "string", length: 100)]
     #[Assert\NotBlank(message: "La description est obligatoire.")]
-#[Assert\Length(
-    max: 100,
-    maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
-)]
-    private string $description;
+    #[Assert\Length(
+        max: 100,
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
+    private string $description ;
 
-    #[ORM\Column(type: "text")]
-    #[Assert\NotBlank(message: "L'image est obligatoire.")]
-#[Assert\Image(
-    maxSize: "2M",
-    mimeTypes: ["image/jpeg", "image/png", "image/webp"],
-    mimeTypesMessage: "Seuls les formats JPEG, PNG et WebP sont acceptés.",
-    maxSizeMessage: "L'image ne doit pas dépasser {{ limit }}."
+    #[ORM\Column(type: "string", length: 255 )]
+ 
+#[Assert\Length(
+    max: 255,
+    maxMessage: "L'URL de l'image ne peut pas dépasser {{ limit }} caractères."
 )]
+#[Assert\Regex(
+    pattern: "/\.(jpg|jpeg|png|webp)$/i",
+    message: "L'image doit être au format JPG, PNG ou WebP."
+)]
+
     private ?string $url_image = null;
 
 
-    #[ORM\Column(type: "string", length: 100)]
+    #[ORM\Column(type: "string", length: 20)]  // <-- Ajout de l'annotation ORM
     #[Assert\NotBlank(message: "Le nom est obligatoire.")]
-#[Assert\Length(
-    max: 20,
-    maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
-)]
-#[Assert\Regex(
-    pattern: "/^[a-zA-Z]/",
-    match: false,
-    message: "Le nom ne doit pas commencer par une lettre."
-)]
-#[Assert\Regex(
-    pattern: "/^[a-zA-Z0-9\s\-_]+$/",
-    message: "Le nom contient des caractères non autorisés."
-)]
-    private string $nom;
+    #[Assert\Length(
+        max: 20,
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z][a-zA-Z\s]*$/",
+        message: "Le nom doit commencer par une lettre et ne contenir que des lettres et des espaces."
+    )]
+    private string $nom  ;
+
+
+    
+    
 
     public function getIdCategorie(): int
     {

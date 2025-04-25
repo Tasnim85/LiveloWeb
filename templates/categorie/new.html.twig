@@ -1,11 +1,164 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}New Categorie{% endblock %}
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>HELLO admin !</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon"  href="{{ asset('bo/assets/img/favicon/favicon.ico') }}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/fonts/boxicons.css')}}" />
+
+   <!-- Core CSS -->
+        <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+        <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+        <link rel="stylesheet" href="{{ asset('bo/assets/css/demo.css') }}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/libs/apex-charts/apex-charts.css')}}" />
+
+    <!-- Page CSS -->
+
+    <!-- Helpers -->
+     <script src="{{ asset('bo/assets/vendor/js/helpers.js')}}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{{ asset('bo/assets/js/config.js')}}"></script>
+  </head>
+
+
 
 {% block body %}
-    <h1>Create new Categorie</h1>
+<div class="container my-5">
+<div class="container my-5">
+    <h1 class="text-center mb-4">Ajouter une catégorie</h1>
 
-    {{ include('categorie/_form.html.twig') }}
+  <div class="col-xxl">
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
+<h5 class="mb-0 text-white">Ajouter une nouvelle catégorie</h5>
+      <small class="text-white">Formulaire</small>
+    </div>
 
-    <a href="{{ path('app_categorie_index') }}">back to list</a>
+            <div class="card-body">
+                {{ form_start(form, {'attr': {'data-turbo': 'false', 'novalidate': 'novalidate'}}) }}
+
+                {% if form.vars.errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        {{ form_errors(form) }}
+                    </div>
+                {% endif %}
+
+                <div class="row mb-3">
+                    {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.nom, {'attr': {'class': 'form-control' ~ (form.nom.vars.errors|length ? ' is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.nom) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    {{ form_label(form.description, 'Description', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
+                    <div class="col-sm-10">
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control' ~ (form.description.vars.errors|length ? ' is-invalid' : ''), 'rows': 4}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.description) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    {{ form_label(form.url_image, 'Image', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
+                    <img id="preview-image" src="#" alt="Aperçu de l'image" class="img-thumbnail mt-3" style="display: none; max-width: 200px;">
+
+                    <div class="col-sm-10">
+                        {{ form_widget(form.url_image, {'attr': {'class': 'form-control' ~ (form.url_image.vars.errors|length ? ' is-invalid' : '')}}) }}
+                        <div class="invalid-feedback">
+                            {{ form_errors(form.url_image) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-end">
+                    <div class="col-sm-10 offset-sm-2">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fas fa-save me-1"></i> Enregistrer
+                        </button>
+                        <a href="{{ path('app_categorie_index') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-1"></i> Annuler
+                        </a>
+                    </div>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputImage = document.querySelector('input[type="file"][name$="[url_image]"]');
+        const preview = document.getElementById('preview-image');
+
+        if (inputImage) {
+            inputImage.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    }
+
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '#';
+                }
+            });
+        }
+    });
+</script>
+
 {% endblock %}
