@@ -18,17 +18,17 @@ class LivraisonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('created_at', DateType::class, [
-                'widget' => 'single_text',
-            ])
+            // ->add('created_at', DateType::class, [
+            //     'widget' => 'single_text',
+            // ])
             ->add('created_by', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'idUser',
+                'choice_label' => 'getId',
                 'label' => 'Created By'
             ])
             ->add('id_livreur', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'idUser',
+                'choice_label' => 'getId',
                 'label' => 'Delivery Person'
             ])
             ->add('commandeId', EntityType::class, [

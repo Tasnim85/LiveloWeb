@@ -24,7 +24,7 @@
     <div class="preloader d-flex align-items-center justify-content-center">
         <div class="preloader-circle"></div>
         <div class="preloader-img">
-            <img src="{{ asset('img/core-img/leaf.png') }}" alt="">
+            <img src="{{ asset('img/logo.png')  }}" alt="">
         </div>
     </div>
 
@@ -82,7 +82,7 @@
                     <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
                         <!-- Nav Brand -->
-                        <a href="index.html" class="nav-brand"><img src=" {{ asset('img/core-img/logo.png') }}" alt=""></a>
+                        <a href="index.html" class="nav-brand"><img src=" {{ asset('img/logo.png')  }}" style="width: 100px; height: 90px;" alt=""></a>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -126,12 +126,12 @@
                                                     <li><a href="single-post.html">Blog Details</a></li>
                                                 </ul>
                                             </li>
-                                            <li><a href="contact.html">Contact</a></li>
+                                            <li><a href="contact.html">My deliveries</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="portfolio.html">Portfolio</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="{{ path('app_avis_index') }}">Feedbacks</a></li>
+                                    <li><a href="{{ path('app_list_deliveries') }}">My deliveries</a></li>
                                 </ul>
 
                                 <!-- Search Icon -->
@@ -160,56 +160,36 @@
     <!-- ##### Header Area End ##### -->
 
     <!-- ##### Hero Area Start ##### -->
-    <section class="hero-area">
-        <div class="hero-post-slides owl-carousel">
+    <section class="hero-area" >
+        <div class="hero-post-slides owl-carousel" > <!-- ##### lenna nhottou taill contenairrr ##### --> 
+        
 
-            <!-- Single Hero Post -->
-            <div class="single-hero-post bg-overlay">
-                <!-- Post Image -->
-                <div class="slide-img bg-img" style="background-image: url(img/bg-img/1.jpg);"></div>
+            <div class="single-hero-post bg-overlay" style="height: 500px;" >
+                <div class="slide-img bg-img" style="background-image: url({{ asset('img/bg-img/1.jpg')}});"></div>
                 <div class="container h-100">
                     <div class="row h-100 align-items-center">
                         <div class="col-12">
-                            <!-- Post Content -->
-                            <div class="hero-slides-content text-center">
-                                <h2>Plants exist in the weather and light rays that surround them</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque ante nec ipsum iaculis, ac iaculis ipsum porttitor. Vivamus cursus nisl lectus, id mattis nisl lobortis eu. Duis diam augue, dapibus ut dolor at, mattis maximus dolor.</p>
-                                <div class="welcome-btn-group">
-                                    <a href="#" class="btn alazea-btn mr-30">GET STARTED</a>
-                                    <a href="#" class="btn alazea-btn active">CONTACT US</a>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Single Hero Post -->
-            <div class="single-hero-post bg-overlay">
-                <!-- Post Image -->
-                <div class="slide-img bg-img" style="background-image: url(img/bg-img/2.jpg);"></div>
+            <div class="single-hero-post bg-overlay" style="height: 500px;">
+                <div class="slide-img bg-img" style="background-image: url({{ asset('img/bg-img/2.jpg')}});"></div>
                 <div class="container h-100">
                     <div class="row h-100 align-items-center">
                         <div class="col-12">
-                            <!-- Post Content -->
-                            <div class="hero-slides-content text-center">
-                                <h2>Plants exist in the weather and light rays that surround them</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque ante nec ipsum iaculis, ac iaculis ipsum porttitor. Vivamus cursus nisl lectus, id mattis nisl lobortis eu. Duis diam augue, dapibus ut dolor at, mattis maximus dolor.</p>
-                                <div class="welcome-btn-group">
-                                    <a href="#" class="btn alazea-btn mr-30">GET STARTED</a>
-                                    <a href="#" class="btn alazea-btn active">CONTACT US</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
     <!-- ##### Hero Area End ##### -->
 
     <!-- ##### Service Area Start ##### -->
+    {% block body %}
     <section class="our-services-area bg-gray section-padding-100-0">
         <div class="container">
             <div class="row">
@@ -903,8 +883,10 @@
     </section>
     <!-- ##### Contact Area End ##### -->
 
+    {% endblock %}
+
     <!-- ##### Footer Area Start ##### -->
-    <footer class="footer-area bg-img" style="background-image: url(img/bg-img/3.jpg);">
+    <footer class="footer-area bg-img" style="background-image: url({{ asset('img/bg-img/3.jpg')}});" >
         <!-- Main Footer Area -->
         <div class="main-footer-area">
             <div class="container">
@@ -914,7 +896,7 @@
                     <div class="col-12 col-sm-6 col-lg-3">
                         <div class="single-footer-widget">
                             <div class="footer-logo mb-30">
-                                <a href="#"><img src="{{ asset('img/core-img/logo.png')}}" alt=""></a>
+                                <a href="#"><img src="{{ asset('/img/logo.png')}}" alt=""></a>
                             </div>
                             <p>Lorem ipsum dolor sit samet, consectetur adipiscing elit. India situs atione mantor</p>
                             <div class="social-info">
@@ -960,7 +942,7 @@
                             <!-- Single Best Seller Products -->
                             <div class="single-best-seller-product d-flex align-items-center">
                                 <div class="product-thumbnail">
-                                    <a href="shop-details.html"><img src="img/bg-img/4.jpg" alt=""></a>
+                                    <a href="shop-details.html"><img src="{{ asset('img/bg-img/4.jpg')}}" alt=""></a>
                                 </div>
                                 <div class="product-info">
                                     <a href="shop-details.html">Cactus Flower</a>

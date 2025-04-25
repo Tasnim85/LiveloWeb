@@ -1,0 +1,39 @@
+{% extends 'livreur/base_livreur.html.twig' %}
+
+{% block livreur_content %}
+    <div class="card">
+        <div class="card-header">
+            <h3>My Delivery History</h3>
+        </div>
+        <div class="card-body">
+            {% if deliveries is empty %}
+                <p class="text-center">No delivery history yet</p>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Order ID</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for delivery in deliveries %}
+                                <tr>
+                                    <td>{{ delivery.created_at|date('Y-m-d') }}</td>
+                                    <td>#{{ delivery.commandeId.idCommande }}</td>
+                                    <td>{{ delivery.commandeId.adresse_arr }}</td>
+                                    <td>
+                                        <span class="badge bg-success">Completed</span>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

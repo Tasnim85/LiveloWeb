@@ -1,54 +1,55 @@
-{% extends 'home/homeAdmin.html.twig' %}
+{% extends 'home/homeClient.html.twig' %}
 
-{% block title %}Edit Avis{% endblock %}
+{% block title %}Modifier un Avis{% endblock %}
 
 {% block body %}
-    <h1>Edit Avis</h1>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="card shadow rounded-4 border-0">
+                <div class="card-header bg-primary text-white rounded-top-4">
+                    <h3 class="mb-0 text-center text-white">✏️ Update your feedback</h3>
+                </div>
+                <div class="card-body p-4">
 
-    {{ form_errors(form) }}
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+                    {{ form_errors(form) }}
+
+                    <div class="form-group mb-4">
+                        {{ form_label(form.description, null, {'label_attr': {'class': 'form-label fw-semibold'}}) }}
+                        {{ form_widget(form.description, {'attr': {'class': 'form-control', 'placeholder': 'Votre avis...'}}) }}
+                        {{ form_errors(form.description, {'attr': {'class': 'form-error'}}) }}
+                        {# {% if form_errors(form.description) %}
+                            <div class="invalid-feedback d-block">
+                                {{ form_errors(form.description) }}
+                            </div>
+                        {% endif %} #}
+                    </div>
+
+                    {# Rendre les autres champs cachés #}
+                    <div style="display: none;">
+                        {{ form_row(form.created_by) }}
+                        {{ form_row(form.livraisonId) }}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{{ path('app_avis_index') }}" class="btn btn-outline-secondary">
+                            ⬅️ Retour à la liste
+                        </a>
+
+                        <button type="submit" class="btn btn-success px-4">
+                            ✅ {{ button_label|default('Enregistrer') }}
+                        </button>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
 
 
-<div class="form-group mb-3">
-    {{ form_label(form.description) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-    {% if form_errors(form.description) %}
-        <div class="invalid-feedback d-block">
-            {{ form_errors(form.description) }}
         </div>
-    {% endif %}
+    </div>
 </div>
-
-<div class="form-group mb-3">
-    {{ form_label(form.created_by) }}
-    {{ form_widget(form.created_by, {'attr': {'class': 'form-select'}}) }}
-    {% if form_errors(form.created_by) %}
-        <div class="invalid-feedback d-block">
-            {{ form_errors(form.created_by) }}
-        </div>
-    {% endif %}
-</div>
-
-<div class="form-group mb-3">
-    {{ form_label(form.livraisonId) }}
-    {{ form_widget(form.livraisonId, {'attr': {'class': 'form-select'}}) }}
-    {% if form_errors(form.livraisonId) %}
-        <div class="invalid-feedback d-block">
-            {{ form_errors(form.livraisonId) }}
-        </div>
-    {% endif %}
-</div>
-
-<button type="submit" class="btn btn-primary">
-    {{ button_label|default('Enregistrer') }}
-</button>
-
-{{ form_end(form) }}
-
-
-
-    <a href="{{ path('app_avis_index') }}">back to list</a>
-
-    {{ include('avis/_delete_form.html.twig') }}
 {% endblock %}

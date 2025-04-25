@@ -1,4 +1,4 @@
-{% extends 'home/homeAdmin.html.twig' %}
+{% extends 'home/homeClient.html.twig' %}
 
 {% block title %}Avis{% endblock %}
 
@@ -13,7 +13,7 @@
             </tr>
             <tr>
                 <th>Created_at</th>
-                <td>{{ avi.created_at ? avi.created_at|date('Y-m-d') : '' }}</td>
+                <td>{{ avi.createdAt ? avi.createdAt|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
                 <th>Description</th>

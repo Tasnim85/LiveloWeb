@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Avis;
+use App\Entity\User;
+use App\Entity\Livraison;
 use App\Form\AvisType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Repository\LivraisonRepository;
+
 
 #[Route('/avis')]
 final class AvisController extends AbstractController{
@@ -24,25 +28,67 @@ final class AvisController extends AbstractController{
         ]);
     }
 
-    #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route(path:'/deliveries', name: 'app_list_deliveries', methods: ['GET', 'POST'])]
+    public function front(Request $request, EntityManagerInterface $entityManager, LivraisonRepository $livraisonRepository,): Response
     {
-        $avi = new Avis();
-        $form = $this->createForm(AvisType::class, $avi);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($avi);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('avis/new.html.twig', [
-            'avi' => $avi,
-            'form' => $form,
+        $livraisons = $livraisonRepository->findByCreatedBy('64');
+        return $this->render('avis/listDeliveries.html.twig', [
+            'livraisons' => $livraisons,           
         ]);
     }
+
+    #[Route(name: 'app_avis_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, LivraisonRepository $livraisonRepository): Response
+    {
+        $avis = new Avis();
+        $description = $request->request->get('description');
+        
+        if (empty(trim($description))) {
+            return new Response(json_encode(['error' => 'Description cannot be empty']), 400, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+
+        if (strlen($description) < 3) {
+            return new Response(json_encode(['error' => 'Description must be at least 3 characters long']), 400, [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+
+        $livraison = $entityManager->getRepository(Livraison::class)->find(42);
+        $createdBy = $entityManager->getRepository(User::class)->find(63);
+
+        $avis->setCreatedAt(new \DateTime());
+        $avis->setLivraisonId($livraison);
+        $avis->setDescription($description);
+        $avis->setCreatedBy($createdBy);
+
+        $entityManager->persist($avis);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    // #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, EntityManagerInterface $entityManager, Avis $avi): Response
+    // {
+    //     $avi = new Avis();
+    //     $form = $this->createForm(AvisType::class, $avi);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $avi->setCreatedAt(new \DateTime());
+    //         $entityManager->persist($avi);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
+    //     }
+
+    //     return $this->render('avis/new.html.twig', [
+    //         'avi' => $avi,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     #[Route('/{idAvis}', name: 'app_avis_show', methods: ['GET'])]
     public function show(Avis $avi): Response
@@ -70,14 +116,22 @@ final class AvisController extends AbstractController{
         ]);
     }
 
-    #[Route('/{idAvis}', name: 'app_avis_delete', methods: ['POST'])]
+    #[Route('/{idAvis}/delete', name: 'app_avis_delete', methods: ['POST'])]
     public function delete(Request $request, Avis $avi, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$avi->getIdAvis(), $request->getPayload()->getString('_token'))) {
+        // if ($this->isCsrfTokenValid('delete'.$avi->getIdAvis(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($avi);
             $entityManager->flush();
-        }
+        // }
 
         return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    // #[Route('/mydeliveries', name: 'app_delivery', methods: ['GET'])]
+    // public function delivery(Avis $avi): Response
+    // {
+    //     return $this->render('avis/show.html.twig', [
+    //         'avi' => $avi,
+    //     ]);
+    // }
 }

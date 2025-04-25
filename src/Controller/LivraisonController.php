@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/livraison')]
 final class LivraisonController extends AbstractController{
     #[Route(name: 'app_livraison_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function back(EntityManagerInterface $entityManager): Response
     {
         $livraisons = $entityManager
             ->getRepository(Livraison::class)
@@ -27,6 +27,8 @@ final class LivraisonController extends AbstractController{
         ]);
     }
 
+    
+
     #[Route('/new', name: 'app_livraison_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -35,7 +37,7 @@ final class LivraisonController extends AbstractController{
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $livraison->setCreatedAt(new \DateTime());
+            $livraison->setCreatedAt(new \DateTime());
             $entityManager->persist($livraison);
             $entityManager->flush();
 

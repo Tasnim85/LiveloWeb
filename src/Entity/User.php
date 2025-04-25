@@ -67,14 +67,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 500)]
     private string $url_image;
 
-    public function getId_user()
+    public function setId(?int $idUser): self
     {
-        return $this->idUser;
-    }
-
-    public function setId_user($value)
-    {
-        $this->idUser = $value;
+        $this->idUser = $idUser;
+        return $this;
     }
 
     public function getNom()
