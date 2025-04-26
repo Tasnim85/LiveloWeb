@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\SendGridMailer;
 
 class RegistrationController extends AbstractController
 {
@@ -18,7 +19,8 @@ class RegistrationController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        SendGridMailer $mailer
     ): Response {
         $user = new User();
 
@@ -62,7 +64,19 @@ class RegistrationController extends AbstractController
 
             $em->persist($user);
             $em->flush();
-
+            $admins = $em->getRepository(User::class)->findBy(['role' => 'admin']);
+            foreach ($admins as $admin) {
+                $mailer->sendAdminNotification(
+                    $admin->getEmail(),
+                    'New User Awaiting Verification',
+                    sprintf("A new user %s %s (%s) has registered and is waiting for verification.",
+                        $user->getPrenom(),
+                        $user->getNom(),
+                        $user->getEmail(),
+                        $user->getCin()
+                    )
+                );
+            }
             $this->addFlash('success', 'Your account is created successfully !');
 
             return $this->redirectToRoute('user_register');

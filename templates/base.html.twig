@@ -113,6 +113,48 @@
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                 </div>
               </form>
+              <script>
+                                document.getElementById('formAuthentication').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const formData = new FormData(e.target);
+
+                    try {
+                        const response = await fetch('{{ path('app_login_check') }}', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                           console.log('🔑 JWT Token:', data.token);
+                           console.log('👤 User object:', data.user);
+                            // Store the token in localStorage
+                            localStorage.setItem('jwt_token', data.token);
+
+                            localStorage.setItem('user_data', JSON.stringify(data.user));
+                            window.location.href = data.redirect;
+                        } else {
+                            alert(data.message);
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        alert('Login failed.');
+                    }
+                });
+              </script>
+             <script>
+                // Log the token on every page load
+                document.addEventListener('DOMContentLoaded', () => {
+                    const token = localStorage.getItem('jwt_token');
+                    if (token) {
+                        console.log('JWT Token:', token);
+                    } else {
+                        console.log('No token found.');
+                    }
+                });
+              </script>
 
               <p class="text-center">
                 <span>New on our platform?</span>
