@@ -78,7 +78,7 @@ public function new(
     if ($request->isMethod('POST')) {
         $article = new Article();
        // $article->setIdCategorie($categorie);
-
+    
         // Données obligatoires
         $article->setNom($request->request->get('nom'));
         $article->setDescription($request->request->get('description'));
