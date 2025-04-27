@@ -61,6 +61,9 @@ class Commande
     #[ORM\OneToMany(mappedBy: "commandeId", targetEntity: Livraison::class)]
     private Collection $livraisons;
 
+
+
+
     // Getters / Setters
     public function getIdCommande(): int
     {
@@ -189,3 +192,4 @@ class Commande
         return $this->livraisons;
     }
 }
+

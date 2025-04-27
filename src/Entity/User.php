@@ -21,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     private int $idUser;
 
+
     #[ORM\Column(type: "string", length: 100)]
     #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "First name cannot be empty.")]
@@ -84,7 +85,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private string $url_image;
 
-    public function getIdUser()
+    public function getIdUser(): int
     {
         return $this->idUser;
     }

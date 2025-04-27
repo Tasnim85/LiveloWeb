@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 <!DOCTYPE html>
 
@@ -72,8 +71,8 @@
       <div class="layout-container">
         <!-- Menu -->
 
-       <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-        <a href="{{ path('app_homeAdmin') }}">
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <a href="{{ path('app_homePartner') }}">
            <div class="app-brand justify-content-center">
                   <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
             </div>
@@ -82,42 +81,28 @@
 
           <ul class="menu-inner py-1">
             
-
-            <!-- Layouts -->
-            <li class="menu-item">
-              <a href="javascript:void(0);" class="menu-link menu-toggle">
-                
-                  <img src="{{ asset('bo/assets/img/icons/user(1).png') }}" width="28" height="28" />
-               
-                <div data-i18n="Layouts">Users</div>
-              </a>
-
-              <ul class="menu-sub">
-                <li class="menu-item">
-                  <a href="{{ path('app_not_verified_users') }}" class="menu-link">
-                    <div data-i18n="Without menu">Pending users</div>
-                  </a>
-                </li>
-                <li class="menu-item">
-                  <a href="{{ path('app_list_users') }}" class="menu-link">
-                    <div data-i18n="Without navbar">All users</div>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            
-           <li class="menu-item">
-  <a
-    href="{{ path('app_categorie_index') }}"
-    class="menu-link"
-  >
+<li class="menu-item">
+  <a href="{{ path('app_cat_partner') }}" class="menu-link">
     
       <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
-  
+    
     <div data-i18n="Documentation">Categories</div>
   </a>
 </li>
 
+
+             <li class="menu-item">
+              <a
+                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                target="_blank"
+                class="menu-link"
+              >
+                
+                  <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" /><p>  </p>
+               
+                <div data-i18n="Support">Statistics</div>
+              </a>
+            </li>
             <li class="menu-item">
               <a
                 href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
@@ -125,31 +110,13 @@
                 class="menu-link"
               >
                 
-                  <img src="{{ asset('bo/assets/img/icons/radar.png') }}" width="28" height="28" />
+                  <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
                 
-                <div data-i18n="Documentation">Coverage areas</div>
+                <div data-i18n="Documentation">Others' products</div>
               </a>
             </li>
-            <li class="menu-item">
-              <a
-                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                target="_blank"
-                class="menu-link"
-              >
-                
-                  <img src="{{ asset('bo/assets/img/icons/helmet-removebg-preview.png') }}" width="28" height="28" /><p>  </p>
-               
-                <div data-i18n="Support">Riders performance</div>
-              </a>
-            </li>
-             <li class="menu-item">
-              <a href="{{ path('app_admin_commande') }}" class="menu-link">
-                 
-                    <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
-                  
-                  <div data-i18n="Documentation">Orders report</div>
-              </a>
-            </li>
+           
+            
           </ul>
         </aside>
         <!-- / Menu -->
@@ -266,6 +233,9 @@
 <div class="content-wrapper">
   <!-- Content -->
   <div class="container-xxl flex-grow-1 container-p-y">
+<button type="button" class="btn btn-primary" onclick="window.location.href='{{ path('app_article_new', {'id_categorie': categorie.getIdCategorie}) }}'">Ajouter article</button>
+
+
     {% if categorie is defined %}
       <h2 class="my-4">Articles de la catégorie : {{ categorie.nom }}</h2>
     {% endif %}
@@ -290,19 +260,58 @@
     <div class="carousel-item {% if loop.first %}active{% endif %}">
       <img class="d-block w-100" 
            style="height: 500px; object-fit: cover;"
-           src="{{ article.getUrl_image() ? asset( article.getUrl_image()) : asset('image/default.png') }}"
+           src="{{ article.getUrl_image() ? asset(article.getUrl_image()) : asset('image/default.png') }}"
            alt="Image de l'article {{ article.nom }}"
            onerror="this.src='{{ asset('image/default.png') }}'">
       <div class="carousel-caption d-none d-md-block rounded p-4" 
-           style="background-color: #228B22; 
-                  background-opacity: 0.9;
+           style="background-color: rgba(34, 139, 34, 0.9);
                   color: white;
                   text-shadow: 1px 1px 2px rgba(200, 230, 182, 0.53);">
+        
+        <!-- Bouton Modifier / Supprimer -->
+        <div class="position-absolute top-0 end-0 m-2">
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              <i class="bx bx-dots-vertical-rounded"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center"
+                        style="border: none; background: none; padding: 0; width: 100%; text-align: left;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalEditArticle"
+                        onclick="prepareEditModal({{ article.id_article }})">
+                  <i class="bx bx-edit-alt scaleX-n1-rtl"></i>
+                  <span style="margin-left: 5px;">Modifier</span>
+                </button>
+              </li>
+              <li>
+                <form method="POST" 
+                      action="{{ path('app_article_delete', {'id_article': article.id_article}) }}"
+                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?');"
+                      class="d-inline">
+                  <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ article.id_article) }}">
+                  <button type="submit" 
+                          class="dropdown-item d-flex align-items-center gap-2" 
+                          style="border: none; background: none; width: 100%; text-align: left;">
+                    <i class="bx bx-trash me-1"></i> Supprimer
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Titre et description -->
         <h3 class="fw-bold">{{ article.nom }}</h3>
         <p class="mb-3">{{ article.description|slice(0, 150) ~ '...' }}</p>
           
-        <!-- Article attributes -->
-        <div class="d-flex flex-wrap justify-content-between mt-3" style="color: white;">
+        <!-- Attributs de l'article -->
+        <div class="d-flex flex-wrap justify-content-between mt-3">
           <div class="me-3 mb-2">
             <i class="bx bx-dollar"></i>
             <span class="ms-1">{{ article.prix|number_format(2, ',', ' ') }} €</span>
@@ -320,6 +329,7 @@
             <span class="ms-1">{{ article.createdAt|date('d/m/Y') }}</span>
           </div>
         </div>
+
       </div>
     </div>
   {% else %}
@@ -329,7 +339,7 @@
            src="{{ asset('image/default.png') }}" 
            alt="Aucun article">
       <div class="carousel-caption d-none d-md-block rounded p-4" 
-           style="background-color: #228B22;
+           style="background-color: rgba(34, 139, 34, 0.9);
                   color: white;
                   text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
         <h3>Aucun article disponible</h3>
@@ -339,7 +349,7 @@
   {% endfor %}
 </div>
 
-<!-- Controls - Styled to match the green theme -->
+<!-- Contrôles du carrousel -->
 <a class="carousel-control-prev" href="#carouselArticles" role="button" data-bs-slide="prev"
    style="filter: invert(77%) sepia(29%) saturate(1183%) hue-rotate(46deg) brightness(97%) contrast(84%);">
   <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -351,8 +361,8 @@
   <span class="visually-hidden">Suivant</span>
 </a>
 
+<!-- Styles supplémentaires -->
 <style>
-  /* Optional: Style for carousel indicators */
   .carousel-indicators [data-bs-target] {
     background-color: #228B22;
     width: 12px;
@@ -360,12 +370,12 @@
     border-radius: 50%;
     margin: 0 5px;
   }
-  
-  /* Ensure icons are white */
+
   .carousel-caption .bx {
     color: white;
   }
 </style>
+
         </div>
       </div>
     </div>
@@ -407,5 +417,4 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
-
 
