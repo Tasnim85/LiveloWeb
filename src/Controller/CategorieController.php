@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Entity\User;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
@@ -173,5 +174,6 @@ public function catPartner(EntityManagerInterface $entityManager): Response
 
         return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
     }
+
 
 }

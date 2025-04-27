@@ -59,6 +59,7 @@ public function articlesByCategorie(
 }
 
 
+
 #[Route('/artPartner/{id_categorie}/articles', name: 'art_partner_articles', methods: ['GET'])]
 public function artPartnerArticles(int $id_categorie, EntityManagerInterface $entityManager): Response
 {
@@ -81,6 +82,11 @@ public function artPartnerArticles(int $id_categorie, EntityManagerInterface $en
 }
 
 #[Route('/article/new/{id_categorie}', name: 'app_article_new', methods: ['GET', 'POST'])]
+
+
+
+
+
 public function new(
     Request $request,
     EntityManagerInterface $em,
@@ -92,6 +98,7 @@ public function new(
     if (!$categorie) {
         throw $this->createNotFoundException('Catégorie non trouvée');
     }
+
 
     $article = new Article();
     $form = $this->createForm(ArticleType::class, $article);
@@ -166,6 +173,10 @@ public function new(
 
 
 
+    
+
+
+  
     #[Route('/{id_article}', name: 'app_article_show', methods: ['GET'])]
     public function show(Article $article): Response
     {
@@ -227,4 +238,8 @@ public function edit(
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> master
