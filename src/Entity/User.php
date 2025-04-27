@@ -60,11 +60,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message: "The email '{{ value }}' is not valid.")]
     private string $email;
 
-    #[ORM\Column(type: "string", length: 300)]
+    #[ORM\Column(type: "string", length: 300, nullable: true)]
     #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Password cannot be empty.")]
     #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long.")]
-    private string $password;
+    private ?string $password = null;
 
     #[ORM\Column(type: "string", length: 8)]
     #[Groups(['user:read'])]

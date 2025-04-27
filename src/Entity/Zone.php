@@ -12,11 +12,11 @@ use App\Entity\Trajet;
 class Zone
 {
 
-        #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "zones")]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "zones")]
     #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'idUser', onDelete: 'CASCADE')]
     private User $id_user;
 
-        #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: "zones")]
+    #[ORM\ManyToOne(targetEntity: Livraison::class, inversedBy: "zones")]
     #[ORM\JoinColumn(name: 'id_livraison', referencedColumnName: 'idLivraison', onDelete: 'CASCADE')]
     private Livraison $id_livraison;
 
