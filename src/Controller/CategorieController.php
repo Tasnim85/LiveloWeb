@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\User;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
@@ -143,11 +144,23 @@ final class CategorieController extends AbstractController
         ]);
     }
     
+// Route pour le partenaire
+#[Route('/catPartner', name: 'app_cat_partner')]
+public function catPartner(EntityManagerInterface $entityManager): Response
+{
+    $categories = $entityManager
+        ->getRepository(Categorie::class)
+        ->findAll();
+
+    return $this->render('categorie/catPartner.html.twig', [
+        'categories' => $categories,
+    ]);
+}
 
     
     
-    
-    
+
+
 
 
     #[Route('/{id_categorie}', name: 'app_categorie_delete', methods: ['POST'])]
@@ -160,4 +173,5 @@ final class CategorieController extends AbstractController
 
         return $this->redirectToRoute('app_categorie_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }

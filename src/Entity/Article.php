@@ -27,24 +27,55 @@ class Article
     private User $created_by;
 
     #[ORM\Column(type: "string", length: 10000)]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "L'URL de l'image ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/\.(jpg|jpeg|png|webp)$/i",
+        message: "L'image doit être au format JPG, PNG ou WebP."
+    )]
     private string $url_image;
 
     #[ORM\Column(type: "string", length: 1000)]
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
+    #[Assert\Length(
+        max: 20,
+        maxMessage: "Le nom ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Z][a-zA-Z\s]*$/",
+        message: "Le nom doit commencer par une lettre et ne contenir que des lettres et des espaces."
+    )]
     private string $nom;
 
     #[ORM\Column(type: "float")]
+    #[Assert\GreaterThan(
+        value: 0,
+        message: "Le prix ne peut pas être égal ou inférieur à zéro."
+    )]
     private float $prix;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Assert\NotBlank(message: "La description est obligatoire.")]
     private string $description;
 
     #[ORM\Column(type: "integer")]
+    #[Assert\GreaterThanOrEqual(
+        value: 0,
+        message: "La quantité ne peut pas être négative."
+    )]
     private int $quantite;
 
     #[ORM\Column(type: "string")]
+    #[Assert\Choice(
+        choices: ["on_stock", "out_of_stock"],
+        message: "Le statut doit être soit 'on_stock' soit 'out_of_stock'."
+    )]
     private string $statut;
     
     #[ORM\Column(type: "date", name: "createdAt")]
+    #[Assert\NotBlank(message: "La date de création ne peut pas être modifiée.")]
 private \DateTimeInterface $createdAt;
 
     

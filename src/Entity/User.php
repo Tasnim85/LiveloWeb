@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Entity\Livraison;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -15,52 +16,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(['user:read'])]
     #[ORM\Column(name: "idUser", type: "integer")]
 
     private int $idUser;
 
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "First name cannot be empty.")]
     #[Assert\Length(min: 3, max: 100, minMessage: "First name must be at least {{ limit }} characters long.", maxMessage: "First name cannot exceed {{ limit }} characters.")]
     private string $nom;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Last name cannot be empty.")]
     #[Assert\Length(min: 3, max: 100, minMessage: "Last name must be at least {{ limit }} characters long.", maxMessage: "Last name cannot exceed {{ limit }} characters.")]
     private string $prenom;
 
     #[ORM\Column(type: "string")]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Role cannot be empty.")]
     #[Assert\Choice(choices: ['client', 'admin', 'delivery_person', 'partner'], message: "Choose a valid role.")]
     private string $role;
 
     #[ORM\Column(type: "boolean")]
+    #[Groups(['user:read'])]
     private bool $verified;
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Address cannot be empty.")]
     private string $adresse;
 
     #[ORM\Column(type: "string", nullable: true)]
+    #[Groups(['user:read'])]
     #[Assert\Choice(choices: ['e_bike', 'Bike','e_scooter', null])]
     private ?string $type_vehicule = null;
 
 
     #[ORM\Column(type: "string", length: 100)]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Email cannot be empty.")]
     #[Assert\Email(message: "The email '{{ value }}' is not valid.")]
     private string $email;
 
     #[ORM\Column(type: "string", length: 300)]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Password cannot be empty.")]
     #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long.")]
     private string $password;
 
     #[ORM\Column(type: "string", length: 8)]
+    #[Groups(['user:read'])]
     private string $num_tel;
 
     #[ORM\Column(type: "string", length: 8)]
+    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Le CIN ne peut pas être vide.")]
     #[Assert\Length(
         min: 8,
@@ -70,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $cin;
 
     #[ORM\Column(type: "string", length: 500)]
+    #[Groups(['user:read'])]
     private string $url_image;
 
     public function getIdUser(): int

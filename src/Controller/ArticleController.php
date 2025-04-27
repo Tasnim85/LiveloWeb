@@ -59,10 +59,28 @@ public function articlesByCategorie(
 }
 
 
+#[Route('/artPartner/{id_categorie}/articles', name: 'art_partner_articles', methods: ['GET'])]
+public function artPartnerArticles(int $id_categorie, EntityManagerInterface $entityManager): Response
+{
+    // Récupérer la catégorie par son ID
+    $categorie = $entityManager->getRepository(Categorie::class)->find($id_categorie);
+    
+    if (!$categorie) {
+        throw $this->createNotFoundException('Catégorie introuvable');
+    }
 
+    // Récupérer les articles associés à cette catégorie
+    $articles = $entityManager->getRepository(Article::class)->findBy([
+        'id_categorie' => $categorie
+    ]);
 
+    return $this->render('article/artPartner.html.twig', [
+        'categorie' => $categorie,
+        'articles' => $articles,
+    ]);
+}
 
-#[Route('/article/new', name: 'app_article_new', methods: ['GET', 'POST'])]
+#[Route('/article/new/{id_categorie}', name: 'app_article_new', methods: ['GET', 'POST'])]
 public function new(
     Request $request,
     EntityManagerInterface $em,
@@ -75,59 +93,78 @@ public function new(
         throw $this->createNotFoundException('Catégorie non trouvée');
     }
 
+    $article = new Article();
+    $form = $this->createForm(ArticleType::class, $article);
+
+    // Affiche un message si le formulaire est soumis ou non
     if ($request->isMethod('POST')) {
-        $article = new Article();
-        $article->setIdCategorie($categorie);
-
-        // Données obligatoires
-        $article->setNom($request->request->get('nom'));
-        $article->setDescription($request->request->get('description'));
-        $article->setPrix((float)$request->request->get('prix'));
-        $article->setQuantite((int)$request->request->get('quantite'));
-        
-        // Gestion automatique du statut
-        $quantite = (int)$request->request->get('quantite');
-        $article->setStatut($quantite > 0 ? 'on_stock' : 'out_of_stock');
-
-        // Gestion de l'image
-        $imageFile = $request->files->get('url_image');
-        if ($imageFile) {
-            $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $slugger->slug($originalFilename);
-            $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
-
-            $destination = $this->getParameter('kernel.project_dir').'/public/image';
-            $imageFile->move($destination, $newFilename);
-            $article->setUrl_image('/image/'.$newFilename);
-        }
-
-        // Assignation des relations
-        $article->setId_categorie($categorie);
-        
-        // Utilisateur par défaut (ID 62)
-        $user = $em->getRepository(User::class)->find(62);
-        if (!$user) {
-            throw new \RuntimeException('Utilisateur par défaut non trouvé');
-        }
-        $article->setCreated_by($user);
-
-        // Date de création
-        $article->setCreatedAt(new \DateTime());
-
-        $em->persist($article);
-        $em->flush();
-
-        $this->addFlash('success', 'Article créé avec succès');
-        return $this->redirectToRoute('app_article_index');
+        dump("Le formulaire a été soumis !");
     }
 
-   
-    return $this->render('article/index.html.twig', [
-        'id_categorie' => $id_categorie,
-        'categorie' => $categorie
+    $form->handleRequest($request);
+
+    // Si le formulaire est soumis
+    if ($form->isSubmitted()) {
+        if (!$form->isValid()) {
+            // Afficher les erreurs du formulaire pour debug
+            dump("Le formulaire n'est pas valide !");
+            foreach ($form->getErrors(true) as $error) {
+                dump($error->getMessage());
+            }
+        } else {
+            // Attribuer la catégorie à l'article
+            $article->setId_categorie($categorie);
+
+            // Données obligatoires
+            $article->setNom($form->get('nom')->getData());
+            $article->setDescription($form->get('description')->getData());
+            $article->setPrix((float)$form->get('prix')->getData());
+            $article->setQuantite((int)$form->get('quantite')->getData());
+
+            // Gestion automatique du statut
+            $quantite = (int)$form->get('quantite')->getData();
+            $article->setStatut($quantite > 0 ? 'on_stock' : 'out_of_stock');
+
+            // Gestion de l'image
+            $imageFile = $form->get('url_image')->getData();
+            if ($imageFile) {
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
+
+                $destination = $this->getParameter('kernel.project_dir').'/public/image';
+                $imageFile->move($destination, $newFilename);
+                $article->setUrl_image('/image/'.$newFilename);
+            }
+
+            // Attribuer l'utilisateur (par défaut, l'utilisateur avec l'ID 62)
+            $user = $em->getRepository(User::class)->find(62);
+            if (!$user) {
+                throw new \RuntimeException('Utilisateur par défaut non trouvé');
+            }
+            $article->setCreated_by($user);
+
+            // Date de création
+            $article->setCreatedAt(new \DateTime());
+
+            // Persistance et flush de l'entité
+            $em->persist($article);
+            $em->flush();
+
+            // Message de succès
+            $this->addFlash('success', 'Article créé avec succès');
+            return $this->redirectToRoute('app_article_index');
+        }
+    }
+
+    return $this->render('article/new.html.twig', [
+        'form' => $form->createView(),
+        'categorie' => $categorie,
     ]);
-    
 }
+
+
+
 
     #[Route('/{id_article}', name: 'app_article_show', methods: ['GET'])]
     public function show(Article $article): Response
