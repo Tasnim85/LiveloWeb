@@ -19,7 +19,7 @@ final class AdminCommandeController extends AbstractController
         $commandes = $entityManager
             ->getRepository(Commande::class)
             ->findAll();
-            $forms = [];  // Initialisation du tableau des formulaires
+            $forms = [];  
 
             foreach ($commandes as $commande) {
                 $form = $formFactory->createNamed(
@@ -33,7 +33,6 @@ final class AdminCommandeController extends AbstractController
             
                 $form->handleRequest($request);
             
-                // Only handle the specific submitted form
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
                         $entityManager->flush();
