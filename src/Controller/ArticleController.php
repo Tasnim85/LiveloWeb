@@ -4,11 +4,12 @@ namespace App\Controller;
 use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
 use App\Entity\Article;
-// Ajoutez cette ligne avec les autres use statements
+use App\Service\ArticleService;
 use App\Entity\User;
-// Dans ArticleController.php
-use App\Entity\Categorie;  // Ajoutez cette ligne
-// Vérifiez que celle-ci existe aussi
+
+use App\Entity\Categorie;  
+use Symfony\Component\Security\Core\Security;
+
 use App\Form\ArticleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,9 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
+
+   
+
     #[Route('/articles', name: 'app_article_index', methods: ['GET'])]
 public function index(EntityManagerInterface $entityManager): Response
 {
@@ -185,48 +189,63 @@ public function new(
         ]);
     }
 
-    #[Route('/article/{id_article}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
+    #[Route('/article/{id_article}/edit', name: 'app_article_edit')]
 public function edit(
-    Request $request, 
-    Article $article, 
-    EntityManagerInterface $entityManager,
-    SluggerInterface $slugger
-): Response
-{
+    Request $request,
+    ArticleRepository $articleRepository,
+    EntityManagerInterface $em,
+    SluggerInterface $slugger,
+    int $id_article
+): Response {
+    $article = $articleRepository->find($id_article);
+
+    if (!$article) {
+        throw $this->createNotFoundException('Article introuvable.');
+    }
+
     $form = $this->createForm(ArticleType::class, $article);
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        // Gestion de l'image si nécessaire
+        // Mise à jour des champs principaux
+        $article->setNom($form->get('nom')->getData());
+        $article->setDescription($form->get('description')->getData());
+        $article->setPrix((float)$form->get('prix')->getData());
+        $article->setQuantite((int)$form->get('quantite')->getData());
+
+        // Mettre à jour automatiquement le statut
+        $quantite = (int)$form->get('quantite')->getData();
+        $article->setStatut($quantite > 0 ? 'on_stock' : 'out_of_stock');
+
+        // Gestion de l'image si elle a été modifiée
         $imageFile = $form->get('url_image')->getData();
+
         if ($imageFile) {
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
             $safeFilename = $slugger->slug($originalFilename);
             $newFilename = $safeFilename.'-'.uniqid().'.'.$imageFile->guessExtension();
 
             $destination = $this->getParameter('kernel.project_dir').'/public/image';
-            $imageFile->move($destination, $newFilename);
-            $article->setUrl_image('/image/'.$newFilename);
+            try {
+                $imageFile->move($destination, $newFilename);
+                $article->setUrl_image('/image/'.$newFilename);
+            } catch (FileException $e) {
+                $this->addFlash('danger', 'Erreur lors de l\'upload de l\'image.');
+            }
         }
 
-        // Mise à jour du statut en fonction de la quantité
-        $article->setStatut($article->getQuantite() > 0 ? 'on_stock' : 'out_of_stock');
+        $em->flush();
 
-        $entityManager->flush();
-
-        $this->addFlash('success', 'Article modifié avec succès');
+        $this->addFlash('success', 'Article mis à jour avec succès !');
         return $this->redirectToRoute('app_article_index');
     }
 
-    // Récupération de tous les articles pour l'affichage
-    $articles = $entityManager->getRepository(Article::class)->findAll();
-
-    return $this->render('article/index.html.twig', [
-        'articles' => $articles,
-        'articleToEdit' => $article, // Passer l'article à éditer pour le modal
-        'formEdit' => $form->createView(),
+    return $this->render('article/edit.html.twig', [
+        'form' => $form->createView(),
+        'article' => $article,
     ]);
 }
+
 
     #[Route('/{id_article}', name: 'app_article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
@@ -237,6 +256,5 @@ public function edit(
         }
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-    }
+    }}
 
-}

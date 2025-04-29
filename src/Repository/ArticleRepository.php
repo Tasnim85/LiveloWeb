@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+ use App\Entity\User;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,4 +22,19 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    public function findBelowThreshold(User $user, int $threshold): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.created_by = :user')
+            ->andWhere('a.quantite < :threshold')
+            ->setParameter('user', $user)
+            ->setParameter('threshold', $threshold)
+            ->getQuery()
+            ->getResult();
+    }
+    
+    
+
+
 }

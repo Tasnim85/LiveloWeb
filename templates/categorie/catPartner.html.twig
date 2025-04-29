@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <!DOCTYPE html>
 
 <!-- =========================================================
@@ -83,9 +83,9 @@
             
 <li class="menu-item">
   <a href="{{ path('app_cat_partner') }}" class="menu-link">
-    <i class="menu-icon tf-icons bx bx-file">
+    
       <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
-    </i>
+    
     <div data-i18n="Documentation">Categories</div>
   </a>
 </li>
@@ -97,9 +97,9 @@
                 target="_blank"
                 class="menu-link"
               >
-                <i class="menu-icon tf-icons bx bx-support">
+               
                   <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" /><p>  </p>
-                </i>
+               
                 <div data-i18n="Support">Statistics</div>
               </a>
             </li>
@@ -109,9 +109,9 @@
                 target="_blank"
                 class="menu-link"
               >
-                <i class="menu-icon tf-icons bx bx-file">
+                
                   <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
-                </i>
+                
                 <div data-i18n="Documentation">Others' products</div>
               </a>
             </li>
@@ -136,33 +136,30 @@
             </div>
 
             <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-              <!-- Search -->
-              <div class="navbar-nav align-items-center">
-                <div class="nav-item d-flex align-items-center">
-                  <i class="bx bx-search fs-4 lh-0"></i>
-                  <input
-                    type="text"
-                    class="form-control border-0 shadow-none"
-                    placeholder="Search..."
-                    aria-label="Search..."
-                  />
-                </div>
-              </div>
-              <!-- /Search -->
 
-              <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Place this tag where you want the button to render. -->
-                <li class="nav-item lh-1 me-3">
-                  <a
-                    class="github-button"
-                    href="https://github.com/themeselection/sneat-html-admin-template-free"
-                    data-icon="octicon-star"
-                    data-size="large"
-                    data-show-count="true"
-                    aria-label="Star themeselection/sneat-html-admin-template-free on GitHub"
-                    >Star</a
-                  >
-                </li>
+                  
+
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+  <li class="nav-item lh-1 me-3">
+    <a
+      href="#"
+      id="categoryStarBtn"
+      class="github-button"
+      data-icon="octicon-star"
+      data-size="large"
+      data-show-count="true"
+      aria-label="Star themeselection/sneat-html-admin-template-free on GitHub"
+    >
+      Category Star
+    </a>
+  </li>
+</ul>
+
+<!-- ICI le conteneur où afficher la carte -->
+<div id="dynamicContent" class="mt-4"></div>
+
+
+
 
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
@@ -234,115 +231,163 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <!-- Horizontal -->
-              <!-- Section Catégories -->
-<h5 class="pb-1 mb-4">Catégories</h5>
-<!-- Vertically Centered Modal -->
-                    <div class="col-lg-4 col-md-6">
-                      <small class="text-light fw-semibold">Vous pouvez</small>
-                      <div class="mt-3">
-                         <div class="mt-3">
-                        <!-- Button trigger modal -->
-<button
-  type="button"
-  class="btn btn-primary"
-  onclick="window.location.href='{{ path('app_categorie_new') }}'">
-  Ajouter catégorie
-</button>
+          
 
+{% block stylesheets %}
+   
+    <style>
+        .stock-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: blink 1s step-end infinite;
+            box-shadow: 0 0 10px red;
+        }
 
-                        
+        @keyframes blink {
+            50% { opacity: 0.3; }
+        }
+    </style>
+{% endblock %}
 
+{% block body %}
+    <div class="container">
+        <!-- Section Catégories -->
+        <h5 class="pb-1 mb-4">Catégories</h5>
+        
 
-                        
+        <hr class="m-0" />
+
+        <!-- Vérifie si des alertes de stock existent -->
+        {% if hasAlerts %}
+            <div id="stockAlert" class="alert alert-danger stock-alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>ALERTE STOCK!</strong>
+                <span id="alertCount">{{ alertsCount }}</span> article(s) sous le seuil critique!
+            </div>
+        {% endif %}
+
+        <div class="card-body">
+            <div class="row mb-5">
+                {% for categorie in categories %}
+                    <div class="col-md-6 mb-4"> <!-- Ajuste la largeur des cartes -->
+                        <div class="card mb-3">
+                            <div class="row g-0 align-items-center">
+                                <!-- Image (colonne gauche) -->
+                                <div class="col-md-4">
+                                    {% if categorie.url_image %}
+                                        <img class="card-img card-img-left"
+                                             src="{{ asset(categorie.url_image) }}"
+                                             alt="{{ categorie.nom }}">
+                                    {% else %}
+                                        <img class="card-img card-img-left"
+                                             src="{{ asset('img/default.png') }}"
+                                             alt="Image par défaut">
+                                    {% endif %}
+                                </div>
+
+                                <!-- Contenu (colonne droite) -->
+                                <div class="col-md-8">
+                                    <div class="d-flex justify-content-between align-items-start p-3">
+                                        <div>
+                                            <h5 class="card-title">{{ categorie.nom }}</h5>
+                                            <p class="card-text">{{ categorie.description }}</p>
+                                        </div>
+
+                                        <!-- Dropdown avec icon -->
+                                        <div class="btn-group" id="dropdown-icon-demo">
+                                            <button
+                                                type="button"
+                                                class="btn btn-primary dropdown-toggle"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i class="bx bx-menu"></i>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li>
+                                                    <a href="{{ path('art_partner_articles', {'id_categorie': categorie.getIdCategorie()}) }}"
+                                                       class="dropdown-item d-flex align-items-center"
+                                                       style="border: none; background: none; padding: 0;">
+                                                        <i class="bx bx-show"></i>
+                                                        <span style="margin-left: 5px;">Voir articles</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Fin colonne droite -->
+                            </div>
                         </div>
-                      </div>
                     </div>
-
-
-                       
-
-<hr class="m-0" />
-<div class="card-body">
-  <div class="row mb-5">
-    {% for categorie in categories %}
-      <div class="col-md-6 mb-4"> <!-- Ajustez la largeur (col-md-6 = 2 cartes par ligne) -->
-        <div class="card mb-3">
-          <div class="row g-0 align-items-center">
-            <!-- Image (colonne gauche) -->
-            <div class="col-md-4">
-              {% if categorie.url_image %}
-                <img class="card-img card-img-left"
-                     src="{{ asset(categorie.url_image) }}"
-                     alt="{{ categorie.nom }}">
-              {% else %}
-                <img class="card-img card-img-left"
-                     src="{{ asset('img/default.png') }}"
-                     alt="Image par défaut">
-              {% endif %}
+                {% else %}
+                    <div class="col-12">
+                        <p class="text-muted">Aucune catégorie trouvée.</p>
+                    </div>
+                {% endfor %}
             </div>
-
-            <!-- Contenu (colonne droite) -->
-            <div class="col-md-8">
-              <div class="d-flex justify-content-between align-items-start p-3">
-                <div>
-                  <h5 class="card-title">{{ categorie.nom }}</h5>
-                  <p class="card-text">{{ categorie.description }}</p>
-                </div>
-
-                <!-- Dropdown with icon aligné à droite -->
-                <div class="btn-group" id="dropdown-icon-demo">
-                  <button
-                    type="button"
-                    class="btn btn-primary dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="bx bx-menu"></i>
-                  </button>
-                 <ul class="dropdown-menu">
-                
-
-
-                   <li>
-    <a href="{{ path('art_partner_articles', {'id_categorie': categorie.getIdCategorie()}) }}"
-       class="dropdown-item d-flex align-items-center"
-       style="border: none; background: none; padding: 0;">
-        <i class="bx bx-show"></i>
-        <span style="margin-left: 5px;">Voir articles</span>
-    </a>
-</li>
-
-
-
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <!-- Fin colonne droite -->
-          </div>
         </div>
-      </div>
-    {% else %}
-      <div class="col-12">
-        <p class="text-muted">Aucune catégorie trouvée.</p>
-      </div>
-    {% endfor %}
-  </div>
-</div>
+    </div>
+{% endblock %}
 
+{% block javascripts %}
+    
+    <script>
+        // Vérification périodique des alertes de stock
+       setInterval(() => {
+    fetch('{{ path('partner_api_alerts') }}')
+        .then(response => response.json())
+        .then(data => {
+            let alertDiv = document.getElementById('stockAlert');
 
+            if (data.hasAlerts) {
+                if (!alertDiv) {
+                    const newAlert = document.createElement('div');
+                    newAlert.id = 'stockAlert';
+                    newAlert.className = 'alert alert-danger stock-alert';
+                    newAlert.style.cursor = 'pointer'; // ✅ Ajoute un curseur "main" au survol
+                    newAlert.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>ALERTE STOCK!</strong>
+                        <span id="alertCount">${data.count}</span> article(s) sous le seuil critique!
+                    `;
 
-            <!-- / Content -->
+                    // ✅ Quand on clique, on montre la liste des articles
+                    newAlert.addEventListener('click', () => {
+                        let articleList = data.articles.map(article => `<li>${article}</li>`).join('');
+                        let alertMessage = `
+                            <ul>${articleList}</ul>
+                        `;
+                        // Petite pop-up native
+                        Swal.fire({
+                            title: 'Articles en alerte',
+                            html: alertMessage,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
+                    });
 
-            <!-- Footer -->
-            <footer class="content-footer footer bg-footer-theme">
-              <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-                <div class="mb-2 mb-md-0">
-                  ©
-                  <script>
-                    document.write(new Date().getFullYear());
-                  </script>
+                    document.body.appendChild(newAlert);
+                } else {
+                    document.getElementById('alertCount').textContent = data.count;
+                }
+            } else if (alertDiv) {
+                alertDiv.remove();
+            }
+        });
+}, 30000);
+
+ 
+    </script>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+
+{% endblock %}
+
                   , made with ❤️ by
                   <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
                 </div>

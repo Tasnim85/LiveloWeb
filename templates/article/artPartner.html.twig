@@ -278,17 +278,15 @@
               <i class="bx bx-dots-vertical-rounded"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <button type="button"
-                        class="dropdown-item d-flex align-items-center"
-                        style="border: none; background: none; padding: 0; width: 100%; text-align: left;"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalEditArticle"
-                        onclick="prepareEditModal({{ article.id_article }})">
-                  <i class="bx bx-edit-alt scaleX-n1-rtl"></i>
-                  <span style="margin-left: 5px;">Modifier</span>
-                </button>
-              </li>
+            <li>
+  <a href="{{ path('app_article_edit', {'id_article': article.id_article}) }}"
+     class="dropdown-item d-flex align-items-center"
+     style="border: none; background: none; padding: 0;">
+    <i class="bx bx-edit-alt scaleX-n1-rtl"></i>
+    <span style="margin-left: 5px;">Modifier</span>
+  </a>
+</li>
+
               <li>
                 <form method="POST" 
                       action="{{ path('app_article_delete', {'id_article': article.id_article}) }}"
