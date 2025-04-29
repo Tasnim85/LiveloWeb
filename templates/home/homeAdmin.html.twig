@@ -240,11 +240,15 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="{{ path('app_login') }}">
-                          <img src="{{ asset('bo/assets/img/icons/bx-log-out.svg') }}" alt="Edit" width="20" height="20"/>
-                        <span class="align-middle">Log Out</span>
-                      </a>
-                    </li>
+  <form id="logout-form" action="{{ path('app_logout') }}" method="POST" style="display: inline">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+    <button class="dropdown-item" type="submit">
+      <img src="{{ asset('bo/assets/img/icons/bx-log-out.svg') }}" …/>
+      <span class="align-middle">Log Out</span>
+    </button>
+  </form>
+</li>
+
                   </ul>
                 </li>
                 <!--/ User -->
@@ -361,7 +365,20 @@
     </div>
     <!-- / Layout wrapper -->
 
+    <script>
+                function handleLogout() {
+    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('user_data');
     
+    fetch('/logout', {
+        method: 'POST',
+        credentials: 'include'
+    })
+    .then(() => {
+        window.location.href = '/';
+    });
+}
+</script>
 
    <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->
