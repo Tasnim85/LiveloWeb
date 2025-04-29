@@ -14,14 +14,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Psr\Log\LoggerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Cookie;
+
 final class LoginController extends AbstractController
 {
     #[Route('/', name: 'app_login')]
     public function index(): Response
     {
-        return $this->render('login/login.html.twig', [
-            'controller_name' => 'LoginController',
-        ]);
+        return $this->render('login/login.html.twig');
     }
 
     #[Route('/login_check', name: 'app_login_check', methods: ['POST'])]
@@ -33,64 +33,156 @@ final class LoginController extends AbstractController
         LoggerInterface $logger,
         SerializerInterface $serializer
     ): Response {
-        $cin = $request->request->get('cin');
-        $plainPassword = $request->request->get('password');
+        try {
+            $cin = $request->request->get('cin');
+            $plainPassword = $request->request->get('password');
 
-        $user = $em->getRepository(User::class)->findOneBy(['cin' => $cin]);
+            $user = $em->getRepository(User::class)->findOneBy(['cin' => $cin]);
+            if (!$user) {
+                return $this->json(['success' => false, 'message' => 'CIN not found.'], Response::HTTP_UNAUTHORIZED);
+            }
+            if (!password_verify($plainPassword, $user->getPassword())) {
+                return $this->json(['success' => false, 'message' => 'Incorrect password.'], Response::HTTP_UNAUTHORIZED);
+            }
 
-        if (!$user) {
+            // Generate JWT and prepare user data
+            $token = $jwtManager->create($user);
+            $userData = json_decode($serializer->serialize($user, 'json', ['groups' => 'user:read']), true);
+            $logger->info('Generated JWT Token: ' . $token);
+
+            // Determine redirect route
+            if ($user->getVerified()) {
+                $routeName = match ($user->getRole()) {
+                    'client' => 'app_homeClient',
+                    'admin' => 'app_homeAdmin',
+                    'delivery_person' => 'app_homeLivreur',
+                    'partner' => 'app_homePartner',
+                    default => 'app_login',
+                };
+            } else {
+                $routeName = match ($user->getRole()) {
+                    'delivery_person' => 'app_homeLivreurNotVerified',
+                    'admin' => 'app_homeAdminNotVerified',
+                    'partner' => 'app_homePartnerNotVerified',
+                    default => 'app_login',
+                };
+            }
+            $redirectUrl = $urlGenerator->generate($routeName, [], UrlGeneratorInterface::ABSOLUTE_PATH);
+
+            // Build JSON response
+            $response = $this->json([
+                'success'  => true,
+                'token'    => $token,
+                'user'     => $userData,
+                'redirect' => $redirectUrl,
+            ]);
+
+            // Handle Remember Me cookie
+            $secure = $request->isSecure();
+            if ($request->request->has('remember-me')) {
+                $rememberMeToken = bin2hex(random_bytes(32));
+                $expiresAt = new \DateTimeImmutable('+30 days');
+
+                $user->setRememberMeToken($rememberMeToken);
+                $user->setRememberMeTokenExpiresAt($expiresAt);
+                $em->flush();
+
+                $cookie = new Cookie(
+                    'REMEMBERME',
+                    $rememberMeToken,
+                    $expiresAt,
+                    '/',
+                    null,
+                    $secure,
+                    true,
+                    false,
+                    'lax'
+                );
+                $response->headers->setCookie($cookie);
+            }
+
+            return $response;
+
+        } catch (\Throwable $e) {
+            $logger->error('LoginCheck error: '.$e->getMessage(), ['exception' => $e]);
             return $this->json([
                 'success' => false,
-                'message' => 'CIN not found.'
-            ], Response::HTTP_UNAUTHORIZED);
+                'message' => 'Server error: '.$e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    #[Route('/remember_me', name: 'app_remember_me', methods: ['POST'])]
+    public function rememberMe(
+        Request $request,
+        EntityManagerInterface $em,
+        JWTTokenManagerInterface $jwtManager,
+        SerializerInterface $serializer,
+        UrlGeneratorInterface $urlGenerator
+    ): Response {
+        $cookieToken = $request->cookies->get('REMEMBERME');
+        if (!$cookieToken) {
+            return $this->json(['success' => false], Response::HTTP_UNAUTHORIZED);
         }
 
-        if (!password_verify($plainPassword, $user->getPassword())) {
-            return $this->json([
-                'success' => false,
-                'message' => 'Incorrect password.'
-            ], Response::HTTP_UNAUTHORIZED);
+        $user = $em->getRepository(User::class)->findOneBy(['rememberMeToken' => $cookieToken]);
+        if (!$user || $user->getRememberMeTokenExpiresAt() < new \DateTimeImmutable()) {
+            $resp = $this->json(['success' => false], Response::HTTP_UNAUTHORIZED);
+            $resp->headers->clearCookie('REMEMBERME');
+            return $resp;
         }
 
-        $token = $jwtManager->create($user);
-        $userJson = $serializer->serialize($user, 'json', ['groups' => 'user:read']);
-        $userData = json_decode($userJson, true);
-        $logger->info('Generated JWT Token: ' . $token);
-            
-        dump($token);
-        $redirectRoute = $user->getVerified() ? 
-            match ($user->getRole()) {
+        // Rotate tokens
+        $newToken = $jwtManager->create($user);
+        $newRememberMeToken = bin2hex(random_bytes(32));
+        $expiresAt = new \DateTimeImmutable('+30 days');
+
+        $user->setRememberMeToken($newRememberMeToken);
+        $user->setRememberMeTokenExpiresAt($expiresAt);
+        $em->flush();
+
+        $cookie = new Cookie('REMEMBERME', $newRememberMeToken, $expiresAt, '/', null, true, true, false, 'lax');
+
+        if ($user->getVerified()) {
+            $routeName = match ($user->getRole()) {
                 'client' => 'app_homeClient',
                 'admin' => 'app_homeAdmin',
                 'delivery_person' => 'app_homeLivreur',
                 'partner' => 'app_homePartner',
                 default => 'app_login',
-            } : 
-            match ($user->getRole()) {
+            };
+        } else {
+            $routeName = match ($user->getRole()) {
                 'delivery_person' => 'app_homeLivreurNotVerified',
                 'admin' => 'app_homeAdminNotVerified',
                 'partner' => 'app_homePartnerNotVerified',
                 default => 'app_login',
             };
-            $redirectUrl = $urlGenerator->generate($redirectRoute, [], UrlGeneratorInterface::ABSOLUTE_PATH);
-        return $this->json([
-            'success' => true,
-            'token' => $token,
-            'user' => $userData,
-            'redirect' => $redirectUrl
+        }
+        $redirectUrl = $urlGenerator->generate($routeName, [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        $response = $this->json([
+            'success'  => true,
+            'token'    => $newToken,
+            'user'     => json_decode($serializer->serialize($user, 'json', ['groups' => 'user:read']), true),
+            'redirect' => $redirectUrl,
         ]);
-       
+        $response->headers->setCookie($cookie);
+
+        return $response;
     }
+
+    #[Route('/logout', name: 'app_logout', methods: ['POST'])]
+    public function logout(): void
+    {
+        throw new \LogicException('Logout is handled by Symfony.');
+    }
+    
 
     #[Route('/connect/google', name: 'app_connect_google')]
     public function connectGoogle(ClientRegistry $clientRegistry): RedirectResponse
     {
-        return $clientRegistry
-            ->getClient('google')
-            ->redirect(
-                ['email', 'profile'],  // Scopes
-                []                     // Additional options (can be empty)
-            );
+        return $clientRegistry->getClient('google')->redirect(['email', 'profile'], []);
     }
 
     #[Route('/connect/google/check', name: 'app_connect_google_check')]
