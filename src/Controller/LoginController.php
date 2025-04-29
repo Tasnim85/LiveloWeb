@@ -12,7 +12,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Psr\Log\LoggerInterface;
-
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 final class LoginController extends AbstractController
 {
     #[Route('/', name: 'app_login')]
@@ -81,7 +82,22 @@ final class LoginController extends AbstractController
        
     }
 
+    #[Route('/connect/google', name: 'app_connect_google')]
+    public function connectGoogle(ClientRegistry $clientRegistry): RedirectResponse
+    {
+        return $clientRegistry
+            ->getClient('google')
+            ->redirect(
+                ['email', 'profile'],  // Scopes
+                []                     // Additional options (can be empty)
+            );
+    }
 
+    #[Route('/connect/google/check', name: 'app_connect_google_check')]
+    public function connectGoogleCheck(): Response
+    {
+        throw new \LogicException('This method should not be called directly.');
+    }
     
     #[Route('/homeAdminNotVerified', name: 'app_homeAdminNotVerified')]
     public function homeAdminNotVerified(): Response

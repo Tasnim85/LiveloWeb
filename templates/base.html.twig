@@ -61,8 +61,39 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('bo/assets/js/config.js') }}"></script>
-  </head>
+    <style>
+      /* Google button styling */
+.btn-google {
+  background-color: #ffffff;
+  border: 1px solid #398c3e;
+  color: #3c4043;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width:350px;
+  justify-content: center; 
+  position: relative;
+}
 
+.btn-google:hover {
+  background-color: #f8f9fa;
+  border-color: #d2e3fc;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-google:active {
+  background-color: #f1f3f4;
+}
+
+
+    </style>
+  </head>
+  
   <body>
     <!-- Content -->
 
@@ -112,6 +143,13 @@
                 <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                 </div>
+                <button 
+                    type="button" 
+                    class="btn btn-google"
+                    onclick="window.location.href = '{{ path('app_connect_google') }}'"
+                >
+                    <img src="{{ asset('bo/assets/img/icons/google.png') }}" width="28" height="28" />&nbsp; Continue with Google
+                </button>
               </form>
               <script>
                                 document.getElementById('formAuthentication').addEventListener('submit', async (e) => {

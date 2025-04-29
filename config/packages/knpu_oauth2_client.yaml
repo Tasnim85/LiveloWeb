@@ -1,0 +1,16 @@
+knpu_oauth2_client:
+    clients:
+        google:
+            type: generic
+            provider_class: League\OAuth2\Client\Provider\Google
+            client_id: '%env(GOOGLE_CLIENT_ID)%'
+            client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+            redirect_route: app_connect_google_check
+            redirect_params: {}
+            provider_options:
+                scope:
+                    - openid
+                    - email
+                    - profile
+                # Add this for local development:
+                redirectUri: '%env(GOOGLE_REDIRECT_URI)%'

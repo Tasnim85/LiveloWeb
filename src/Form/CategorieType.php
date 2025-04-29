@@ -14,7 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
 
-
 class CategorieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -57,7 +56,7 @@ class CategorieType extends AbstractType
         ;
 
 
-              
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
