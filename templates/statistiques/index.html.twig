@@ -1,0 +1,24 @@
+<h3>Statistiques des Articles par Statut</h3>
+<div id="piechart" style="width: 700px; height: 400px;"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        const data = google.visualization.arrayToDataTable([
+            ['Statut', 'Nombre'],
+            {% for stat in stats %}
+                ['{{ stat.statut }}', {{ stat.count }}],
+            {% endfor %}
+        ]);
+
+        const options = {
+            title: 'Répartition des articles par statut'
+        };
+
+        const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        chart.draw(data, options);
+    }
+</script>
