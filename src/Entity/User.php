@@ -9,6 +9,7 @@ use App\Entity\Livraison;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use DateTimeImmutable;
 
 #[ORM\Entity]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -62,7 +63,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $email;
 
     #[ORM\Column(type: "string", length: 300, nullable: true)]
-    #[Groups(['user:read'])]
     #[Assert\NotBlank(message: "Password cannot be empty.")]
     #[Assert\Length(min: 8, minMessage: "Password must be at least {{ limit }} characters long.")]
     private ?string $password = null;
@@ -84,6 +84,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: "string", length: 500)]
     #[Groups(['user:read'])]
     private string $url_image;
+
+   
+    #[ORM\Column(name: "rememberMeToken", type: "string", length: 255, nullable: true)]
+    private ?string $rememberMeToken = null;
+
+    #[ORM\Column(name: "rememberMeTokenExpiresAt", type: "datetime_immutable", nullable: true)]
+    private ?\DateTimeImmutable $rememberMeTokenExpiresAt = null;
+
+    public function getRememberMeToken(): ?string
+    {
+        return $this->rememberMeToken;
+    }
+
+    public function setRememberMeToken(?string $rememberMeToken): self
+    {
+        $this->rememberMeToken = $rememberMeToken;
+        return $this;
+    }
+
+    public function getRememberMeTokenExpiresAt(): ?DateTimeImmutable
+    {
+        return $this->rememberMeTokenExpiresAt;
+    }
+
+    public function setRememberMeTokenExpiresAt(?DateTimeImmutable $rememberMeTokenExpiresAt): self
+    {
+        $this->rememberMeTokenExpiresAt = $rememberMeTokenExpiresAt;
+        return $this;
+    }
 
     public function getIdUser(): int
     {
