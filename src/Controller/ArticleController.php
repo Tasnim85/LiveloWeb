@@ -6,7 +6,7 @@ use App\Repository\CategorieRepository;
 use App\Entity\Article;
 use App\Service\ArticleService;
 use App\Entity\User;
-
+use App\Service\TwilioService;
 use App\Entity\Categorie;  
 use Symfony\Component\Security\Core\Security;
 
@@ -86,16 +86,12 @@ public function artPartnerArticles(int $id_categorie, EntityManagerInterface $en
 }
 
 #[Route('/article/new/{id_categorie}', name: 'app_article_new', methods: ['GET', 'POST'])]
-
-
-
-
-
 public function new(
     Request $request,
     EntityManagerInterface $em,
     SluggerInterface $slugger,
-    int $id_categorie
+    int $id_categorie,
+    TwilioService $twilioService // Injection du service Twilio
 ): Response {
     // Vérification de l'existence de la catégorie
     $categorie = $em->getRepository(Categorie::class)->find($id_categorie);
@@ -103,40 +99,29 @@ public function new(
         throw $this->createNotFoundException('Catégorie non trouvée');
     }
 
-
     $article = new Article();
     $form = $this->createForm(ArticleType::class, $article);
 
-    // Affiche un message si le formulaire est soumis ou non
     if ($request->isMethod('POST')) {
         dump("Le formulaire a été soumis !");
     }
 
     $form->handleRequest($request);
 
-    // Si le formulaire est soumis
     if ($form->isSubmitted()) {
         if (!$form->isValid()) {
-            // Afficher les erreurs du formulaire pour debug
             dump("Le formulaire n'est pas valide !");
             foreach ($form->getErrors(true) as $error) {
                 dump($error->getMessage());
             }
         } else {
-            // Attribuer la catégorie à l'article
             $article->setId_categorie($categorie);
-
-            // Données obligatoires
             $article->setNom($form->get('nom')->getData());
             $article->setDescription($form->get('description')->getData());
             $article->setPrix((float)$form->get('prix')->getData());
             $article->setQuantite((int)$form->get('quantite')->getData());
+            $article->setStatut($article->getQuantite() > 0 ? 'on_stock' : 'out_of_stock');
 
-            // Gestion automatique du statut
-            $quantite = (int)$form->get('quantite')->getData();
-            $article->setStatut($quantite > 0 ? 'on_stock' : 'out_of_stock');
-
-            // Gestion de l'image
             $imageFile = $form->get('url_image')->getData();
             if ($imageFile) {
                 $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
@@ -148,21 +133,24 @@ public function new(
                 $article->setUrl_image('/image/'.$newFilename);
             }
 
-            // Attribuer l'utilisateur (par défaut, l'utilisateur avec l'ID 62)
-            $user = $em->getRepository(User::class)->find(62);
+            $user = $this->getUser();
             if (!$user) {
-                throw new \RuntimeException('Utilisateur par défaut non trouvé');
+                throw new \RuntimeException('Aucun utilisateur connecté');
             }
             $article->setCreated_by($user);
-
-            // Date de création
+            
             $article->setCreatedAt(new \DateTime());
 
-            // Persistance et flush de l'entité
             $em->persist($article);
             $em->flush();
 
-            // Message de succès
+            // Envoi du SMS après ajout de l'article
+            $numeroClient = '+21652887287'; // Remplace par un numéro dynamique si besoin
+            $numeroTwilio = '+15154171765'; // Ton numéro Twilio
+            $message = 'Un nouvel article a été ajouté : ' . $article->getNom();
+
+            $twilioService->sendSms($numeroClient, $numeroTwilio, $message);
+
             $this->addFlash('success', 'Article créé avec succès');
             return $this->redirectToRoute('app_article_index');
         }
@@ -173,6 +161,7 @@ public function new(
         'categorie' => $categorie,
     ]);
 }
+
 
 
 
