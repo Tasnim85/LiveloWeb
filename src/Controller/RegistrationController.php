@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Service\SendGridMailer;
+use App\Service\AvatarGenerator;
+
 
 class RegistrationController extends AbstractController
 {
@@ -20,7 +22,8 @@ class RegistrationController extends AbstractController
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
         ValidatorInterface $validator,
-        SendGridMailer $mailer
+        SendGridMailer $mailer,
+        AvatarGenerator $avatarGenerator
     ): Response {
         $user = new User();
 
@@ -31,10 +34,20 @@ class RegistrationController extends AbstractController
             $user->setAdresse($request->request->get('adresse'));
             $user->setEmail($request->request->get('email'));
             $user->setNumTel($request->request->get('num_tel'));
-            $user->setUrlImage($request->request->get('url_image'));
             $user->setRole($request->request->get('role'));
             $user->setType_vehicule($request->request->get('type_vehicule') ?: null);
             $user->setVerified(false);
+            $urlImage = $request->request->get('url_image');
+        if (empty($urlImage)) {
+            $firstNameInitial = mb_substr($user->getPrenom(), 0, 1);
+            $lastNameInitial = mb_substr($user->getNom(), 0, 1);
+            $initials = mb_strtoupper($firstNameInitial.$lastNameInitial);
+            $avatarPath = $avatarGenerator->generateAvatar($initials);
+            $user->setUrlImage($avatarPath);
+        } else {
+            $user->setUrlImage($urlImage);
+        }
+
 
             $plainPassword = $request->request->get('password');
             $confirmPassword = $request->request->get('confirm_password');
