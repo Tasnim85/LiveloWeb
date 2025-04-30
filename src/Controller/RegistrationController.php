@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\SendGridMailer;
+use App\Service\AvatarGenerator;
+
 
 class RegistrationController extends AbstractController
 {
@@ -18,7 +21,9 @@ class RegistrationController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        SendGridMailer $mailer,
+        AvatarGenerator $avatarGenerator
     ): Response {
         $user = new User();
 
@@ -29,10 +34,20 @@ class RegistrationController extends AbstractController
             $user->setAdresse($request->request->get('adresse'));
             $user->setEmail($request->request->get('email'));
             $user->setNumTel($request->request->get('num_tel'));
-            $user->setUrlImage($request->request->get('url_image'));
             $user->setRole($request->request->get('role'));
             $user->setType_vehicule($request->request->get('type_vehicule') ?: null);
             $user->setVerified(false);
+            $urlImage = $request->request->get('url_image');
+        if (empty($urlImage)) {
+            $firstNameInitial = mb_substr($user->getPrenom(), 0, 1);
+            $lastNameInitial = mb_substr($user->getNom(), 0, 1);
+            $initials = mb_strtoupper($firstNameInitial.$lastNameInitial);
+            $avatarPath = $avatarGenerator->generateAvatar($initials);
+            $user->setUrlImage($avatarPath);
+        } else {
+            $user->setUrlImage($urlImage);
+        }
+
 
             $plainPassword = $request->request->get('password');
             $confirmPassword = $request->request->get('confirm_password');
@@ -62,7 +77,19 @@ class RegistrationController extends AbstractController
 
             $em->persist($user);
             $em->flush();
-
+            $admins = $em->getRepository(User::class)->findBy(['role' => 'admin']);
+            foreach ($admins as $admin) {
+                $mailer->sendAdminNotification(
+                    $admin->getEmail(),
+                    'New User Awaiting Verification',
+                    sprintf("A new user %s %s (%s) has registered and is waiting for verification.",
+                        $user->getPrenom(),
+                        $user->getNom(),
+                        $user->getEmail(),
+                        $user->getCin()
+                    )
+                );
+            }
             $this->addFlash('success', 'Your account is created successfully !');
 
             return $this->redirectToRoute('user_register');
