@@ -1,26 +1,24 @@
-# config/packages/security.yaml
 security:
-  providers:
-    app_user_provider:
-      entity:
-        class: App\Entity\User
-        property: cin
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: cin
 
-  firewalls:
-    main:
-      pattern: ^/
-      provider: app_user_provider
-      lazy: true
+    firewalls:
+        main:
+            pattern: ^/
+            provider: app_user_provider
+            lazy: true
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
+                - App\Security\GoogleAuthenticator
+            logout:
+                path: app_logout
+                target: app_login
 
-      custom_authenticators:
-        - App\Security\LoginFormAuthenticator
-        - App\Security\GoogleAuthenticator
-
-      logout:
-        path: app_logout
-        target: app_login
-
-      
+        
+    
 
 
 when@test:

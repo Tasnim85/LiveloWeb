@@ -16,6 +16,7 @@ use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 
+
 final class LoginController extends AbstractController
 {
     #[Route('/', name: 'app_login')]
@@ -76,6 +77,18 @@ final class LoginController extends AbstractController
                 'user'     => $userData,
                 'redirect' => $redirectUrl,
             ]);
+            $response->headers->setCookie(new Cookie(
+                'BEARER', 
+                $token,
+                time() + 3600, // Expiration
+                '/',            // Path (make it available to all routes)
+                null,           // Domain (adjust if needed)
+                $request->isSecure(), // Secure (true if HTTPS)
+                true,           // HttpOnly
+                false, 
+                'none'          // SameSite (allow cross-origin if needed)
+            ));
+            
 
             // Handle Remember Me cookie
             $secure = $request->isSecure();
