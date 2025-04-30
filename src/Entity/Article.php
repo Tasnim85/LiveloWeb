@@ -42,10 +42,10 @@ class Article
     #[ORM\Column(type: "string")]
     private string $statut;
 
-    #[ORM\Column(type: "date")]
+    #[ORM\Column(name: "createdAt", type: "date")]
     private \DateTimeInterface $createdAt;
 
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(name:"nbViews",type: "integer")]
     private int $nbViews;
 
     public function getId_article()

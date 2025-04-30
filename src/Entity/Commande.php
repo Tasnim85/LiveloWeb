@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 class Commande
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: "AUTO")]
     #[ORM\Column(type: "integer")]
     private int $idCommande;
 
