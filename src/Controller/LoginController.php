@@ -46,7 +46,6 @@ final class LoginController extends AbstractController
                 return $this->json(['success' => false, 'message' => 'Incorrect password.'], Response::HTTP_UNAUTHORIZED);
             }
 
-            // Generate JWT and prepare user data
             $token = $jwtManager->create($user);
             $userData = json_decode($serializer->serialize($user, 'json', ['groups' => 'user:read']), true);
             $logger->info('Generated JWT Token: ' . $token);
@@ -70,7 +69,6 @@ final class LoginController extends AbstractController
             }
             $redirectUrl = $urlGenerator->generate($routeName, [], UrlGeneratorInterface::ABSOLUTE_PATH);
 
-            // Build JSON response
             $response = $this->json([
                 'success'  => true,
                 'token'    => $token,
@@ -80,17 +78,16 @@ final class LoginController extends AbstractController
             $response->headers->setCookie(new Cookie(
                 'BEARER', 
                 $token,
-                time() + 3600, // Expiration
-                '/',            // Path (make it available to all routes)
-                null,           // Domain (adjust if needed)
-                $request->isSecure(), // Secure (true if HTTPS)
-                true,           // HttpOnly
-                false, 
-                'none'          // SameSite (allow cross-origin if needed)
+                time() + 3600,
+                '/',
+                null,
+                $request->isSecure(),
+                true,
+                false,
+                $request->isSecure() ? 'None' : 'Lax'
             ));
             
 
-            // Handle Remember Me cookie
             $secure = $request->isSecure();
             if ($request->request->has('remember-me')) {
                 $rememberMeToken = bin2hex(random_bytes(32));
@@ -145,7 +142,6 @@ final class LoginController extends AbstractController
             return $resp;
         }
 
-        // Rotate tokens
         $newToken = $jwtManager->create($user);
         $newRememberMeToken = bin2hex(random_bytes(32));
         $expiresAt = new \DateTimeImmutable('+30 days');
