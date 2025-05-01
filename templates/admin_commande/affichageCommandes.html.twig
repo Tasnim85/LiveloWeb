@@ -61,6 +61,17 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset ('bo/assets/js/config.js')}}"></script>
+    <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userJson = localStorage.getItem('user_data');
+    if (userJson) {
+      const user = JSON.parse(userJson);
+      console.log('👤 Restored User Data:', user);
+    } else {
+      console.log('⚠️ No user_data in localStorage');
+    }
+  });
+</script>
   </head>
 
   <body>
@@ -132,12 +143,29 @@
               </a>
             </li>
               
-             <li class="menu-item active">
-              <a href="{{ path('app_admin_commande') }}" class="menu-link">
-                    <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
-                  <div data-i18n="Documentation">Orders report</div>
-              </a>
-            </li>
+           <!-- Orders Report -->
+<li class="menu-item">
+  <a href="javascript:void(0);" class="menu-link menu-toggle">
+    <i>
+      <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
+    </i>
+    <div data-i18n="Orders">Orders Report</div>
+  </a>
+
+  <ul class="menu-sub">
+    <li class="menu-item">
+      <a href="{{ path('admin_stats') }}" class="menu-link">
+        <div data-i18n="Stats">Statistics</div>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="{{ path('app_admin_commande') }}" class="menu-link">
+        <div data-i18n="Listing">Orders Listing</div>
+      </a>
+    </li>
+  </ul>
+</li>
+
           </ul>
         </aside>
         <!-- / Menu -->
