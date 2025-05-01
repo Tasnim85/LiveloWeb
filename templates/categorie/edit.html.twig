@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<!-- =========================================================
+* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
+==============================================================
+
+* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
+* Created by: ThemeSelection
+* License: You must have a valid license purchased in order to legally use the theme for your project.
+* Copyright ThemeSelection (https://themeselection.com)
+
+=========================================================
+ -->
+<!-- beautify ignore:start -->
+<html
+  lang="en"
+  class="light-style layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="../assets/"
+  data-template="vertical-menu-template-free"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+
+    <title>HELLO admin !</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon"  href="{{ asset('bo/assets/img/favicon/favicon.ico') }}" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/fonts/boxicons.css')}}" />
+
+   <!-- Core CSS -->
+        <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+        <link rel="stylesheet" href="{{ asset('bo/assets/vendor/css/theme-default.css') }}" class="template-customizer-theme-css" />
+        <link rel="stylesheet" href="{{ asset('bo/assets/css/demo.css') }}" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
+    <link rel="stylesheet" href="{{ asset('bo/assets/vendor/libs/apex-charts/apex-charts.css')}}" />
+
+    <!-- Page CSS -->
+
+    <!-- Helpers -->
+     <script src="{{ asset('bo/assets/vendor/js/helpers.js')}}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{{ asset('bo/assets/js/config.js')}}"></script>
+  </head>
+
+{% block title %}Modifier une catégorie{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-xxl">
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0">Modifier la catégorie</h5>
+                    <small class="text-muted float-end">Formulaire</small>
+                </div>
+                <div class="card-body">
+                    {{ form_start(form, {
+                        'attr': {
+                            'data-turbo': 'false',
+                            'novalidate': 'novalidate',
+                            'class': 'needs-validation'
+                        }
+                    }) }}
+
+                    {{ form_errors(form) }}
+
+                    {# Nom #}
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">{{ form.nom.vars.label|default('Nom') }}</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.nom, {
+                                'attr': {'class': 'form-control', 'placeholder': 'Entrez le nom de la catégorie'}
+                            }) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+                    </div>
+
+                    {# Description #}
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">{{ form.description.vars.label|default('Description') }}</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.description, {
+                                'attr': {'class': 'form-control', 'placeholder': 'Décrivez la catégorie...', 'rows': 4}
+                            }) }}
+                            {{ form_errors(form.description) }}
+                        </div>
+                    </div>
+
+                    {# Image #}
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">{{ form.url_image.vars.label|default('Image') }}</label>
+                        <div class="col-sm-10">
+                            {{ form_widget(form.url_image, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(form.url_image) }}
+
+                            {% if imageUrl is defined and imageUrl %}
+                                <img src="{{ asset('uploads/images/' ~ imageUrl) }}" alt="Image actuelle" class="img-thumbnail mt-2" style="max-width: 200px;">
+                            {% endif %}
+
+                            <img id="preview-image" class="img-thumbnail mt-2" style="max-width: 200px; display: none;">
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-end mt-4">
+                        <div class="col-sm-10">
+                            <a href="{{ path('app_categorie_index') }}" class="btn btn-outline-secondary me-2">
+                                <i class="fas fa-arrow-left me-1"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Enregistrer
+                            </button>
+                        </div>
+                    </div>
+
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Script pour prévisualisation de l'image #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputImage = document.querySelector('input[type="file"][name$="[url_image]"]');
+        const preview = document.getElementById('preview-image');
+
+        if (inputImage) {
+            inputImage.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.style.display = 'none';
+                    preview.src = '#';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

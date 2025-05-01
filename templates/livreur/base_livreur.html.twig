@@ -37,20 +37,7 @@
     <div class="container mt-4">
         <div class="row">
             <div class="col-md-3">
-                <div class="delivery-menu">
-                    <a href="{{ path('app_livreur_available') }}" class="menu-item {% if app.request.get('_route') == 'app_livreur_available' %}active-menu{% endif %}">
-                        <i class="fas fa-truck"></i>
-                        Available Deliveries
-                    </a>
-                    <a href="{{ path('app_livreur_history') }}" class="menu-item {% if app.request.get('_route') == 'app_livreur_history' %}active-menu{% endif %}">
-                        <i class="fas fa-history"></i>
-                        My history
-                    </a>
-                    <a href="{{ path('app_livreur_current') }}" class="menu-item {% if app.request.get('_route') == 'app_livreur_current' %}active-menu{% endif %}">
-                        <i class="fas fa-clock"></i>
-                        My Deliveries
-                    </a>
-                </div>
+                
             </div>
             <div class="col-md-9">
                 {% block livreur_content %}{% endblock %}

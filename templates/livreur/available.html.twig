@@ -23,8 +23,8 @@
                             {% for command in commandes %}
                                 <tr>
                                     <td>{{ command.idCommande }}</td>
-                                    <td>{{ command.adresse_dep }}</td>
-                                    <td>{{ command.adresse_arr }}</td>
+                                    <td>{{ command.adresseDep }}</td>
+                                    <td>{{ command.adresseArr }}</td>
                                     <td>
                                         <a href="{{ path('app_livreur_accept', {'id': command.idCommande}) }}" 
                                            class="btn btn-success btn-sm">Accept Delivery</a>

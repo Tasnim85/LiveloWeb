@@ -20,9 +20,11 @@ final class AvisController extends AbstractController{
     #[Route(name: 'app_avis_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
+        $user =$this->getUser();
+
         $avis = $entityManager
             ->getRepository(Avis::class)
-            ->findAll();
+            ->findBy(['created_by'=>$user]);
 
         return $this->render('avis/index.html.twig', [
             'avis' => $avis,
@@ -32,7 +34,10 @@ final class AvisController extends AbstractController{
     #[Route(path:'/deliveries', name: 'app_list_deliveries', methods: ['GET', 'POST'])]
     public function front(Request $request, EntityManagerInterface $entityManager, LivraisonRepository $livraisonRepository,): Response
     {
-        $livraisons = $livraisonRepository->findByCreatedBy('64');
+        $user =$this->getUser();
+        $livraisons = $entityManager
+            ->getRepository(Livraison::class)
+            ->findBy(['created_by'=>$user]);
         return $this->render('avis/listDeliveries.html.twig', [
             'livraisons' => $livraisons,           
         ]);

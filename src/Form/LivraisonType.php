@@ -23,12 +23,12 @@ class LivraisonType extends AbstractType
             // ])
             ->add('created_by', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'getId',
+                'choice_label' => 'getIdUser',
                 'label' => 'Created By'
             ])
             ->add('id_livreur', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'getId',
+                'choice_label' => 'getIdUser',
                 'label' => 'Delivery Person'
             ])
             ->add('commandeId', EntityType::class, [

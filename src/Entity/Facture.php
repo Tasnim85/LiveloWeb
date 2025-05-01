@@ -13,9 +13,11 @@ class Facture
 {
 
     #[ORM\Id]
-    #[ORM\Column(name: "idFacture", type: "integer")]
-    #[ORM\GeneratedValue(strategy: "AUTO")]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer", name: "idFacture")]
     private int $idFacture;
+
+
 
     #[ORM\Column(type: "float")]
     private float $montant;

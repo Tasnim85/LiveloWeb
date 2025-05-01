@@ -24,17 +24,17 @@
                     <tr>
                         <th scope="row">👤 Customer Name</th>
                         <td>{{ client.prenom }} {{ client.nom }}</td>
-                        <td>📞 {{ client.num_tel }}</td>
+                        <td>📞 {{ client.getNumTel }}</td>
                     </tr>
                     <tr>
                         <th scope="row">🚴 Assigned Delivery Person</th>
                         <td>{{ livreur.nom }} {{ livreur.prenom }}</td>
-                        <td>📞 {{ livreur.num_tel }}</td>
+                        <td>📞 {{ livreur.getNumTel }}</td>
                     </tr>
-                    <tr>
+                    {# <tr>
                         <th scope="row">🛒 Product Description</th>
                         <td>{{ articleCommande.idArticle.description }}</td>
-                    </tr>
+                    </tr> #}
                     <tr>
                         <th scope="row">📝 Feedback</th>
                         {% if avis.description is defined %}

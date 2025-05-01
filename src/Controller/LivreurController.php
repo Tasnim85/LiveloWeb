@@ -44,7 +44,7 @@ class LivreurController extends AbstractController
         ->find('65');
 
         $command = $em->getRepository(Commande::class)->find($request->get('id'));
-        $createdBy=$command->getCreated_by();
+        $createdBy=$command->getCreatedBy();
 
         $facture=$em
         ->getRepository(Facture::class)

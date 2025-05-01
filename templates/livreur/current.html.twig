@@ -23,8 +23,8 @@
                             {% for delivery in deliveries %}
                                 <tr>
                                     <td>#{{ delivery.idCommande }}</td>
-                                    <td>{{ delivery.adresse_dep }}</td>
-                                    <td>{{ delivery.adresse_arr }}</td>
+                                    <td>{{ delivery.adresseDep }}</td>
+                                    <td>{{ delivery.adresseArr }}</td>
                                     {# <td>
                                         <a href="{{ path('app_livreur_complete', {'id': delivery.idCommande}) }}" 
                                            class="btn btn-primary btn-sm">Mark as Delivered</a>
