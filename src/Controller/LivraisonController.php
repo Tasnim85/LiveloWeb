@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Livraison;
 use App\Entity\User;
+use App\Entity\Articlecommande;
 use App\Entity\Avis;
 use App\Entity\Commande;
 use App\Form\LivraisonType;
@@ -65,13 +66,18 @@ final class LivraisonController extends AbstractController{
         $avis = $entityManager->getRepository(Avis::class)->findOneBy([
             'livraisonId' => $livraison
         ]);        
+
+        $articleCommande = $entityManager->getRepository(Articlecommande::class)->findOneBy([
+            'idCommande' => $commandID
+        ]); 
         
         return $this->render('livraison/show.html.twig', [
             'livraison' => $livraison,
             'command'=>$command,
             'client'=>$client,
             'livreur'=>$livreur,
-            'avis'=>$avis
+            'avis'=>$avis,
+            'articleCommande'=>$articleCommande,
         ]);
     }
 

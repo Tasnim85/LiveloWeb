@@ -1,11 +1,11 @@
 {% extends 'livreur/base_livreur.html.twig' %}
 
 {% block livreur_content %}
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">
             <h3>My Current Deliveries</h3>
         </div>
-        <div class="card-body">
+        <div class="card-body ">
             {% if deliveries is empty %}
                 <p class="text-center">No current deliveries</p>
             {% else %}
@@ -16,19 +16,19 @@
                                 <th>Order ID</th>
                                 <th>From</th>
                                 <th>To</th>
-                                <th>Action</th>
+                                {# <th>Action</th> #}
                             </tr>
                         </thead>
                         <tbody>
                             {% for delivery in deliveries %}
                                 <tr>
-                                    <td>#{{ delivery.commandeId.idCommande }}</td>
-                                    <td>{{ delivery.commandeId.adresse_dep }}</td>
-                                    <td>{{ delivery.commandeId.adresse_arr }}</td>
-                                    <td>
-                                        <a href="{{ path('app_livreur_complete', {'id': delivery.idLivraison}) }}" 
+                                    <td>#{{ delivery.idCommande }}</td>
+                                    <td>{{ delivery.adresse_dep }}</td>
+                                    <td>{{ delivery.adresse_arr }}</td>
+                                    {# <td>
+                                        <a href="{{ path('app_livreur_complete', {'id': delivery.idCommande}) }}" 
                                            class="btn btn-primary btn-sm">Mark as Delivered</a>
-                                    </td>
+                                    </td> #}
                                 </tr>
                             {% endfor %}
                         </tbody>
