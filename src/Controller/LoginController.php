@@ -51,7 +51,6 @@ final class LoginController extends AbstractController
             $userData = json_decode($serializer->serialize($user, 'json', ['groups' => 'user:read']), true);
             $logger->info('Generated JWT Token: ' . $token);
 
-            // Determine redirect route
             if ($user->getVerified()) {
                 $codeVerificationRequired = !$user->isCodeUsed();
                 $routeName = match ($user->getRole()) {
@@ -205,7 +204,7 @@ final class LoginController extends AbstractController
 
             if ($user->getVerificationCode() === $submittedCode && !$user->isCodeUsed()) {
                 $user->setIsCodeUsed(true);
-                $user->setVerificationCode(null); // Clear the code after successful verification
+                $user->setVerificationCode(null); 
                 $em->flush();
                 return $this->json(['success' => true]);
             }

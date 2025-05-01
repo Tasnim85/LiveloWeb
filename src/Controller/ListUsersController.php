@@ -31,7 +31,6 @@ final class ListUsersController extends AbstractController
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Set headers
         $sheet->setCellValue('A1', 'First Name');
         $sheet->setCellValue('B1', 'Last Name');
         $sheet->setCellValue('C1', 'CIN');
@@ -42,7 +41,6 @@ final class ListUsersController extends AbstractController
         $sheet->setCellValue('H1', 'Phone Number');
         $sheet->setCellValue('I1', 'Verified');
 
-        // Populate data
         $row = 2;
         foreach ($users as $user) {
             $sheet->setCellValue('A'.$row, $user->getNom());
@@ -57,17 +55,13 @@ final class ListUsersController extends AbstractController
             $row++;
         }
 
-        // Create Excel file
         $writer = new Xlsx($spreadsheet);
 
-        // Create a temporary file
         $fileName = 'users_export.xlsx';
         $temp_file = tempnam(sys_get_temp_dir(), $fileName);
 
-        // Save the spreadsheet
         $writer->save($temp_file);
 
-        // Return the Excel file as response
         return $this->file($temp_file, $fileName, ResponseHeaderBag::DISPOSITION_INLINE);
     }
 }
