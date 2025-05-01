@@ -125,8 +125,8 @@
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-
-        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+{% if app.user and app.user.role == 'admin' %}
+     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <a href="{{ path('app_homeAdmin') }}">
            <div class="app-brand justify-content-center">
                   <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
@@ -206,6 +206,105 @@
             </li>
           </ul>
         </aside>
+            {% elseif app.user and app.user.role == 'partner' %}
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <a href="{{ path('app_homePartner') }}">
+           <div class="app-brand justify-content-center">
+                  <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
+            </div>
+        </a>
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            
+      <li class="menu-item">
+  <a href="{{ path('app_cat_partner') }}" class="menu-link">
+    <i class="menu-icon tf-icons bx bx-file">
+      <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
+    </i>
+    <div data-i18n="Documentation">Categories</div>
+  </a>
+</li>
+
+
+             <li class="menu-item">
+              <a
+                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-support">
+                  <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" /><p>  </p>
+                </i>
+                <div data-i18n="Support">Statistics</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-file">
+                  <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
+                </i>
+                <div data-i18n="Documentation">Others' products</div>
+              </a>
+            </li>
+           
+            
+          </ul>
+</aside>
+    {% elseif app.user and app.user.role == 'delivery_person' %}
+         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <a href="{{ path('app_homeLivreur') }}">
+           <div class="app-brand justify-content-center">
+                  <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
+            </div>
+        </a>
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            
+
+            
+            
+            <li class="menu-item">
+              <a
+                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-file">
+                  <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
+                </i>
+                <div data-i18n="Documentation">Available Deliveries</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-support">
+                  <img src="{{ asset('bo/assets/img/icons/téléchargement.png') }}" width="28" height="28" /><p>  </p>
+                </i>
+                <div data-i18n="Support">My History</div>
+              </a>
+            </li>
+             <li class="menu-item">
+              <a href="{{ path('app_admin_commande') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-file">
+                    <img src="{{ asset('bo/assets/img/icons/clock.png') }}" width="28" height="28" />
+                  </i>
+                  <div data-i18n="Documentation">My Deliveries</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+            {% endif %}
+
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -317,11 +416,7 @@
                         ><i class="bx bx-bell me-1"></i> QR Code</a
                       >
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="pages-account-settings-connections.html"
-                        ><i class="bx bx-link-alt me-1"></i> Connections</a
-                      >
-                    </li>
+                    
                   </ul>
                   <div class="card mb-4">
                     <h5 class="card-header">Profile Details</h5>

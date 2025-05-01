@@ -6,23 +6,28 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
-use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
-use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use League\OAuth2\Client\Provider\GoogleUser;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use League\OAuth2\Client\Provider\GoogleUser;
+use Symfony\Component\HttpFoundation\RedirectResponse; 
+
 class GoogleAuthenticator extends OAuth2Authenticator
 {
     public function __construct(
-        private ClientRegistry $clientRegistry,
-        private EntityManagerInterface $entityManager,
-        private RouterInterface $router,
+        private ClientRegistry               $clientRegistry,
+        private EntityManagerInterface       $entityManager,
+        private JWTTokenManagerInterface     $jwtManager,
+        private SerializerInterface          $serializer,
+        private UrlGeneratorInterface        $router,
     ) {}
 
     public function supports(Request $request): ?bool
@@ -58,6 +63,7 @@ class GoogleAuthenticator extends OAuth2Authenticator
                 $user->setCin(uniqid()); 
                 $user->setPassword(''); 
 
+
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
@@ -68,33 +74,53 @@ class GoogleAuthenticator extends OAuth2Authenticator
     
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
-        /** @var User $user */
-        $user = $token->getUser();
-        
-        // Use the same redirection logic as your regular login
-        $redirectRoute = $user->getVerified() ? 
-            match ($user->getRole()) {
-                'client' => 'app_homeClient',
-                'admin' => 'app_homeAdmin',
-                'delivery_person' => 'app_homeLivreur',
-                'partner' => 'app_homePartner',
-                default => 'app_login',
-            } : 
-            match ($user->getRole()) {
-                'delivery_person' => 'app_homeLivreurNotVerified',
-                'admin' => 'app_homeAdminNotVerified',
-                'partner' => 'app_homePartnerNotVerified',
-                default => 'app_login',
-            };
+{
+    /** @var User $user */
+    $user = $token->getUser();
 
-        $redirectUrl = $this->router->generate($redirectRoute, [], UrlGeneratorInterface::ABSOLUTE_PATH);
+    $jwt = $this->jwtManager->create($user);
 
-        return new RedirectResponse($redirectUrl);
+    if ($user->getVerified()) {
+        $routeName = match ($user->getRole()) {
+            'client'          => 'app_homeClient',
+            'admin'           => 'app_homeAdmin',
+            'delivery_person' => 'app_homeLivreur',
+            'partner'         => 'app_homePartner',
+            default           => 'app_login',
+        };
+    } else {
+        $routeName = match ($user->getRole()) {
+            'delivery_person' => 'app_homeLivreurNotVerified',
+            'admin'           => 'app_homeAdminNotVerified',
+            'partner'         => 'app_homePartnerNotVerified',
+            default           => 'app_login',
+        };
     }
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+
+    $redirectUrl = $this->router->generate($routeName, [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+    $response = new RedirectResponse($redirectUrl);
+
+    $response->headers->setCookie(new Cookie(
+        'BEARER',
+        $jwt,
+        time() + 3600,
+        '/',
+        null,
+        $request->isSecure(),
+        true,   
+        false, 
+        $request->isSecure() ? 'None' : 'Lax'
+    ));
+
+    return $response;
+}
+
+    public function onAuthenticationFailure(Request $request, \Exception $exception): JsonResponse
     {
-        $message = strtr($exception->getMessageKey(), $exception->getMessageData());
-        return new Response($message, Response::HTTP_FORBIDDEN);
+        return new JsonResponse([
+            'success' => false,
+            'message' => $exception->getMessage(),
+        ], JsonResponse::HTTP_FORBIDDEN);
     }
 }

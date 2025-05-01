@@ -65,21 +65,56 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const userJson = localStorage.getItem('user_data');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      console.log('👤 Restored User Data:', user);
-    } else {
-      console.log('⚠️ No user_data in localStorage');
-    }
+    if (!userJson) return console.warn('⚠️ No user_data in localStorage');
+
+    const user = JSON.parse(userJson);
+
+    const baseUrl = 'http://localhost:8000'; 
+    console.log('aaaaaaaaa:', user.url_image);
+    console.log('bbbbbbbbbbb:', baseUrl);
+    const fullUrl = `${baseUrl}${user.url_image}`;
+    console.log('Final Image URL:', fullUrl); // Verify in console
+
+    // Set image source
+    const avatarElement = document.getElementById('uploadedAvatar');
+    avatarElement.src = fullUrl;
+
+    // Error handling
+    avatarElement.onerror = function() {
+        console.error('Failed to load image at:', fullUrl);
+        this.src = '/default-avatar.png'; // Fallback image
+    };
+
+    const avatarElement1 = document.getElementById('uploadedAvatar1');
+    avatarElement1.src = fullUrl;
+
+    // Error handling
+    avatarElement1.onerror = function() {
+        console.error('Failed to load image at:', fullUrl);
+        this.src = '/default-avatar.png'; // Fallback image
+    };
+
+
+    // Fill in input fields
+    document.getElementById('firstName').value   = user.prenom    || '';
+    document.getElementById('lastName').value    = user.nom       || '';
+    document.getElementById('email').value       = user.email     || '';
+    document.getElementById('address').value     = user.adresse   || '';
+    document.getElementById('phoneNumber').value = user.num_tel   || '';
+    document.getElementById('role').value        = user.role      || '';
+    document.getElementById('Cin').value        = user.cin      || '';
+
+    
   });
 </script>
+
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
 
-        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <a href="{{ path('app_homePartner') }}">
            <div class="app-brand justify-content-center">
                   <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
@@ -89,7 +124,7 @@
 
           <ul class="menu-inner py-1">
             
-<li class="menu-item">
+      <li class="menu-item">
   <a href="{{ path('app_cat_partner') }}" class="menu-link">
     <i class="menu-icon tf-icons bx bx-file">
       <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
@@ -126,7 +161,7 @@
            
             
           </ul>
-        </aside>
+</aside>
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -164,7 +199,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="{{ asset('bo/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="#" alt="user-avatar" class="w-px-40 h-auto rounded-circle" id="uploadedAvatar" >
                     </div>
 
                   </a>

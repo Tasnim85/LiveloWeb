@@ -38,10 +38,12 @@ final class NotVerifiedUsersController extends AbstractController
         }
 
         $user->setVerified(true);
+        $code = (string) rand(100000, 999999);
+        $user->setVerificationCode($code);
+        $user->setIsCodeUsed(false);
         $entityManager->flush();
 
         $subject = "Your Account Has Been Verified";
-        $code = rand(100000, 999999); 
         $content = "Hello " . $user->getNom() . ",\n\nYour account has been successfully verified.\nVerification Code: $code";
 
         $this->mailer->sendAdminNotification($user->getEmail(), $subject, $content);

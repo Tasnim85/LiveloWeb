@@ -92,6 +92,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: "rememberMeTokenExpiresAt", type: "datetime_immutable", nullable: true)]
     private ?\DateTimeImmutable $rememberMeTokenExpiresAt = null;
 
+
+    #[ORM\Column(length: 6, nullable: true)]
+    private ?string $verificationCode = null;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $isCodeUsed = null;
+
+    public function getVerificationCode(): ?string
+    {
+        return $this->verificationCode;
+    }
+
+    public function setVerificationCode(?string $verificationCode): static
+    {
+        $this->verificationCode = $verificationCode;
+        return $this;
+    }
+
+    public function isCodeUsed(): bool
+    {
+        return $this->isCodeUsed;
+    }
+
+    public function setIsCodeUsed(bool $isCodeUsed): static
+    {
+        $this->isCodeUsed = $isCodeUsed;
+        return $this;
+    }
+
     public function getRememberMeToken(): ?string
     {
         return $this->rememberMeToken;
