@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Avis;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\User;
 use App\Entity\Livraison;
 use App\Form\AvisType;
@@ -37,37 +38,55 @@ final class AvisController extends AbstractController{
         ]);
     }
 
-    #[Route(name: 'app_avis_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, LivraisonRepository $livraisonRepository): Response
-    {
-        $avis = new Avis();
-        $description = $request->request->get('description');
-        
-        if (empty(trim($description))) {
-            return new Response(json_encode(['error' => 'Description cannot be empty']), 400, [
-                'Content-Type' => 'application/json'
-            ]);
-        }
+    
+#[Route('/avis/new', name: 'app_avis_new', methods: ['POST'])]
+public function new(Request $request, EntityManagerInterface $entityManager): Response
+{
+    $description = $request->request->get('description');
 
-        if (strlen($description) < 3) {
-            return new Response(json_encode(['error' => 'Description must be at least 3 characters long']), 400, [
-                'Content-Type' => 'application/json'
-            ]);
-        }
-
-        $livraison = $entityManager->getRepository(Livraison::class)->find(42);
-        $createdBy = $entityManager->getRepository(User::class)->find(63);
-
-        $avis->setCreatedAt(new \DateTime());
-        $avis->setLivraisonId($livraison);
-        $avis->setDescription($description);
-        $avis->setCreatedBy($createdBy);
-
-        $entityManager->persist($avis);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
+    if (!$description || strlen($description) < 3) {
+        return new JsonResponse(['error' => 'Invalid description'], 400);
     }
+
+    // Example: Replace with actual logic to get correct Livraison and User
+    $livraison = $entityManager->getRepository(Livraison::class)->find(42);
+    $createdBy = $entityManager->getRepository(User::class)->find(63);
+
+    if (!$livraison || !$createdBy) {
+        return new JsonResponse(['error' => 'Invalid data'], 400);
+    }
+
+    $avis = new Avis();
+    $avis->setCreatedAt(new \DateTime());
+    $avis->setLivraisonId($livraison);
+    $avis->setDescription($description);
+    $avis->setCreatedBy($createdBy);
+
+    $entityManager->persist($avis);
+    $entityManager->flush();
+
+    return new JsonResponse(['message' => 'Avis submitted successfully!'], 200);
+}
+
+    // #[Route(name: 'app_avis_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, EntityManagerInterface $entityManager, LivraisonRepository $livraisonRepository): Response
+    // {
+    //     $avis = new Avis();
+    //     $description = $request->request->get('description');
+
+    //     $livraison = $entityManager->getRepository(Livraison::class)->find(42);
+    //     $createdBy = $entityManager->getRepository(User::class)->find(63);
+
+    //     $avis->setCreatedAt(new \DateTime());
+    //     $avis->setLivraisonId($livraison);
+    //     $avis->setDescription($description);
+    //     $avis->setCreatedBy($createdBy);
+
+    //     $entityManager->persist($avis);
+    //     $entityManager->flush();
+
+    //     return $this->redirectToRoute('app_avis_index', [], Response::HTTP_SEE_OTHER);
+    // }
 
     // #[Route('/new', name: 'app_avis_new', methods: ['GET', 'POST'])]
     // public function new(Request $request, EntityManagerInterface $entityManager, Avis $avi): Response

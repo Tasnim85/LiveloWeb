@@ -34,6 +34,25 @@ class Avis
     )]
     private string $description;
 
+    // #[ORM\Column(name:"rate",type:"integer", nullable: true)]
+    // #[Assert\Range(
+    //     min: 1,
+    //     max: 5,
+    //     notInRangeMessage: "La note doit être comprise entre {{ min }} et {{ max }}."
+    // )]
+    // private ?int $rate=null;
+
+    // public function getRate(): ?int
+    // {
+    //     return $this->rate;
+    // }
+
+    // public function setRate($value)
+    // {
+    //     $this->rate = $value;
+    // }
+
+
     public function getCreatedBy(): ?User
     {
         return $this->created_by;
