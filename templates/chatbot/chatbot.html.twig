@@ -113,6 +113,7 @@
                 <div data-i18n="Documentation">Others' products</div>
               </a>
             </li>
+            </li>
            <li class="menu-item">
   <a href="{{ path('chatbot_page') }}" class="menu-link">
     
@@ -161,130 +162,72 @@
 {% block body %}
     <div class="container">
         <!-- Section Catégories -->
-        <h5 class="pb-1 mb-4">Categories</h5>
+        <h5 class="pb-1 mb-4">Gemini Chatbot</h5>
         
+
+
 
         <hr class="m-0" />
 
-        <!-- Vérifie si des alertes de stock existent -->
-        {% if hasAlerts %}
-            <div id="stockAlert" class="alert alert-danger stock-alert">
-                <i class="fas fa-exclamation-triangle"></i>
-                <strong>ALERTE STOCK!</strong>
-                <span id="alertCount">{{ alertsCount }}</span> article(s) sous le seuil critique!
-            </div>
-        {% endif %}
 
-        <div class="card-body">
-            <div class="row mb-5">
-                {% for categorie in categories %}
-                    <div class="col-md-6 mb-4"> <!-- Ajuste la largeur des cartes -->
-                        <div class="card mb-3">
-                            <div class="row g-0 align-items-center">
-                                <!-- Image (colonne gauche) -->
-                                <div class="col-md-4">
-                                    {% if categorie.url_image %}
-                                        <img class="card-img card-img-left"
-                                             src="{{ asset(categorie.url_image) }}"
-                                             alt="{{ categorie.nom }}">
-                                    {% else %}
-                                        <img class="card-img card-img-left"
-                                             src="{{ asset('img/default.png') }}"
-                                             alt="Image par défaut">
-                                    {% endif %}
-                                </div>
+<!-- Bouton pour ouvrir la modale -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#chatbotModal">
+  Ouvrir le Chatbot 🤖
+</button>
 
-                                <!-- Contenu (colonne droite) -->
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start p-3">
-                                        <div>
-                                            <h5 class="card-title">{{ categorie.nom }}</h5>
-                                            <p class="card-text">{{ categorie.description }}</p>
-                                        </div>
-
-                                        <!-- Dropdown avec icon -->
-                                        <div class="btn-group" id="dropdown-icon-demo">
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary dropdown-toggle"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                <i class="bx bx-menu"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a href="{{ path('art_partner_articles', {'id_categorie': categorie.getIdCategorie()}) }}"
-                                                       class="dropdown-item d-flex align-items-center"
-                                                       style="border: none; background: none; padding: 0;">
-                                                        <i class="bx bx-show"></i>
-                                                        <span style="margin-left: 5px;">View articles</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Fin colonne droite -->
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="col-12">
-                        <p class="text-muted">Aucune catégorie trouvée.</p>
-                    </div>
-                {% endfor %}
-            </div>
+<!-- Modale -->
+<div class="modal fade" id="chatbotModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">Chatbot Gemini</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="messageInput" class="form-label">Votre question</label>
+          <input
+            type="text"
+            id="messageInput"
+            class="form-control"
+            placeholder="Posez une question au chatbot..."
+          />
         </div>
+        <div class="mt-3">
+          <strong>Réponse :</strong>
+          <div id="responseDiv" class="mt-2 border rounded p-2" style="min-height: 50px;"></div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-success" onclick="sendMessageToChatbot()">Envoyer</button>
+      </div>
+      
     </div>
-{% endblock %}
+  </div>
+</div>
 
-{% block javascripts %}
-    
-    <script>
-        // Vérification périodique des alertes de stock
-       setInterval(() => {
-    fetch('{{ path('partner_api_alerts') }}')
-        .then(response => response.json())
-        .then(data => {
-            let alertDiv = document.getElementById('stockAlert');
+<!-- Script JavaScript -->
+<script>
+  async function sendMessageToChatbot() {
+    const message = document.getElementById('messageInput').value;
 
-            if (data.hasAlerts) {
-                if (!alertDiv) {
-                    const newAlert = document.createElement('div');
-                    newAlert.id = 'stockAlert';
-                    newAlert.className = 'alert alert-danger stock-alert';
-                    newAlert.style.cursor = 'pointer'; // ✅ Ajoute un curseur "main" au survol
-                    newAlert.innerHTML = `
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <strong>ALERTE STOCK!</strong>
-                        <span id="alertCount">${data.count}</span> article(s) sous le seuil critique!
-                    `;
+    const response = await fetch('/chatbot/ask', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({ message }),
+    });
 
-                    // ✅ Quand on clique, on montre la liste des articles
-                    newAlert.addEventListener('click', () => {
-                        let articleList = data.articles.map(article => `<li>${article}</li>`).join('');
-                        let alertMessage = `
-                            <ul>${articleList}</ul>
-                        `;
-                        // Petite pop-up native
-                        Swal.fire({
-                            title: 'Articles en alerte',
-                            html: alertMessage,
-                            icon: 'warning',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-
-                    document.body.appendChild(newAlert);
-                } else {
-                    document.getElementById('alertCount').textContent = data.count;
-                }
-            } else if (alertDiv) {
-                alertDiv.remove();
-            }
-        });
-}, 30000);
+    const data = await response.json();
+    document.getElementById('responseDiv').innerText = data.response;
+    document.getElementById('messageInput').value = ''; // Efface le champ après envoi
+  }
+</script>
 
  
     </script>
@@ -295,9 +238,7 @@
 
 {% endblock %}
 
-              
-              
-            <!-- / Footer -->
+                 
 
             <div class="content-backdrop fade"></div>
           </div>

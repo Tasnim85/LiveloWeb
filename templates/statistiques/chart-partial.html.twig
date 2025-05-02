@@ -101,6 +101,7 @@
   </a>
 </li>
 
+
             <li class="menu-item">
               <a
                 href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
@@ -113,14 +114,16 @@
                 <div data-i18n="Documentation">Others' products</div>
               </a>
             </li>
+             </li>
            <li class="menu-item">
   <a href="{{ path('chatbot_page') }}" class="menu-link">
     
       <img src="{{ asset('bo/assets/img/icons/robot.png') }}" width="28" height="28" />
     
-    <div data-i18n="Documentation">Chatbot Livelo</div>
+    <div data-i18n="Documentation">chatbot Livelo</div>
   </a>
 </li>
+           
             
           </ul>
         </aside>
@@ -161,130 +164,32 @@
 {% block body %}
     <div class="container">
         <!-- Section Catégories -->
-        <h5 class="pb-1 mb-4">Categories</h5>
+        <h5 class="pb-1 mb-4">statistics</h5>
         
+<div id="chart_div" style="width: 100%; height: 500px;"></div>
+
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    const data = google.visualization.arrayToDataTable({{ stats|json_encode|raw }});
+    const options = {
+      title: 'Stock des articles',
+      is3D: true,
+      colors: ['#41b123', '#068408']
+    };
+    const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+   
+</script>
+
 
         <hr class="m-0" />
 
-        <!-- Vérifie si des alertes de stock existent -->
-        {% if hasAlerts %}
-            <div id="stockAlert" class="alert alert-danger stock-alert">
-                <i class="fas fa-exclamation-triangle"></i>
-                <strong>ALERTE STOCK!</strong>
-                <span id="alertCount">{{ alertsCount }}</span> article(s) sous le seuil critique!
-            </div>
-        {% endif %}
 
-        <div class="card-body">
-            <div class="row mb-5">
-                {% for categorie in categories %}
-                    <div class="col-md-6 mb-4"> <!-- Ajuste la largeur des cartes -->
-                        <div class="card mb-3">
-                            <div class="row g-0 align-items-center">
-                                <!-- Image (colonne gauche) -->
-                                <div class="col-md-4">
-                                    {% if categorie.url_image %}
-                                        <img class="card-img card-img-left"
-                                             src="{{ asset(categorie.url_image) }}"
-                                             alt="{{ categorie.nom }}">
-                                    {% else %}
-                                        <img class="card-img card-img-left"
-                                             src="{{ asset('img/default.png') }}"
-                                             alt="Image par défaut">
-                                    {% endif %}
-                                </div>
-
-                                <!-- Contenu (colonne droite) -->
-                                <div class="col-md-8">
-                                    <div class="d-flex justify-content-between align-items-start p-3">
-                                        <div>
-                                            <h5 class="card-title">{{ categorie.nom }}</h5>
-                                            <p class="card-text">{{ categorie.description }}</p>
-                                        </div>
-
-                                        <!-- Dropdown avec icon -->
-                                        <div class="btn-group" id="dropdown-icon-demo">
-                                            <button
-                                                type="button"
-                                                class="btn btn-primary dropdown-toggle"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                <i class="bx bx-menu"></i>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li>
-                                                    <a href="{{ path('art_partner_articles', {'id_categorie': categorie.getIdCategorie()}) }}"
-                                                       class="dropdown-item d-flex align-items-center"
-                                                       style="border: none; background: none; padding: 0;">
-                                                        <i class="bx bx-show"></i>
-                                                        <span style="margin-left: 5px;">View articles</span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Fin colonne droite -->
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="col-12">
-                        <p class="text-muted">Aucune catégorie trouvée.</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block javascripts %}
-    
-    <script>
-        // Vérification périodique des alertes de stock
-       setInterval(() => {
-    fetch('{{ path('partner_api_alerts') }}')
-        .then(response => response.json())
-        .then(data => {
-            let alertDiv = document.getElementById('stockAlert');
-
-            if (data.hasAlerts) {
-                if (!alertDiv) {
-                    const newAlert = document.createElement('div');
-                    newAlert.id = 'stockAlert';
-                    newAlert.className = 'alert alert-danger stock-alert';
-                    newAlert.style.cursor = 'pointer'; // ✅ Ajoute un curseur "main" au survol
-                    newAlert.innerHTML = `
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <strong>ALERTE STOCK!</strong>
-                        <span id="alertCount">${data.count}</span> article(s) sous le seuil critique!
-                    `;
-
-                    // ✅ Quand on clique, on montre la liste des articles
-                    newAlert.addEventListener('click', () => {
-                        let articleList = data.articles.map(article => `<li>${article}</li>`).join('');
-                        let alertMessage = `
-                            <ul>${articleList}</ul>
-                        `;
-                        // Petite pop-up native
-                        Swal.fire({
-                            title: 'Articles en alerte',
-                            html: alertMessage,
-                            icon: 'warning',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-
-                    document.body.appendChild(newAlert);
-                } else {
-                    document.getElementById('alertCount').textContent = data.count;
-                }
-            } else if (alertDiv) {
-                alertDiv.remove();
-            }
-        });
-}, 30000);
 
  
     </script>
@@ -295,8 +200,29 @@
 
 {% endblock %}
 
-              
-              
+                  , made with ❤️ by
+                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
+                </div>
+                <div>
+                  <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
+                  <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
+
+                  <a
+                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                    target="_blank"
+                    class="footer-link me-4"
+                    >Documentation</a
+                  >
+
+                  <a
+                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                    target="_blank"
+                    class="footer-link me-4"
+                    >Support</a
+                  >
+                </div>
+              </div>
+            </footer>
             <!-- / Footer -->
 
             <div class="content-backdrop fade"></div>
@@ -311,7 +237,14 @@
     </div>
     <!-- / Layout wrapper -->
 
-   
+    <div class="buy-now">
+      <a
+        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
+        target="_blank"
+        class="btn btn-danger btn-buy-now"
+        >Upgrade to Pro</a
+      >
+    </div>
 
     <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->
