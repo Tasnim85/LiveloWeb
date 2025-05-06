@@ -1,24 +1,29 @@
-<h3>Statistiques des Articles par Statut</h3>
-<div id="piechart" style="width: 700px; height: 400px;"></div>
+{% block body %}
+    <h1>Statistiques des articles</h1>
+     {% include 'statistiques/_chart.html.twig' %}
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
     google.charts.load('current', {'packages':['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
+
+    // Attendre l'ouverture complète du modal pour dessiner le graphique
+    $('#statModal').on('shown.bs.modal', function () {
+        drawChart();
+    });
 
     function drawChart() {
-        const data = google.visualization.arrayToDataTable([
-            ['Statut', 'Nombre'],
-            {% for stat in stats %}
-                ['{{ stat.statut }}', {{ stat.count }}],
-            {% endfor %}
-        ]);
+        const data = google.visualization.arrayToDataTable({{ stats|json_encode|raw }});
 
         const options = {
-            title: 'Répartition des articles par statut'
+            title: 'Stock des articles',
+            is3D: true,
+            colors: ['#41b123', '#068408'] // Couleurs personnalisées
         };
 
-        const chart = new google.visualization.PieChart(document.getElementById('piechart'));
+        const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
     }
 </script>
+
+{% endblock %}

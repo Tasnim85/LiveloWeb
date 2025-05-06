@@ -33,15 +33,17 @@ class ArticleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    // src/Repository/ArticleRepository.php
-public function countArticlesByStockStatus(): array
-{
-    $qb = $this->createQueryBuilder('a')
-        ->select('a.statut, COUNT(a.id_article) as count')
-        ->groupBy('a.statut');
-
-    return $qb->getQuery()->getResult();
-}
+    public function countArticlesByStockStatusForUser($user): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a.statut, COUNT(a.id_article) as count')
+            ->where('a.created_by = :user')
+            ->setParameter('user', $user)
+            ->groupBy('a.statut')
+            ->getQuery()
+            ->getResult();
+    }
+    
     
     
 

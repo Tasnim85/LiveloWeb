@@ -1,0 +1,18 @@
+<div id="chart_div" style="width: 100%; height: 500px;"></div>
+
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    const data = google.visualization.arrayToDataTable({{ stats|json_encode|raw }});
+    const options = {
+      title: 'Stock des articles',
+      is3D: true,
+      colors: ['#41b123', '#068408']
+    };
+    const chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>

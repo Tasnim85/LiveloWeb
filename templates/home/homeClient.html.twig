@@ -9,13 +9,13 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title -->
-    <title>Alazea - Gardening &amp; Landscaping HTML Template</title>
+    <title>LiVelo</title>
 
     <!-- Favicon -->
     <link rel="icon" href="img/core-img/favicon.ico">
 
     <!-- Core Stylesheet -->
-    <link rel="stylesheet" href="{{ asset('fo/style.css')}}">
+    <link rel="stylesheet" href="{{ asset('style.css') }}">
 
 </head>
 
@@ -45,27 +45,13 @@
 
                             <!-- Top Header Content -->
                             <div class="top-header-meta d-flex">
-                                <!-- Language Dropdown -->
-                                <div class="language-dropdown">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle mr-30" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Language</button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">USA</a>
-                                            <a class="dropdown-item" href="#">UK</a>
-                                            <a class="dropdown-item" href="#">Bangla</a>
-                                            <a class="dropdown-item" href="#">Hindi</a>
-                                            <a class="dropdown-item" href="#">Spanish</a>
-                                            <a class="dropdown-item" href="#">Latin</a>
-                                        </div>
-                                    </div>
-                                </div>
                                 <!-- Login -->
                                 <div class="login">
                                     <a href="#"><i class="fa fa-user" aria-hidden="true"></i> <span>Login</span></a>
                                 </div>
                                 <!-- Cart -->
                                 <div class="cart">
-                                    <a href="#"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(1)</span></span></a>
+                                    <a href="{{ path('app_cart') }}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity">(1)</span></span></a>
                                 </div>
                             </div>
                         </div>
@@ -100,38 +86,11 @@
                             <!-- Navbar Start -->
                             <div class="classynav">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">About</a></li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="dropdown">
-                                            <li><a href="index.html">Home</a></li>
-                                            <li><a href="about.html">About</a></li>
-                                            <li><a href="shop.html">Shop</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="shop.html">Shop</a></li>
-                                                    <li><a href="shop-details.html">Shop Details</a></li>
-                                                    <li><a href="cart.html">Shopping Cart</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="portfolio.html">Portfolio</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="portfolio.html">Portfolio</a></li>
-                                                    <li><a href="single-portfolio.html">Portfolio Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="blog.html">Blog</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="single-post.html">Blog Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="contact.html">Contact</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="portfolio.html">Portfolio</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="{{ path('app_homeClient') }}">Home</a></li>
+                                    <li><a href="#">About</a></li>
+                                    <li><a href="{{ path('app_articles_list') }}">Shop</a></li>
+                                    <li><a href="{{ path('app_my_orders') }}">My-Orders</a></li>
+                                    <li><a href="#">Contact</a></li>
                                 </ul>
 
                                 <!-- Search Icon -->
@@ -1037,19 +996,19 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </footer>
-    <!-- ##### Footer Area End ##### -->
+   <!-- ##### Footer Area End ##### -->
 
-    <!-- ##### All Javascript Files ##### -->
+     <!-- ##### All Javascript Files ##### -->
     <!-- jQuery-2.2.4 js -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
+    <script src="{{asset ('js/jquery/jquery-2.2.4.min.js') }}"></script>
     <!-- Popper js -->
-    <script src="js/bootstrap/popper.min.js"></script>
+    <script src="{{asset ('js/bootstrap/popper.min.js') }}"></script>
     <!-- Bootstrap js -->
-    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="{{asset ('js/bootstrap/bootstrap.min.js') }}"></script>
     <!-- All Plugins js -->
-    <script src="js/plugins/plugins.js"></script>
+    <script src="{{asset ('js/plugins/plugins.js') }}"></script>
     <!-- Active js -->
-    <script src="js/active.js"></script>
+    <script src="{{asset ('js/active.js') }}"></script>
 </body>
 
 </html>

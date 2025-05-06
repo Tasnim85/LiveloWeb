@@ -151,14 +151,29 @@
                 <div data-i18n="Support">Riders performance</div>
               </a>
             </li>
-             <li class="menu-item">
-              <a href="{{ path('app_admin_commande') }}" class="menu-link">
-                  <i class="menu-icon tf-icons bx bx-file">
-                    <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
-                  </i>
-                  <div data-i18n="Documentation">Orders report</div>
-              </a>
-            </li>
+             <!-- Orders Report -->
+<li class="menu-item">
+  <a href="javascript:void(0);" class="menu-link menu-toggle">
+    <i class="menu-icon tf-icons bx bx-file">
+      <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
+    </i>
+    <div data-i18n="Orders">Orders Report</div>
+  </a>
+
+  <ul class="menu-sub">
+    <li class="menu-item">
+      <a href="{{ path('admin_stats') }}" class="menu-link">
+        <div data-i18n="Stats">Statistics</div>
+      </a>
+    </li>
+    <li class="menu-item">
+      <a href="{{ path('app_admin_commande') }}" class="menu-link">
+        <div data-i18n="Listing">Orders Listing</div>
+      </a>
+    </li>
+  </ul>
+</li>
+
           </ul>
         </aside>
         <!-- / Menu -->
@@ -325,7 +340,7 @@
                   </div>
                 </div>
                 <div class="col-md-6 col-xl-4">
-                <a href="{{ path('app_admin_commande') }}">
+                <a href="{{ path('admin_stats') }}">
                   <div class="card card-hover shadow-none bg-transparent border border-primary mb-3">
                     <div class="card-body">
                       <center>

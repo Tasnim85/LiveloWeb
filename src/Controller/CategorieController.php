@@ -8,6 +8,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\CategorieRepository;
 use App\Service\ArticleService;
 use App\Entity\Categorie;
+use App\Service\CaptchaValidator;
 use App\Form\CategorieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,11 +19,20 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\SerializerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 
 #[Route('/categorie')]
 final class CategorieController extends AbstractController
 {   
+    private SerializerInterface $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     #[Route('/catPartner', name: 'app_cat_partner')]
     public function catPartner(ArticleService $alertService, EntityManagerInterface $entityManager): Response
     {
@@ -31,16 +41,22 @@ final class CategorieController extends AbstractController
             ->getRepository(Categorie::class)
             ->findAll();
     
-        // Récupère l'utilisateur par son ID (ici l'ID 66 pour le test)
-        $user = $entityManager->getRepository(User::class)->find(66);
-    
-        // Vérifie si l'utilisateur existe
-        if (!$user) {
-            // Si l'utilisateur n'existe pas, gérer l'erreur (redirection ou message d'erreur)
-            return $this->render('error.html.twig', [
-                'message' => 'Utilisateur non trouvé.',
-            ]);
-        }
+            $user = $this->getUser();
+
+if (!$user) {
+    throw $this->createAccessDeniedException('User not authenticated.');
+}
+
+
+
+// Si tu veux vraiment extraire l'ID pour autre chose :
+$userData = json_decode(
+    $this->serializer->serialize($user, 'json', ['groups' => 'user:read']),
+    true
+);
+
+$userId = $userData['idUser'];
+dump("ID de l'utilisateur connecté : " . $userId);
     
         // Vérifie les alertes de stock
         $alerts = $alertService->checkLowStock($user);
@@ -55,7 +71,22 @@ final class CategorieController extends AbstractController
 public function getStockAlerts(ArticleService $alertService, EntityManagerInterface $entityManager): Response
 {
     // Récupérer l'utilisateur
-    $user = $entityManager->getRepository(User::class)->find(66);
+    $user = $this->getUser();
+
+    if (!$user) {
+        throw $this->createAccessDeniedException('User not authenticated.');
+    }
+    
+    
+    
+    // Si tu veux vraiment extraire l'ID pour autre chose :
+    $userData = json_decode(
+        $this->serializer->serialize($user, 'json', ['groups' => 'user:read']),
+        true
+    );
+    
+    $userId = $userData['idUser'];
+    dump("ID de l'utilisateur connecté : " . $userId);
     $alerts = $alertService->checkLowStock($user);
 
     // Retourner la réponse JSON
@@ -100,8 +131,8 @@ public function index(EntityManagerInterface $entityManager, CategorieRepository
   
     
     #[Route('/new', name: 'app_categorie_new')]
-    public function new(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
-    {
+    public function new(Request $request, EntityManagerInterface $em, SluggerInterface $slugger, CaptchaValidator $captchaValidator): Response
+    {    $this->captchaValidator = $captchaValidator;
         $categorie = new Categorie();
         $form = $this->createForm(CategorieType::class, $categorie);
     
@@ -138,9 +169,25 @@ public function index(EntityManagerInterface $entityManager, CategorieRepository
                     }
                 }
     
-                // Ajout de l'utilisateur
-                $user = $em->getRepository(User::class)->find(62); // À remplacer par l’utilisateur connecté
-                $categorie->setCreated_by($user);
+                $user = $this->getUser();
+
+if (!$user) {
+    throw $this->createAccessDeniedException('User not authenticated.');
+}
+
+// Si tu veux juste lier à la catégorie :
+$categorie->setCreated_by($user);
+
+// Si tu veux vraiment extraire l'ID pour autre chose :
+$userData = json_decode(
+    $this->serializer->serialize($user, 'json', ['groups' => 'user:read']),
+    true
+);
+
+$userId = $userData['idUser'];
+dump("ID de l'utilisateur connecté : " . $userId);
+
+
     
                 $em->persist($categorie);
                 $em->flush();
@@ -152,6 +199,7 @@ public function index(EntityManagerInterface $entityManager, CategorieRepository
     
         return $this->render('categorie/new.html.twig', [
             'form' => $form->createView(),
+            'site_key' => $_ENV['NOCAPTCHA_SITEKEY'],
         ]);
     }
     
