@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
@@ -249,8 +251,10 @@ public function edit(
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
     #[Route('/client/articles', name: 'app_articles_list')]
-    public function index1(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    public function index1(SessionInterface $session, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        $panier=$session->get('panier', []);
+        $cartItemCount = count($panier);
         // Récupérer la query
         $query = $entityManager->getRepository(Article::class)
             ->createQueryBuilder('a') // a est un alias
@@ -264,7 +268,8 @@ public function edit(
         );
 
         return $this->render('article/list.html.twig', [
-            'articles' => $articles
+            'articles' => $articles,
+            'cartItemCount' => $cartItemCount,
         ]);
     }
 }

@@ -50,14 +50,22 @@ class InvoiceController extends AbstractController
         // 4. Generate PDF
         $pdfOptions = new Options();
         $pdfOptions->set('defaultFont', 'Arial');
-        
+        // Get path to the image inside public/
+$imagePath = $this->getParameter('kernel.project_dir') . '/public/logo_final-removebg-preview.png';
+
+// Convert it to base64
+$imageData = base64_encode(file_get_contents($imagePath));
+$imageMimeType = mime_content_type($imagePath); // e.g., "image/png"
+
         $dompdf = new Dompdf($pdfOptions);
         $dompdf->loadHtml($this->renderView('invoice/template.html.twig', [
             'commande' => $commande,
             'invoice_number' => $invoiceData['invoice_number'],
             'items' => $invoiceData['items'],
             'total' => $total,
-            'date' => $invoiceData['created_at']
+            'date' => $invoiceData['created_at'],
+            'image_data' => $imageData,
+            'image_mime' => $imageMimeType
         ]));
         
         $dompdf->setPaper('A4', 'portrait');

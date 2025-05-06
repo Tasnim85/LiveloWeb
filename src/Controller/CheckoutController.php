@@ -15,20 +15,27 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 final class CheckoutController extends AbstractController
 {
 
+
+   // #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[Route('/checkout', name: 'app_checkout')]
 public function checkout(Request $request, EntityManagerInterface $entityManager, SessionInterface $session): Response
-{
-    // 1. Check if cart is empty
+{   if($this->getUser() == null){
+    $this->addFlash('error', 'You must be logged in to proceed to checkout.');
+    return $this->redirectToRoute('app_login');
+}
+        // 1. Check if cart is empty
     $panier = $session->get('panier', []);
     if (empty($panier)) {
         $this->addFlash('error', 'Your cart is empty');
         return $this->redirectToRoute('app_cart');
     }
-
+    $cartItemCount = count($panier);
     // 2. Prepare cart data
     $panierWithData = [];
     foreach ($panier as $id => $quantity) {
@@ -36,7 +43,8 @@ public function checkout(Request $request, EntityManagerInterface $entityManager
         if ($article) {
             $panierWithData[] = [
                 'article' => $article,
-                'quantity' => $quantity
+                'quantity' => $quantity,
+                'cartItemCount' => $cartItemCount
             ];
         }
     }
@@ -134,9 +142,13 @@ public function processOrder(EntityManagerInterface $em, SessionInterface $sessi
         $commande->setStatut('Processing');
 
         // Verify user exists
-        $user = $em->getRepository(User::class)->find(64); // Replace with actual user ID
+        /*$user = $em->getRepository(User::class)->find(64); // Replace with actual user ID
         if (!$user) {
             throw new \Exception('User not found');
+        }*/
+        $user = $this->getUser(); // Get the currently authenticated user
+        if (!$user) {
+            throw new \Exception('User not authenticated');
         }
         $commande->setCreatedBy($user);
 
@@ -163,7 +175,7 @@ public function processOrder(EntityManagerInterface $em, SessionInterface $sessi
             'created_at' => new \DateTime()
         ];
         $session->set('completed_orders', $completedOrders);
-
+        
         $em->getConnection()->commit();
 
         // 3. Clear only what's necessary
@@ -294,4 +306,5 @@ public function processOrder(EntityManagerInterface $em, SessionInterface $sessi
             'session_id' => $session->getId()
         ]);
     }
+    
 }

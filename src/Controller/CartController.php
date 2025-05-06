@@ -18,6 +18,7 @@ final class CartController extends AbstractController
     public function index(SessionInterface $session,EntityManagerInterface $em)
     {
         $panier=$session->get('panier', []);
+        $cartItemCount = count($panier);
         $panierWithData = [];
         foreach($panier as $id => $quantity) {
             $panierWithData[] = [
@@ -33,7 +34,8 @@ final class CartController extends AbstractController
         }
         return $this->render('cart/index.html.twig', [
             "items"=>$panierWithData,
-            "total"=>$total
+            "total"=>$total,
+            'cartItemCount' => $cartItemCount,
         ]);
     }
 
@@ -82,17 +84,34 @@ final class CartController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
     
+    
+    
     #[Route('/cart/increase/{articleId}', name: 'app_cart_increase')]
-    public function increaseQuantity($articleId, SessionInterface $session)
+    public function increaseQuantity($articleId, SessionInterface $session, EntityManagerInterface $em)
     {
-    $panier = $session->get('panier', []);
-    if (isset($panier[$articleId])) {
-        $panier[$articleId]++;
+        $article = $em->getRepository(Article::class)->find($articleId);
+        if (!$article) {
+            $this->addFlash('error', 'Article not found.');
+            return $this->redirectToRoute('app_cart');
+        }
+    
+        $stock = $article->getQuantite();
+        $panier = $session->get('panier', []);
+    
+        if (isset($panier[$articleId])) {
+            if ($panier[$articleId] < $stock) {
+                $panier[$articleId]++;
+            } else {
+                $this->addFlash('error', 'Stock limit reached for this item.');
+            }
+        } else {
+            $panier[$articleId] = 1;
+        }
+    
+        $session->set('panier', $panier);
+        return $this->redirectToRoute('app_cart');
     }
-    $session->set('panier', $panier);
-    return $this->redirectToRoute('app_cart');
-    }
-    #[Route('/cart/decrease/{articleId}', name: 'app_cart_decrease')]
+        #[Route('/cart/decrease/{articleId}', name: 'app_cart_decrease')]
     public function decreaseQuantity($articleId, SessionInterface $session)
     {
     $panier = $session->get('panier', []);

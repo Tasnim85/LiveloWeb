@@ -11,14 +11,20 @@
             color: #333;
             background-color: #fff;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
         .header h1 {
             color: #28a745;
             font-size: 36px;
             margin-bottom: 5px;
+        }
+        .logo {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
         }
         .header p {
             font-size: 14px;
@@ -69,9 +75,9 @@
 <body>
 
     <div class="header">
-        <h1>LiVelo</h1>
-        <p>Date: {{ date|date('Y-m-d H:i') }}</p>
-    </div>
+<img src="data:{{ image_mime }};base64,{{ image_data }}" class="logo" alt="LiVelo Logo">
+    <p>Date: {{ date|date('Y-m-d H:i') }}</p>
+</div>
 
     <div class="address">
         <h3>Delivery Details:</h3>

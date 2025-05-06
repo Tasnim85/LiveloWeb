@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Entity\Livraison;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity]
 class Commande
 {
@@ -45,7 +46,10 @@ class Commande
 
     #[ORM\Column(type: "datetime")]
     private \DateTimeInterface $horaire;
-    
+    #[ORM\Column(length: 255)]
+    #[Groups(['commande'])]
+    private ?string $nsc = null;
+
     #[Assert\Choice(
         choices: ['shipping', 'processing', 'delivered'],
         message: "Statut should be 'shipping', 'processing' or'delivered'."
@@ -140,7 +144,15 @@ class Commande
     {
         return $this->articlecommandes;
     }
-
+    public function getNsc(): ?string
+    {
+    return $this->nsc;
+    }
+    public function setNsc(string $nsc): static
+    {
+    $this->nsc = $nsc;
+    return $this;
+    }
     public function addArticlecommande(Articlecommande $articlecommande): self
     {
         if (!$this->articlecommandes->contains($articlecommande)) {

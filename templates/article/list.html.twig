@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Title -->
     <title>Alazea - Gardening &amp; Landscaping HTML Template</title>
@@ -28,7 +29,7 @@
     </div>
 
     <!-- ##### Header Area Start ##### -->
-    <header class="header-area">
+   <header class="header-area">
 
         <!-- ***** Top Header Area ***** -->
         <div class="top-header-area">
@@ -44,28 +45,18 @@
 
                             <!-- Top Header Content -->
                             <div class="top-header-meta d-flex">
-                                <!-- Language Dropdown -->
-                                <div class="language-dropdown">
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle mr-30" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Language</button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">USA</a>
-                                            <a class="dropdown-item" href="#">UK</a>
-                                            <a class="dropdown-item" href="#">Bangla</a>
-                                            <a class="dropdown-item" href="#">Hindi</a>
-                                            <a class="dropdown-item" href="#">Spanish</a>
-                                            <a class="dropdown-item" href="#">Latin</a>
-                                        </div>
-                                    </div>
-                                </div>
                                 <!-- Login -->
                                 <div class="login">
                                     <a href="#"><i class="fa fa-user" aria-hidden="true"></i> <span>Login</span></a>
                                 </div>
                                 <!-- Cart -->
                                 <div class="cart">
-                                    <a href="{{path('app_cart')}}"><i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>Cart <span class="cart-quantity"></span></span></a>
-                                </div>
+    <a href="{{ path('app_cart') }}">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        <span>Cart <span class="cart-quantity">({{ cartItemCount }})</span></span>
+    </a>
+</div>
+
                             </div>
                         </div>
                     </div>
@@ -81,7 +72,7 @@
                     <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
                         <!-- Nav Brand -->
-                        <a href="index.html" class="nav-brand"><img src="{{asset('img/core-img/logo.png')}}" alt=""></a>
+                        <a href="index.html" class="nav-brand"><img src="img/core-img/logo.png" alt=""></a>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -99,38 +90,11 @@
                             <!-- Navbar Start -->
                             <div class="classynav">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="about.html">About</a></li>
-                                    <li><a href="#">Pages</a>
-                                        <ul class="dropdown">
-                                            <li><a href="index.html">Home</a></li>
-                                            <li><a href="about.html">About</a></li>
-                                            <li><a href="shop.html">Shop</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="shop.html">Shop</a></li>
-                                                    <li><a href="shop-details.html">Shop Details</a></li>
-                                                    <li><a href="cart.html">Shopping Cart</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="portfolio.html">Portfolio</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="portfolio.html">Portfolio</a></li>
-                                                    <li><a href="single-portfolio.html">Portfolio Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="blog.html">Blog</a>
-                                                <ul class="dropdown">
-                                                    <li><a href="blog.html">Blog</a></li>
-                                                    <li><a href="single-post.html">Blog Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="contact.html">Contact</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop.html">Shop</a></li>
-                                    <li><a href="portfolio.html">Portfolio</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="{{ path('app_homeClient') }}">Home</a></li>
+                                    <li><a href="#">About</a></li>
+                                    <li><a href="{{ path('app_articles_list') }}">Shop</a></li>
+                                    <li><a href="{{ path('app_my_orders') }}">My-Orders</a></li>
+                                    <li><a href="#">Contact</a></li>
                                 </ul>
 
                                 <!-- Search Icon -->
@@ -407,9 +371,13 @@
 
                             
 
-                        <nav aria-label="Page navigation">
-                            {{ knp_pagination_render(articles) }}
-                        </nav>
+                        <nav aria-label="Page navigation" class="d-flex justify-content-center mt-4">
+    {{ knp_pagination_render(articles, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig', {
+        'pagination_class': 'pagination-sm'
+    }) }}
+</nav>
+
+
 
     </section>
     <!-- ##### Shop Area End ##### -->
