@@ -82,11 +82,33 @@
         <!-- Menu -->
 
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-        <a href="{{ path('app_homeAdmin') }}">
+          <div class="app-brand demo">
+            <a href="{{ path('app_homeAdmin') }}" class="app-brand-link">
+            <img src="{{ asset('img/logo.png') }}" alt="logo" width="100" height="100">
+              
+              <span class="app-brand-text demo menu-text fw-bolder ms-2">Livelo</span>
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+              <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            </a>
+          </div>
+
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            <!-- Dashboard -->
+            <li class="menu-item ">
+              <a  href="{{ path('app_homeAdmin') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div data-i18n="Analytics">Dashboard</div>
+              </a>
+            </li>
+        {# <a href="{{ path('app_homeAdmin') }}">
            <div class="app-brand justify-content-center">
                   <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
             </div>
-        </a>
+        </a> #}
           <div class="menu-inner-shadow"></div>
 
           <ul class="menu-inner py-1">
@@ -113,6 +135,7 @@
                   </a>
                 </li>
               </ul>
+              </li>
             </li>
             
            <li class="menu-item">
@@ -141,8 +164,7 @@
             </li>
             <li class="menu-item">
               <a
-                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                target="_blank"
+                href="{{ path('app_livraison_index') }}"
                 class="menu-link"
               >
                 <i class="menu-icon tf-icons bx bx-support">
@@ -289,6 +311,24 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="bg-white" style="width:100% ; height:100%; padding:30px 30px 0 30px">
+               {% block body %}
+
+               {% endblock %}
+               </div>
+            </div>
+            <!-- / Content -->
+
+            <!-- Footer -->
+            {# <footer class="content-footer footer bg-footer-theme">
+              <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                <div class="mb-2 mb-md-0">
+                  ©
+                  <script>
+                    document.write(new Date().getFullYear());
+                  </script>
+                  , made with ❤️ by
+                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
              <br><br><br><br><br><br>
               <center>
               <B><h3 class="pb-1 mb-4">Welcome to Livelo!</h3></B>
@@ -363,9 +403,7 @@
                 </div>
                 </div>
               </div>
-              <!--/ Style variation -->
-
-              
+            </footer> #}
             <!-- / Footer -->
 
             <div class="content-backdrop fade"></div>

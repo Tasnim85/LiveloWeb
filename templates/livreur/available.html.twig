@@ -1,0 +1,40 @@
+{% extends 'livreur/base_livreur.html.twig' %}
+
+{% block livreur_content %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h3>Available Deliveries</h3>
+        </div>
+        <div class="card-body">
+            {% if commandes is empty %}
+                <p class="text-center">No available deliveries at the moment</p>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for command in commandes %}
+                                <tr>
+                                    <td>{{ command.idCommande }}</td>
+                                    <td>{{ command.adresseDep }}</td>
+                                    <td>{{ command.adresseArr }}</td>
+                                    <td>
+                                        <a href="{{ path('app_livreur_accept', {'id': command.idCommande}) }}" 
+                                           class="btn btn-success btn-sm">Accept Delivery</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -12,7 +12,7 @@
     <title>LiVelo</title>
 
     <!-- Favicon -->
-    <link rel="icon" href="img/core-img/favicon.ico">
+    <link rel="icon" href="{{ asset('/img/core-img/favicon.ico')}}">
 
     <!-- Core Stylesheet -->
     <link rel="stylesheet" href="{{ asset('style.css') }}">
@@ -24,7 +24,7 @@
     <div class="preloader d-flex align-items-center justify-content-center">
         <div class="preloader-circle"></div>
         <div class="preloader-img">
-            <img src="img/core-img/leaf.png" alt="">
+            <img src="{{ asset('img/logo.png')  }}" alt="">
         </div>
     </div>
 
@@ -68,7 +68,7 @@
                     <nav class="classy-navbar justify-content-between" id="alazeaNav">
 
                         <!-- Nav Brand -->
-                        <a href="index.html" class="nav-brand"><img src="img/core-img/logo.png" alt=""></a>
+                        <a href="index.html" class="nav-brand"><img src=" {{ asset('img/logo.png')  }}" style="width: 100px; height: 90px;" alt=""></a>
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -86,11 +86,34 @@
                             <!-- Navbar Start -->
                             <div class="classynav">
                                 <ul>
-                                    <li><a href="{{ path('app_homeClient') }}">Home</a></li>
-                                    <li><a href="#">About</a></li>
-                                    <li><a href="{{ path('app_articles_list') }}">Shop</a></li>
-                                    <li><a href="{{ path('app_my_orders') }}">My-Orders</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about.html">About</a></li>
+
+                                    <li><a href="#">Pages</a>
+                                        <ul class="dropdown">
+                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="contact.html">Shop</a></li>
+                                        </ul>
+                                    </li>
+
+
+
+                                    {% if app.user.getRole() == 'client' %}
+                                    <li><a href="shop.html">Shop</a></li>
+                                    {% else %}
+
+                                    <li><a href="#">Deliveries</a>
+                                        <ul class="dropdown">
+                                            <li><a href="{{ path('app_livreur_available') }}">Available deliveries</a></li>
+                                            <li><a href="{{ path('app_livreur_current') }}">My deliveries</a></li>
+                                            <li><a href="{{ path('app_livreur_history') }}">History</a></li>
+                                        </ul>
+                                    </li>
+                                    {% endif %}
+
+                                    <li><a href="{{ path('app_avis_index') }}">Feedbacks</a></li>
+                                    <li><a href="{{ path('app_list_deliveries') }}">My deliveries</a></li>
                                 </ul>
 
                                 <!-- Search Icon -->
@@ -119,56 +142,36 @@
     <!-- ##### Header Area End ##### -->
 
     <!-- ##### Hero Area Start ##### -->
-    <section class="hero-area">
-        <div class="hero-post-slides owl-carousel">
+    <section class="hero-area" >
+        <div class="hero-post-slides owl-carousel" > <!-- ##### lenna nhottou taill contenairrr ##### --> 
+        
 
-            <!-- Single Hero Post -->
-            <div class="single-hero-post bg-overlay">
-                <!-- Post Image -->
-                <div class="slide-img bg-img" style="background-image: url(img/bg-img/1.jpg);"></div>
+            <div class="single-hero-post bg-overlay" style="height: 500px;" >
+                <div class="slide-img bg-img" style="background-image: url({{ asset('img/bg-img/1.jpg')}});"></div>
                 <div class="container h-100">
                     <div class="row h-100 align-items-center">
                         <div class="col-12">
-                            <!-- Post Content -->
-                            <div class="hero-slides-content text-center">
-                                <h2>Plants exist in the weather and light rays that surround them</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque ante nec ipsum iaculis, ac iaculis ipsum porttitor. Vivamus cursus nisl lectus, id mattis nisl lobortis eu. Duis diam augue, dapibus ut dolor at, mattis maximus dolor.</p>
-                                <div class="welcome-btn-group">
-                                    <a href="#" class="btn alazea-btn mr-30">GET STARTED</a>
-                                    <a href="#" class="btn alazea-btn active">CONTACT US</a>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Single Hero Post -->
-            <div class="single-hero-post bg-overlay">
-                <!-- Post Image -->
-                <div class="slide-img bg-img" style="background-image: url(img/bg-img/2.jpg);"></div>
+            <div class="single-hero-post bg-overlay" style="height: 500px;">
+                <div class="slide-img bg-img" style="background-image: url({{ asset('img/bg-img/2.jpg')}});"></div>
                 <div class="container h-100">
                     <div class="row h-100 align-items-center">
                         <div class="col-12">
-                            <!-- Post Content -->
-                            <div class="hero-slides-content text-center">
-                                <h2>Plants exist in the weather and light rays that surround them</h2>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur pellentesque ante nec ipsum iaculis, ac iaculis ipsum porttitor. Vivamus cursus nisl lectus, id mattis nisl lobortis eu. Duis diam augue, dapibus ut dolor at, mattis maximus dolor.</p>
-                                <div class="welcome-btn-group">
-                                    <a href="#" class="btn alazea-btn mr-30">GET STARTED</a>
-                                    <a href="#" class="btn alazea-btn active">CONTACT US</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </section>
     <!-- ##### Hero Area End ##### -->
 
     <!-- ##### Service Area Start ##### -->
+    {% block body %}
     <section class="our-services-area bg-gray section-padding-100-0">
         <div class="container">
             <div class="row">
@@ -189,8 +192,7 @@
                         <div class="single-service-area d-flex align-items-center wow fadeInUp" data-wow-delay="100ms">
                             <!-- Icon -->
                             <div class="service-icon mr-30">
-                                <img src="img/core-img/s1.png" alt="">
-                            </div>
+                                <img src="{{ asset('img/core-img/s1.png') }}" alt="Service Icon">                            </div>
                             <!-- Content -->
                             <div class="service-content">
                                 <h5>Plants Care</h5>
@@ -202,7 +204,7 @@
                         <div class="single-service-area d-flex align-items-center wow fadeInUp" data-wow-delay="300ms">
                             <!-- Icon -->
                             <div class="service-icon mr-30">
-                                <img src="img/core-img/s2.png" alt="">
+                                <img src="{{ asset('img/core-img/s2.png')}}" alt="">
                             </div>
                             <!-- Content -->
                             <div class="service-content">
@@ -215,7 +217,7 @@
                         <div class="single-service-area d-flex align-items-center wow fadeInUp" data-wow-delay="500ms">
                             <!-- Icon -->
                             <div class="service-icon mr-30">
-                                <img src="img/core-img/s3.png" alt="">
+                                <img src="{{ asset('img/core-img/s3.png')}}" alt="">
                             </div>
                             <!-- Content -->
                             <div class="service-content">
@@ -229,7 +231,7 @@
 
                 <div class="col-12 col-lg-6">
                     <div class="alazea-video-area bg-overlay mb-100">
-                        <img src="img/bg-img/23.jpg" alt="">
+                        <img src="{{ asset('img/bg-img/23.jpg')}}" alt="">
                         <a href="http://www.youtube.com/watch?v=7HKoqNJtMTQ" class="video-icon">
                             <i class="fa fa-play" aria-hidden="true"></i>
                         </a>
@@ -306,7 +308,7 @@
                             <!-- Single Benefits Area -->
                             <div class="col-12 col-sm-6">
                                 <div class="single-benefits-area">
-                                    <img src="img/core-img/b1.png" alt="">
+                                    <img src="{{ asset('img/core-img/b1.png')}}" alt="">
                                     <h5>Quality Products</h5>
                                     <p>Intiam eu sagittis est, at commodo lacini libero. Praesent dignissim sed odio vel aliquam manta lagorn.</p>
                                 </div>
@@ -315,7 +317,7 @@
                             <!-- Single Benefits Area -->
                             <div class="col-12 col-sm-6">
                                 <div class="single-benefits-area">
-                                    <img src="img/core-img/b2.png" alt="">
+                                    <img src="{{ asset('img/core-img/b2.png')}}" alt="">
                                     <h5>Perfect Service</h5>
                                     <p>Intiam eu sagittis est, at commodo lacini libero. Praesent dignissim sed odio vel aliquam manta lagorn.</p>
                                 </div>
@@ -324,7 +326,7 @@
                             <!-- Single Benefits Area -->
                             <div class="col-12 col-sm-6">
                                 <div class="single-benefits-area">
-                                    <img src="img/core-img/b3.png" alt="">
+                                    <img src="{{ asset('img/core-img/b3.png')}}" alt="">
                                     <h5>100% Natural</h5>
                                     <p>Intiam eu sagittis est, at commodo lacini libero. Praesent dignissim sed odio vel aliquam manta lagorn.</p>
                                 </div>
@@ -333,7 +335,7 @@
                             <!-- Single Benefits Area -->
                             <div class="col-12 col-sm-6">
                                 <div class="single-benefits-area">
-                                    <img src="img/core-img/b4.png" alt="">
+                                    <img src="{{ asset('img/core-img/b4.png')}}" alt="">
                                     <h5>Environmentally friendly</h5>
                                     <p>Intiam eu sagittis est, at commodo lacini libero. Praesent dignissim sed odio vel aliquam manta lagorn.</p>
                                 </div>
@@ -391,7 +393,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/16.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/16.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 1">
+                        <a href="{{ asset('img/bg-img/16.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 1">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -406,7 +408,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/17.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/17.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 2">
+                        <a href="{{ asset('img/bg-img/17.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 2">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -421,7 +423,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/18.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/18.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 3">
+                        <a href="{{ asset('img/bg-img/18.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 3">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -436,7 +438,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/19.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/19.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 4">
+                        <a href="{{ asset('img/bg-img/19.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 4">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -451,7 +453,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/20.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/20.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 5">
+                        <a href="{{ asset('img/bg-img/20.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 5">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -466,7 +468,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/21.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/21.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 6">
+                        <a href="{{ asset('img/bg-img/21.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 6">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -481,7 +483,7 @@
                     <div class="portfolio-thumbnail bg-img" style="background-image: url(img/bg-img/22.jpg);"></div>
                     <!-- Portfolio Hover Text -->
                     <div class="portfolio-hover-overlay">
-                        <a href="img/bg-img/22.jpg" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 7">
+                        <a href="{{ asset('img/bg-img/22.jpg')}}" class="portfolio-img d-flex align-items-center justify-content-center" title="Portfolio 7">
                             <div class="port-hover-text">
                                 <h3>Minimal Flower Store</h3>
                                 <h5>Office Plants</h5>
@@ -507,7 +509,7 @@
                             <div class="row align-items-center">
                                 <div class="col-12 col-md-6">
                                     <div class="testimonial-thumb">
-                                        <img src="img/bg-img/13.jpg" alt="">
+                                        <img src="{{ asset('img/bg-img/13.jpg')}}" alt="">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -532,7 +534,7 @@
                             <div class="row align-items-center">
                                 <div class="col-12 col-md-6">
                                     <div class="testimonial-thumb">
-                                        <img src="img/bg-img/14.jpg" alt="">
+                                        <img src="{{ asset('img/bg-img/14.jpg')}}" alt="">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -557,7 +559,7 @@
                             <div class="row align-items-center">
                                 <div class="col-12 col-md-6">
                                     <div class="testimonial-thumb">
-                                        <img src="img/bg-img/15.jpg" alt="">
+                                        <img src="{{ asset('img/bg-img/15.jpg')}}" alt="">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-6">
@@ -604,7 +606,7 @@
                     <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="100ms">
                         <!-- Product Image -->
                         <div class="product-img">
-                            <a href="shop-details.html"><img src="img/bg-img/9.jpg" alt=""></a>
+                            <a href="shop-details.html"><img src="{{ asset('img/bg-img/9.jpg')}}" alt=""></a>
                             <!-- Product Tag -->
                             <div class="product-tag">
                                 <a href="#">Hot</a>
@@ -630,7 +632,7 @@
                     <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="200ms">
                         <!-- Product Image -->
                         <div class="product-img">
-                            <a href="shop-details.html"><img src="img/bg-img/10.jpg" alt=""></a>
+                            <a href="shop-details.html"><img src="{{ asset('img/bg-img/10.jpg')}}" alt=""></a>
                             <div class="product-meta d-flex">
                                 <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
                                 <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
@@ -652,7 +654,7 @@
                     <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="300ms">
                         <!-- Product Image -->
                         <div class="product-img">
-                            <a href="shop-details.html"><img src="img/bg-img/11.jpg" alt=""></a>
+                            <a href="shop-details.html"><img src="{{ asset('img/bg-img/11.jpg')}}" alt=""></a>
                             <div class="product-meta d-flex">
                                 <a href="#" class="wishlist-btn"><i class="icon_heart_alt"></i></a>
                                 <a href="cart.html" class="add-to-cart-btn">Add to cart</a>
@@ -674,7 +676,7 @@
                     <div class="single-product-area mb-50 wow fadeInUp" data-wow-delay="400ms">
                         <!-- Product Image -->
                         <div class="product-img">
-                            <a href="shop-details.html"><img src="img/bg-img/12.jpg" alt=""></a>
+                            <a href="shop-details.html"><img src="{{ asset('img/bg-img/12.jpg')}}" alt=""></a>
                             <!-- Product Tag -->
                             <div class="product-tag sale-tag">
                                 <a href="#">Hot</a>
@@ -723,7 +725,7 @@
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="single-blog-post mb-100">
                         <div class="post-thumbnail mb-30">
-                            <a href="single-post.html"><img src="img/bg-img/6.jpg" alt=""></a>
+                            <a href="single-post.html"><img src="{{ asset('img/bg-img/6.jpg')}}" alt=""></a>
                         </div>
                         <div class="post-content">
                             <a href="single-post.html" class="post-title">
@@ -742,7 +744,7 @@
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="single-blog-post mb-100">
                         <div class="post-thumbnail mb-30">
-                            <a href="single-post.html"><img src="img/bg-img/7.jpg" alt=""></a>
+                            <a href="single-post.html"><img src="{{ asset('img/bg-img/7.jpg')}}" alt=""></a>
                         </div>
                         <div class="post-content">
                             <a href="single-post.html" class="post-title">
@@ -761,7 +763,7 @@
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="single-blog-post mb-100">
                         <div class="post-thumbnail mb-30">
-                            <a href="single-post.html"><img src="img/bg-img/8.jpg" alt=""></a>
+                            <a href="single-post.html"><img src="{{ asset('img/bg-img/8.jpg')}}" alt=""></a>
                         </div>
                         <div class="post-content">
                             <a href="single-post.html" class="post-title">
@@ -805,7 +807,7 @@
 
         <!-- Subscribe Side Thumbnail -->
         <div class="subscribe-side-thumb wow fadeInUp" data-wow-delay="500ms">
-            <img class="first-img" src="img/core-img/leaf.png" alt="">
+            <img class="first-img" src="{{ asset('img/core-img/leaf.png')}}" alt="">
         </div>
     </section>
     <!-- ##### Subscribe Area End ##### -->
@@ -863,8 +865,10 @@
     </section>
     <!-- ##### Contact Area End ##### -->
 
+    {% endblock %}
+
     <!-- ##### Footer Area Start ##### -->
-    <footer class="footer-area bg-img" style="background-image: url(img/bg-img/3.jpg);">
+    <footer class="footer-area bg-img" style="background-image: url({{ asset('img/bg-img/3.jpg')}});" >
         <!-- Main Footer Area -->
         <div class="main-footer-area">
             <div class="container">
@@ -874,7 +878,7 @@
                     <div class="col-12 col-sm-6 col-lg-3">
                         <div class="single-footer-widget">
                             <div class="footer-logo mb-30">
-                                <a href="#"><img src="img/core-img/logo.png" alt=""></a>
+                                <a href="#"><img src="{{ asset('/img/logo.png')}}" alt=""></a>
                             </div>
                             <p>Lorem ipsum dolor sit samet, consectetur adipiscing elit. India situs atione mantor</p>
                             <div class="social-info">
@@ -920,7 +924,7 @@
                             <!-- Single Best Seller Products -->
                             <div class="single-best-seller-product d-flex align-items-center">
                                 <div class="product-thumbnail">
-                                    <a href="shop-details.html"><img src="img/bg-img/4.jpg" alt=""></a>
+                                    <a href="shop-details.html"><img src="{{ asset('img/bg-img/4.jpg')}}" alt=""></a>
                                 </div>
                                 <div class="product-info">
                                     <a href="shop-details.html">Cactus Flower</a>
@@ -931,7 +935,7 @@
                             <!-- Single Best Seller Products -->
                             <div class="single-best-seller-product d-flex align-items-center">
                                 <div class="product-thumbnail">
-                                    <a href="shop-details.html"><img src="img/bg-img/5.jpg" alt=""></a>
+                                    <a href="shop-details.html"><img src="{{ asset('img/bg-img/5.jpg')}}" alt=""></a>
                                 </div>
                                 <div class="product-info">
                                     <a href="shop-details.html">Tulip Flower</a>
@@ -1000,15 +1004,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
      <!-- ##### All Javascript Files ##### -->
     <!-- jQuery-2.2.4 js -->
-    <script src="{{asset ('js/jquery/jquery-2.2.4.min.js') }}"></script>
+    <script src="{{ asset('js/jquery/jquery-2.2.4.min.js')}}"></script>
     <!-- Popper js -->
-    <script src="{{asset ('js/bootstrap/popper.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/popper.min.js')}}"></script>
     <!-- Bootstrap js -->
-    <script src="{{asset ('js/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap/bootstrap.min.js')}}"></script>
     <!-- All Plugins js -->
-    <script src="{{asset ('js/plugins/plugins.js') }}"></script>
+    <script src="{{ asset('js/plugins/plugins.js')}}"></script>
     <!-- Active js -->
-    <script src="{{asset ('js/active.js') }}"></script>
+    <script src="{{ asset('js/active.js')}}"></script>
 </body>
 
 </html>

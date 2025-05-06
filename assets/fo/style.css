@@ -8,7 +8,6 @@ Version: - v1.0
 */
 /* :: 1.0 Import Fonts */
 @import url("https://fonts.googleapis.com/css?family=Dosis:200,300,400,500,600,700,800");
-/* :: 2.0 Import All CSS */
 @import url(css/bootstrap.min.css);
 @import url(css/classy-nav.css);
 @import url(css/owl.carousel.min.css);
