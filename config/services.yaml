@@ -7,8 +7,8 @@ parameters:
     twilio_sid: '%env(TWILIO_SID)%'
     twilio_token: '%env(TWILIO_AUTH_TOKEN)%'
     twilio_from: '%env(TWILIO_PHONE_NUMBER)%'
-
-
+    chatbot_api_url: '%env(SECRET_KEY_CHATBOT)%'
+    recaptcha_secret: '%env(NOCAPTCHA_SECRET)%'
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -31,8 +31,13 @@ services:
         arguments:
             $accountSid: '%twilio_sid%'
             $authToken: '%twilio_token%'
+    App\Service\GeminiChatbotService:
+        arguments:
+            $chatbotApiUrl: '%chatbot_api_url%'
+    App\Service\CaptchaValidator:
+        arguments:
+            $recaptchaSecret: '%recaptcha_secret%'
     App\Service\SendGridMailer:
         arguments:
             $sendGridApiKey: '%env(SENDGRID_API_KEY)%'
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    

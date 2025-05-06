@@ -32,7 +32,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('bo/img/favicon/favicon.ico') }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -62,6 +62,27 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset ('bo/assets/js/config.js')}}"></script>
   </head>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const userJson = localStorage.getItem('user_data');
+    if (!userJson) return console.warn('⚠️ No user_data in localStorage');
+
+    const user = JSON.parse(userJson);
+
+    const baseUrl = 'http://localhost:8000'; 
+    console.log('aaaaaaaaa:', user.url_image);
+    console.log('bbbbbbbbbbb:', baseUrl);
+    const fullUrl = `${baseUrl}${user.url_image}`;
+    console.log('Final Image URL:', fullUrl); 
+    const avatarElement1 = document.getElementById('uploadedAvatar');
+    avatarElement1.src = fullUrl;
+
+    avatarElement1.onerror = function() {
+        console.error('Failed to load image at:', fullUrl);
+        
+    };
+  });
+</script>
 
   <body>
     <!-- Layout wrapper -->
@@ -69,7 +90,8 @@
       <div class="layout-container">
         <!-- Menu -->
 
-         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+         {% if app.user and app.user.role == 'admin' %}
+     <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
         <a href="{{ path('app_homeAdmin') }}">
            <div class="app-brand justify-content-center">
                   <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
@@ -83,7 +105,7 @@
             <!-- Layouts -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i >
+                <i class="menu-icon tf-icons bx bx-layout">
                   <img src="{{ asset('bo/assets/img/icons/user(1).png') }}" width="28" height="28" />
                 </i>
                 <div data-i18n="Layouts">Users</div>
@@ -109,7 +131,7 @@
                 target="_blank"
                 class="menu-link"
               >
-                <i >
+                <i class="menu-icon tf-icons bx bx-file">
                   <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
                 </i>
                 <div data-i18n="Documentation">Categories</div>
@@ -121,7 +143,7 @@
                 target="_blank"
                 class="menu-link"
               >
-                <i >
+                <i class="menu-icon tf-icons bx bx-file">
                   <img src="{{ asset('bo/assets/img/icons/radar.png') }}" width="28" height="28" />
                 </i>
                 <div data-i18n="Documentation">Coverage areas</div>
@@ -133,7 +155,7 @@
                 target="_blank"
                 class="menu-link"
               >
-                <i >
+                <i class="menu-icon tf-icons bx bx-support">
                   <img src="{{ asset('bo/assets/img/icons/helmet-removebg-preview.png') }}" width="28" height="28" /><p>  </p>
                 </i>
                 <div data-i18n="Support">Riders performance</div>
@@ -141,7 +163,7 @@
             </li>
              <li class="menu-item">
               <a href="{{ path('app_admin_commande') }}" class="menu-link">
-                  <i >
+                  <i class="menu-icon tf-icons bx bx-file">
                     <img src="{{ asset('bo/assets/img/icons/shopping-cart.png') }}" width="28" height="28" />
                   </i>
                   <div data-i18n="Documentation">Orders report</div>
@@ -149,6 +171,105 @@
             </li>
           </ul>
         </aside>
+            {% elseif app.user and app.user.role == 'partner' %}
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <a href="{{ path('app_homePartner') }}">
+           <div class="app-brand justify-content-center">
+                  <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
+            </div>
+        </a>
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            
+      <li class="menu-item">
+  <a href="{{ path('app_cat_partner') }}" class="menu-link">
+    <i>
+      <img src="{{ asset('bo/assets/img/icons/menu.png') }}" width="28" height="28" />
+    </i>
+    <div data-i18n="Documentation">Categories</div>
+  </a>
+</li>
+
+
+             <li class="menu-item">
+              <a
+                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                target="_blank"
+                class="menu-link"
+              >
+                <i >
+                  <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" /><p>  </p>
+                </i>
+                <div data-i18n="Support">Statistics</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                target="_blank"
+                class="menu-link"
+              >
+                <i >
+                  <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
+                </i>
+                <div data-i18n="Documentation">Others' products</div>
+              </a>
+            </li>
+           
+            
+          </ul>
+</aside>
+    {% elseif app.user and app.user.role == 'delivery_person' %}
+         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+        <a href="{{ path('app_homeLivreur') }}">
+           <div class="app-brand justify-content-center">
+                  <img src="{{ asset('bo/logo_final-removebg-preview.png') }}" alt="Logo" style="max-width: 150px;">
+            </div>
+        </a>
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1">
+            
+
+            
+            
+            <li class="menu-item">
+              <a
+                href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-file">
+                  <img src="{{ asset('bo/assets/img/icons/now-in-stock.png') }}" width="28" height="28" />
+                </i>
+                <div data-i18n="Documentation">Available Deliveries</div>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
+                target="_blank"
+                class="menu-link"
+              >
+                <i class="menu-icon tf-icons bx bx-support">
+                  <img src="{{ asset('bo/assets/img/icons/téléchargement.png') }}" width="28" height="28" /><p>  </p>
+                </i>
+                <div data-i18n="Support">My History</div>
+              </a>
+            </li>
+             <li class="menu-item">
+              <a href="{{ path('app_admin_commande') }}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-file">
+                    <img src="{{ asset('bo/assets/img/icons/clock.png') }}" width="28" height="28" />
+                  </i>
+                  <div data-i18n="Documentation">My Deliveries</div>
+              </a>
+            </li>
+          </ul>
+        </aside>
+            {% endif %}
+
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -186,7 +307,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="{{ asset('bo/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="#" alt="user-avatar" class="w-px-40 h-auto rounded-circle" id="uploadedAvatar" >
                     </div>
 
                   </a>
@@ -250,7 +371,7 @@
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Account Settings /</span> Notifications
+                <span class="text-muted fw-light">Account Settings /</span> QR Code
               </h4>
 
               <div class="row">
@@ -263,18 +384,17 @@
                     </li>
                     <li class="nav-item">
                       <a class="nav-link active" href="javascript:void(0);"
-                        ><i class="bx bx-bell me-1"></i> Qr Code</a
+                        ><i >
+                        <img src="{{ asset('bo/assets/img/icons/qr-code.png') }}" width="20" height="20" />
+
+                        </i>   Qr Code</a
                       >
                     </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="pages-account-settings-connections.html"
-                        ><i class="bx bx-link-alt me-1"></i> Connections</a
-                      >
-                    </li>
+                    
                   </ul>
              
    <center>
-    {# For endroid/qr-code-bundle 6.x #}
+    
 <img src="{{ qr_code_url(payload) }}" alt="QR Code"></center>
 </div>
               </div>

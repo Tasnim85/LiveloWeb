@@ -62,6 +62,8 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{{ asset('bo/assets/js/config.js')}}"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
   </head>
 
 
@@ -69,13 +71,13 @@
 {% block body %}
 <div class="container my-5">
 <div class="container my-5">
-    <h1 class="text-center mb-4">Ajouter une catégorie</h1>
+    <h1 class="text-center mb-4">Add new category</h1>
 
   <div class="col-xxl">
   <div class="card mb-4 shadow-sm">
     <div class="card-header d-flex align-items-center justify-content-between bg-primary text-white">
-<h5 class="mb-0 text-white">Ajouter une nouvelle catégorie</h5>
-      <small class="text-white">Formulaire</small>
+
+      <small class="text-white">Form</small>
     </div>
 
             <div class="card-body">
@@ -88,7 +90,7 @@
                 {% endif %}
 
                 <div class="row mb-3">
-                    {{ form_label(form.nom, 'Nom', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
+                    {{ form_label(form.nom, 'Name', {'label_attr': {'class': 'col-sm-2 col-form-label'}}) }}
                     <div class="col-sm-10">
                         {{ form_widget(form.nom, {'attr': {'class': 'form-control' ~ (form.nom.vars.errors|length ? ' is-invalid' : '')}}) }}
                         <div class="invalid-feedback">
@@ -121,16 +123,24 @@
 
                 <div class="row justify-content-end">
                     <div class="col-sm-10 offset-sm-2">
+                    <div class="mb-3">
+    <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+    {% if form_errors(form._token) %}
+        <div class="text-danger">{{ form_errors(form._token) }}</div>
+    {% endif %}
+</div>
+
                         <button type="submit" class="btn btn-primary me-2">
-                            <i class="fas fa-save me-1"></i> Enregistrer
+                            <i class="fas fa-save me-1"></i> Save
                         </button>
                         <a href="{{ path('app_categorie_index') }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-1"></i> Annuler
+                            <i class="fas fa-times me-1"></i> cancel
                         </a>
                     </div>
                 </div>
 
                 {{ form_end(form) }}
+              
             </div>
         </div>
     </div>

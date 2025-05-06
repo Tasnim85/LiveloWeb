@@ -15,7 +15,8 @@ use Psr\Log\LoggerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Cookie;
-
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 final class LoginController extends AbstractController
 {
@@ -50,8 +51,8 @@ final class LoginController extends AbstractController
             $userData = json_decode($serializer->serialize($user, 'json', ['groups' => 'user:read']), true);
             $logger->info('Generated JWT Token: ' . $token);
 
-            // Determine redirect route
             if ($user->getVerified()) {
+                $codeVerificationRequired = !$user->isCodeUsed();
                 $routeName = match ($user->getRole()) {
                     'client' => 'app_homeClient',
                     'admin' => 'app_homeAdmin',
@@ -60,6 +61,7 @@ final class LoginController extends AbstractController
                     default => 'app_login',
                 };
             } else {
+                $codeVerificationRequired = false;
                 $routeName = match ($user->getRole()) {
                     'delivery_person' => 'app_homeLivreurNotVerified',
                     'admin' => 'app_homeAdminNotVerified',
@@ -74,6 +76,7 @@ final class LoginController extends AbstractController
                 'token'    => $token,
                 'user'     => $userData,
                 'redirect' => $redirectUrl,
+                'codeVerificationRequired' => $codeVerificationRequired,
             ]);
             $response->headers->setCookie(new Cookie(
                 'BEARER', 
@@ -153,6 +156,7 @@ final class LoginController extends AbstractController
         $cookie = new Cookie('REMEMBERME', $newRememberMeToken, $expiresAt, '/', null, true, true, false, 'lax');
 
         if ($user->getVerified()) {
+            $codeVerificationRequired = !$user->isCodeUsed();
             $routeName = match ($user->getRole()) {
                 'client' => 'app_homeClient',
                 'admin' => 'app_homeAdmin',
@@ -161,6 +165,7 @@ final class LoginController extends AbstractController
                 default => 'app_login',
             };
         } else {
+            $codeVerificationRequired = false;
             $routeName = match ($user->getRole()) {
                 'delivery_person' => 'app_homeLivreurNotVerified',
                 'admin' => 'app_homeAdminNotVerified',
@@ -175,10 +180,61 @@ final class LoginController extends AbstractController
             'token'    => $newToken,
             'user'     => json_decode($serializer->serialize($user, 'json', ['groups' => 'user:read']), true),
             'redirect' => $redirectUrl,
+            'codeVerificationRequired' => $codeVerificationRequired,
         ]);
         $response->headers->setCookie($cookie);
 
         return $response;
+    }
+
+    #[Route('/verify-code', name: 'app_verify_code', methods: ['POST'])]
+    public function verifyCode(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        try {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            /** @var User $user */
+            $user = $this->getUser();
+
+            $data = json_decode($request->getContent(), true);
+            $submittedCode = $data['code'] ?? '';
+
+            if (!$user || !$user instanceof User) {
+                throw new AccessDeniedException('User not authenticated');
+            }
+
+            if ($user->getVerificationCode() === $submittedCode && !$user->isCodeUsed()) {
+                $user->setIsCodeUsed(true);
+                $user->setVerificationCode(null); 
+                $em->flush();
+                return $this->json(['success' => true]);
+            }
+
+            return $this->json(['success' => false, 'message' => 'Invalid code'], Response::HTTP_BAD_REQUEST);
+
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()], Response::HTTP_UNAUTHORIZED);
+        }
+    }
+
+    #[Route('/check-code-verification', name: 'app_check_code_verification', methods: ['GET'])]
+    public function checkCodeVerification(): JsonResponse
+    {
+        try {
+            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            /** @var User $user */
+            $user = $this->getUser();
+
+            if (!$user instanceof User) {
+                return $this->json(['codeVerificationRequired' => false]);
+            }
+
+            return $this->json([
+                'codeVerificationRequired' => $user->getVerified() && !$user->isCodeUsed()
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->json(['codeVerificationRequired' => false]);
+        }
     }
 
     #[Route('/logout', name: 'app_logout', methods: ['POST'])]

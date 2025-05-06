@@ -18,14 +18,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Form\CategorieType;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\SerializerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
 
-   
+    private SerializerInterface $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
 
     #[Route('/articles', name: 'app_article_index', methods: ['GET'])]
 public function index(EntityManagerInterface $entityManager): Response
@@ -50,6 +60,7 @@ public function index(EntityManagerInterface $entityManager): Response
         'articlesParCategorie' => $articlesParCategorie,
     ]);
 }
+
 
 #[Route('/article/categorie/{id_categorie}', name: 'articles_par_categorie')]
 public function articlesByCategorie(
@@ -83,11 +94,22 @@ public function artPartnerArticles(int $id_categorie, EntityManagerInterface $en
         'id_categorie' => $categorie
     ]);
 
+    // Calculer le total gain
+    $totalGain = 0;
+    foreach ($articles as $article) {
+        $totalGain += $article->getPrix() * $article->getQuantite();
+    }
+
     return $this->render('article/artPartner.html.twig', [
         'categorie' => $categorie,
         'articles' => $articles,
+        'totalGain' => $totalGain,  // Passer le total gain à la vue
     ]);
 }
+
+
+
+
 
 #[Route('/article/new/{id_categorie}', name: 'app_article_new', methods: ['GET', 'POST'])]
 public function new(
@@ -138,10 +160,22 @@ public function new(
             }
 
             $user = $this->getUser();
+
             if (!$user) {
-                throw new \RuntimeException('Aucun utilisateur connecté');
+                throw $this->createAccessDeniedException('User not authenticated.');
             }
+            
             $article->setCreated_by($user);
+            
+            // Si tu veux vraiment extraire l'ID pour autre chose :
+            $userData = json_decode(
+                $this->serializer->serialize($user, 'json', ['groups' => 'user:read']),
+                true
+            );
+            
+            $userId = $userData['idUser'];
+            dump("ID de l'utilisateur connecté : " . $userId);
+            
             
             $article->setCreatedAt(new \DateTime());
 
@@ -174,13 +208,7 @@ public function new(
 
 
   
-    #[Route('/{id_article}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
-    {
-        return $this->render('article/show.html.twig', [
-            'article' => $article,
-        ]);
-    }
+ 
 
     #[Route('/article/{id_article}/edit', name: 'app_article_edit')]
 public function edit(

@@ -65,12 +65,22 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const userJson = localStorage.getItem('user_data');
-    if (userJson) {
-      const user = JSON.parse(userJson);
-      console.log('👤 Restored User Data:', user);
-    } else {
-      console.log('⚠️ No user_data in localStorage');
-    }
+    if (!userJson) return console.warn('⚠️ No user_data in localStorage');
+
+    const user = JSON.parse(userJson);
+
+    const baseUrl = 'http://localhost:8000'; 
+    console.log('aaaaaaaaa:', user.url_image);
+    console.log('bbbbbbbbbbb:', baseUrl);
+    const fullUrl = `${baseUrl}${user.url_image}`;
+    console.log('Final Image URL:', fullUrl); 
+    const avatarElement1 = document.getElementById('uploadedAvatar');
+    avatarElement1.src = fullUrl;
+
+    avatarElement1.onerror = function() {
+        console.error('Failed to load image at:', fullUrl);
+        
+    };
   });
 </script>
   <body>
@@ -163,7 +173,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="{{ asset('bo/assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle" />
+                      <img src="#" alt="user-avatar" class="w-px-40 h-auto rounded-circle" id="uploadedAvatar" >
                     </div>
 
                   </a>
