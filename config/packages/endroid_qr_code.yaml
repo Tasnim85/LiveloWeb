@@ -1,9 +1,16 @@
 endroid_qr_code:
     default:
-        writer: 'Endroid\QrCode\Writer\SvgWriter'
-        size: 600
+        writer: Endroid\QrCode\Writer\PngWriter
+        size: 300
         margin: 10
         encoding: 'UTF-8'
-        error_correction_level: 'quartile'
+        error_correction_level: 'low'
         round_block_size_mode: 'margin'
-        validate_result: false    # Disable strict validation
+        validate_result: false
+        # writer: 'Endroid\QrCode\Writer\SvgWriter'
+        # size: 600
+        # margin: 10
+        # encoding: 'UTF-8'
+        # error_correction_level: 'quartile'
+        # round_block_size_mode: 'margin'
+        # validate_result: false    # Disable strict validation

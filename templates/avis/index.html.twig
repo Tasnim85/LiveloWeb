@@ -1,0 +1,96 @@
+{% extends 'home/homeClient.html.twig' %}
+
+{% block title %}Gestion des Avis{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <!-- En-tête -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="display-5 fw-bold text-primary">Feedbacks list</h1>
+            <a href="{{ path('app_list_deliveries') }}" class="btn btn-success btn-lg shadow-sm">
+                <i class="bi bi-arrow-left me-2"></i> Go back
+            </a>
+        </div>
+
+        <!-- Message si aucun avis -->
+        {% if avis is empty %}
+            <div class="alert alert-info text-center" role="alert">
+                Aucun avis trouvé. <a href="{{ path('app_avis_new') }}" class="alert-link">Créez le premier avis !</a>
+            </div>
+        {% else %}
+            <!-- Tableau des avis -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th scope="col">Date de création</th>
+                                    <th scope="col">Description</th>
+                                    <th scope="col" class="text-end pe-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for avi in avis %}
+                                    <tr>
+                                        <td>{{ avi.createdAt ? avi.createdAt|date('d/m/Y') : 'Non défini' }}</td>
+                                        <td>{{ avi.description|length > 50 ? avi.description|slice(0, 50) ~ '...' : avi.description }}</td>
+                                        <td class="text-end pe-4">
+
+                                        <div class="d-flex " style="gap: 10px;"> 
+
+                                            <a href="{{ path('app_avis_edit', {'idAvis': avi.idAvis}) }}" 
+                                               class="btn btn-sm btn-outline-warning" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            <form method="post" action="{{ path('app_avis_delete', {'idAvis': avi.idAvis}) }}">
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+
+                                        </div>
+
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Inclure Bootstrap Icons pour les icônes -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Personnalisations CSS pour un look moderne */
+        body {
+            background-color: #f8f9fa;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+            transition: background-color 0.3s ease;
+        }
+        .btn {
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .card {
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+    </style>
+{% endblock %}

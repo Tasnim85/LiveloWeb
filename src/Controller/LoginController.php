@@ -279,7 +279,7 @@ final class LoginController extends AbstractController
     #[Route('/homeLivreur', name: 'app_homeLivreur')]
     public function homeLivreurPage(): Response
     {
-        return $this->render('home/home_livreur.html.twig');
+        return $this->render('home/homeClient.html.twig');
     }
     #[Route('/homePartner', name: 'app_homePartner')]
     public function homePartner(): Response

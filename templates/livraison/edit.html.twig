@@ -1,0 +1,54 @@
+{% extends 'home/homeAdmin.html.twig' %}
+
+{% block title %}Edit Livraison{% endblock %}
+
+{% block body %}
+    <h1>Edit Livraison</h1>
+
+    {{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+
+<div class="mb-3">
+    {{ form_label(form.created_by, 'Créé par', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.created_by, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.created_by) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.id_livreur, 'Livreur', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.id_livreur, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.id_livreur) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.commandeId, 'Commande', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.commandeId, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.commandeId) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.factureId, 'Facture', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.factureId, {'attr': {'class': 'form-select'}}) }}
+    {{ form_errors(form.factureId) }}
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.zoneId, 'Zone ID', {'label_attr': {'class': 'form-label'}}) }}
+    {{ form_widget(form.zoneId, {'attr': {'class': 'form-control'}}) }}
+    {{ form_errors(form.zoneId) }}
+</div>
+
+<button type="submit" class="btn btn-success ml-3">
+    ✅ {{ button_label|default('Enregistrer') }}
+</button>
+
+
+
+<a href="{{ path('app_livraison_index') }}" class="btn btn-primary">back to list</a>
+
+
+
+{{ form_end(form) }}
+
+
+{% endblock %}

@@ -57,6 +57,7 @@ class Commande
     #[ORM\Column(type: "string")]
     private string $statut;
 
+
     #[ORM\OneToMany(mappedBy: "idCommande", targetEntity: Articlecommande::class)]
     private Collection $articlecommandes;
 

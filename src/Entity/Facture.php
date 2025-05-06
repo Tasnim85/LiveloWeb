@@ -13,9 +13,10 @@ class Facture
 {
 
     #[ORM\Id]
-#[ORM\GeneratedValue]
-#[ORM\Column(type: "integer")]
-private int $idFacture;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: "integer", name: "idFacture")]
+    private int $idFacture;
+
 
 
     #[ORM\Column(type: "float")]
@@ -35,14 +36,15 @@ private int $idFacture;
     #[ORM\JoinColumn(name: 'commandeId', referencedColumnName: 'id_commande', onDelete: 'CASCADE')]
     private Commande $commandeId;
 
-    public function getIdFacture()
+    public function getIdFacture(): int
     {
         return $this->idFacture;
     }
 
-    public function setIdFacture($value)
+    public function setIdFacture(int $idFacture): self
     {
-        $this->idFacture = $value;
+        $this->idFacture = $idFacture;
+        return $this;
     }
 
     public function getMontant()

@@ -1,0 +1,230 @@
+
+{% extends 'home/homeClient.html.twig' %}
+
+{% block title %}My Deliveries{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+    <div class="row justify-content-center mb-5">
+        <h1 class="text-center text-primary fw-bold">My Deliveries</h1>
+    </div>
+
+    <div class="card shadow-lg border-0">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="text-dark">ID Livraison</th>
+                            <th scope="col" class="text-dark">Created At</th>
+                            <th scope="col" class="text-dark">State / Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for livraison in livraisons %}
+                        <tr>
+                            <td>{{ livraison.idLivraison }}</td>
+                            <td>{{ livraison.createdAt ? livraison.createdAt|date('Y-m-d') : '' }}</td>
+                            <td>
+                                {% if livraison.commandeId.statut == 'Shipping' %}
+                                    <span class="badge bg-warning text-white">Shipping</span>
+                                {% elseif livraison.commandeId.statut == 'Processing' %}
+                                    <span class="badge bg-warning text-dark">Processing</span>
+                                {% elseif livraison.commandeId.statut == 'Delivered' %}
+
+                                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                        Rate
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Rate this delivery:</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <form id="formAvis" action="{{ path('app_avis_new') }}" method="POST">
+                                                    <div class="">
+                                                        <label for="description" class="form-label fw-bold text-dark">Description :</label>
+                                                        <input type="text" class="form-control" id="description" name="description" 
+                                                               placeholder="Entrez votre description" >
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <p class="text-danger" id="emptyError" style="display: none;">Description cannot be empty</p>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <p class="text-danger" id="lengthError" style="display: none;">
+                                                        Description must be at least 3 characters long</p>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <p class="text-danger" id="badWordError" style="display: none;">
+                                                        please remove the *** description</p>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-primary">Confirm</button>
+                                                    </div>
+                                                </form>
+
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ livraison.commandeId.statut }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted">No deliveries found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# <script>
+
+
+        let formAvis = document.getElementById('formAvis');
+            let descriptionInput = document.getElementById('description');
+            let emptyError = document.getElementById('emptyError');
+            let lengthError = document.getElementById('lengthError');
+            let badWordError = document.getElementById('badWordError');
+
+        const badWords = [
+            "fuck", "shit", "asshole", "bastard", "bitch", "damn", "hell", "crap", 
+            "dick", "pussy", "cock", "motherfucker", "slut", "twat", "faggot", "cunt"
+        ];
+
+            formAvis.addEventListener('submit', function(e) {
+                let description = descriptionInput.value.trim();
+
+                if (description === "") {
+                    emptyError.style.display = 'block';
+                    lengthError.style.display = 'none';
+                    badWordError.style.display = 'none';
+                    descriptionInput.classList.add('is-invalid');
+                    e.preventDefault();
+                } else if (description.length < 3) {
+                    emptyError.style.display = 'none';
+                    lengthError.style.display = 'block';
+                    badWordError.style.display = 'none';
+                    descriptionInput.classList.add('is-invalid');
+                    e.preventDefault();
+                } else {
+                    // Check if the description contains any bad words
+                    let containsBadWord = badWords.some(word => description.toLowerCase().includes(word));
+                    
+                    if (containsBadWord) {
+                        badWordError.style.display = 'block';
+                        emptyError.style.display = 'none';
+                        lengthError.style.display = 'none';
+                        descriptionInput.classList.add('is-invalid');
+                        e.preventDefault();
+                    } else {
+                        badWordError.style.display = 'none';
+                        emptyError.style.display = 'none';
+                        lengthError.style.display = 'none';
+                        descriptionInput.classList.remove('is-invalid');
+                    }
+                }
+            });
+</script> #}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let formAvis = document.getElementById('formAvis');
+        let descriptionInput = document.getElementById('description');
+        let emptyError = document.getElementById('emptyError');
+        let lengthError = document.getElementById('lengthError');
+        let badWordError = document.getElementById('badWordError');
+
+        const badWords = [
+            "fuck", "shit", "asshole", "bastard", "bitch", "damn", "hell", "crap", 
+            "dick", "pussy", "cock", "motherfucker", "slut", "twat", "faggot", "cunt"
+        ];
+
+        formAvis.addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent form default submission
+
+            let description = descriptionInput.value.trim();
+
+            // Reset all errors
+            emptyError.style.display = 'none';
+            lengthError.style.display = 'none';
+            badWordError.style.display = 'none';
+            descriptionInput.classList.remove('is-invalid');
+
+            // Validate input
+            if (description === "") {
+                emptyError.style.display = 'block';
+                descriptionInput.classList.add('is-invalid');
+                return;
+            }
+
+            if (description.length < 3) {
+                lengthError.style.display = 'block';
+                descriptionInput.classList.add('is-invalid');
+                return;
+            }
+
+            let containsBadWord = badWords.some(word =>
+                description.toLowerCase().includes(word)
+            );
+
+            if (containsBadWord) {
+                badWordError.style.display = 'block';
+                descriptionInput.classList.add('is-invalid');
+                return;
+            }
+
+            // Prepare data for AJAX
+            let formData = new FormData(formAvis);
+
+            fetch('/avis/new', {  // Use absolute path instead of form.action
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error("Failed to submit.");
+                }
+            })
+            .then(data => {
+                $('#exampleModal').modal('hide'); // Bootstrap modal
+                formAvis.reset();
+                alert("Thank you for your feedback!");
+            })
+            .catch(error => {
+                alert("An error occurred. Please try again.");
+                console.error(error);
+            });
+        });
+    });
+</script>
+
+
+{% endblock %}
+
+
