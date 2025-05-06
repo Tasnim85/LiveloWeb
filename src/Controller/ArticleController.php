@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Service\TwilioService;
 use App\Entity\Categorie;  
 use Symfony\Component\Security\Core\Security;
+use Knp\Component\Pager\PaginatorInterface;
+
 use App\Form\ArticleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +24,8 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\SerializerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
@@ -273,5 +277,27 @@ public function edit(
         }
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-    }}
+    }
+    #[Route('/client/articles', name: 'app_articles_list')]
+    public function index1(SessionInterface $session, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        $panier=$session->get('panier', []);
+        $cartItemCount = count($panier);
+        // Récupérer la query
+        $query = $entityManager->getRepository(Article::class)
+            ->createQueryBuilder('a') // a est un alias
+            ->getQuery();
 
+        // Paginer la query
+        $articles = $paginator->paginate(
+            $query, /* query pas findAll() */
+            $request->query->getInt('page', 1), /* numéro de page */
+            9 /* limite d'articles par page */
+        );
+
+        return $this->render('article/list.html.twig', [
+            'articles' => $articles,
+            'cartItemCount' => $cartItemCount,
+        ]);
+    }
+}

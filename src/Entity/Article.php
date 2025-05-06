@@ -79,10 +79,9 @@ class Article
     #[Assert\NotBlank(message: "La date de création ne peut pas être modifiée.")]
 private \DateTimeInterface $createdAt;
 
-    
-
 #[ORM\Column(name: "nbViews", type: "integer", options: ["default" => 0])]
 private int $nbViews = 0;
+
 
     public function getId_article()
     {
