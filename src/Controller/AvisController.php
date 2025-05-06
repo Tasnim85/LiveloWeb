@@ -24,7 +24,7 @@ final class AvisController extends AbstractController{
 
         $avis = $entityManager
             ->getRepository(Avis::class)
-            ->findBy(['created_by'=>$user]);
+            ->findBy(['created_by'=>'63']);
 
         return $this->render('avis/index.html.twig', [
             'avis' => $avis,
@@ -44,22 +44,14 @@ final class AvisController extends AbstractController{
     }
 
     
-#[Route('/avis/new', name: 'app_avis_new', methods: ['POST'])]
+#[Route('/new', name: 'app_avis_new', methods: ['POST'])]
 public function new(Request $request, EntityManagerInterface $entityManager): Response
 {
     $description = $request->request->get('description');
 
-    if (!$description || strlen($description) < 3) {
-        return new JsonResponse(['error' => 'Invalid description'], 400);
-    }
-
-    // Example: Replace with actual logic to get correct Livraison and User
-    $livraison = $entityManager->getRepository(Livraison::class)->find(42);
+    $livraison = $entityManager->getRepository(Livraison::class)->find(53);
     $createdBy = $entityManager->getRepository(User::class)->find(63);
 
-    if (!$livraison || !$createdBy) {
-        return new JsonResponse(['error' => 'Invalid data'], 400);
-    }
 
     $avis = new Avis();
     $avis->setCreatedAt(new \DateTime());
