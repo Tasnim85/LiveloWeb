@@ -91,18 +91,16 @@
 </li>
 
 
-             <li class="menu-item">
-              <a
-                href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                target="_blank"
-                class="menu-link"
-              >
-               
-                  <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" /><p>  </p>
-               
-                <div data-i18n="Support">Statistics</div>
-              </a>
-            </li>
+            <li class="menu-item">
+  <a
+    href="{{ path('article_stats_partial') }}"
+    class="menu-link"
+  >
+    <img src="{{ asset('bo/assets/img/icons/statistics.png') }}" width="28" height="28" />
+    <div data-i18n="Support">Statistics</div>
+  </a>
+</li>
+
             <li class="menu-item">
               <a
                 href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
@@ -115,7 +113,14 @@
                 <div data-i18n="Documentation">Others' products</div>
               </a>
             </li>
-           
+           <li class="menu-item">
+  <a href="{{ path('chatbot_page') }}" class="menu-link">
+    
+      <img src="{{ asset('bo/assets/img/icons/robot.png') }}" width="28" height="28" />
+    
+    <div data-i18n="Documentation">Chatbot Livelo</div>
+  </a>
+</li>
             
           </ul>
         </aside>
@@ -156,7 +161,7 @@
 {% block body %}
     <div class="container">
         <!-- Section Catégories -->
-        <h5 class="pb-1 mb-4">Catégories</h5>
+        <h5 class="pb-1 mb-4">Categories</h5>
         
 
         <hr class="m-0" />
@@ -213,7 +218,7 @@
                                                        class="dropdown-item d-flex align-items-center"
                                                        style="border: none; background: none; padding: 0;">
                                                         <i class="bx bx-show"></i>
-                                                        <span style="margin-left: 5px;">Voir articles</span>
+                                                        <span style="margin-left: 5px;">View articles</span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -290,29 +295,8 @@
 
 {% endblock %}
 
-                  , made with ❤️ by
-                  <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
-                </div>
-                <div>
-                  <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                  <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                  <a
-                    href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Documentation</a
-                  >
-
-                  <a
-                    href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                    target="_blank"
-                    class="footer-link me-4"
-                    >Support</a
-                  >
-                </div>
-              </div>
-            </footer>
+              
+              
             <!-- / Footer -->
 
             <div class="content-backdrop fade"></div>
@@ -327,14 +311,7 @@
     </div>
     <!-- / Layout wrapper -->
 
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
+   
 
     <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->

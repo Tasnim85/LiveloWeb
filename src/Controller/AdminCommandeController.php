@@ -5,20 +5,26 @@ namespace App\Controller;
 use App\Entity\Commande;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Form\CommandeFormType;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class AdminCommandeController extends AbstractController
 {
     #[Route('/admin/commande', name: 'app_admin_commande')]
     public function index(Request $request ,EntityManagerInterface $entityManager,FormFactoryInterface $formFactory): Response
     {
-        $commandes = $entityManager
-            ->getRepository(Commande::class)
-            ->findAll();
+
+       
+                $commandes=$entityManager
+                ->getRepository(Commande::class)
+                ->findAll();
+            
             $forms = [];  
 
             foreach ($commandes as $commande) {
@@ -52,8 +58,45 @@ final class AdminCommandeController extends AbstractController
                 'commandes' => $commandes,
                 'forms' => $forms,
             ]);
-            
+        }
+        
+        #[Route('/admin/commande/search', name: 'app_admin_commande_search')]
+public function search(Request $request, EntityManagerInterface $entityManager): JsonResponse
+{
+    $searchValue = strtolower($request->query->get('searchValue', ''));
+    
+    $repository = $entityManager->getRepository(Commande::class);
+    
+    $query = $repository->createQueryBuilder('c')
+        ->leftJoin('c.createdBy', 'u')
+        ->where('LOWER(c.idCommande) LIKE :searchValue')
+        ->orWhere('LOWER(u.nom) LIKE :searchValue')
+        ->orWhere('LOWER(u.prenom) LIKE :searchValue')
+        ->orWhere('LOWER(c.statut) LIKE :searchValue')
+        ->orWhere('LOWER(c.adresseDep) LIKE :searchValue')  // Added address fields
+        ->orWhere('LOWER(c.adresseArr) LIKE :searchValue')  // Added address fields
+        ->setParameter('searchValue', '%'.$searchValue.'%');
+
+    $commandes = $query->getQuery()->getResult();
+
+    $data = [];
+    foreach ($commandes as $commande) {
+        $data[] = [
+            'idCommande' => $commande->getIdCommande(),
+            'adresseDep' => $commande->getAdresseDep(),
+            'adresseArr' => $commande->getAdresseArr(),
+            'typeLivraison' => $commande->getTypeLivraison(),
+            'horaire' => $commande->getHoraire() ? $commande->getHoraire()->format('Y-m-d H:i:s') : null,
+            'statut' => $commande->getStatut(),
+            'createdBy' => $commande->getCreatedBy() ? [
+                'nom' => $commande->getCreatedBy()->getNom(),
+                'prenom' => $commande->getCreatedBy()->getPrenom()
+            ] : null
+        ];
     }
+
+    return new JsonResponse($data);
+}
     #[Route('/Admincommande/delete/{id_commande}', name: 'app_commande_delete')]
     public function delete(EntityManagerInterface $entityManager, int $id_commande): Response
     {
@@ -95,4 +138,5 @@ final class AdminCommandeController extends AbstractController
             'form' => $form->createView(),
         ]);
     }*/
+    
 }

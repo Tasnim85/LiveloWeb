@@ -1,6 +1,7 @@
 security:
     password_hashers:
         App\Entity\User: 'auto'
+    
     providers:
         app_user_provider:
             entity:
@@ -23,8 +24,7 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 2592000 
                 path: /
-
-        
+                # Permet de revenir à la page précédente après login
     
 
 

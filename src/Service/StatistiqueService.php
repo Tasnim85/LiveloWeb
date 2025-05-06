@@ -2,19 +2,21 @@
 namespace App\Service;
 
 use App\Repository\ArticleRepository;
+use App\Entity\User;
 
 class StatistiqueService
 {
-    private $articleRepository;
+    private ArticleRepository $articleRepository;
 
     public function __construct(ArticleRepository $articleRepository)
     {
         $this->articleRepository = $articleRepository;
     }
 
-    public function getStockStats(): array
+    public function getStockStats(User $user): array
     {
-        $articles = $this->articleRepository->findAll();
+        // Récupère uniquement les articles de l'utilisateur
+        $articles = $this->articleRepository->findBy(['created_by' => $user]);
 
         $onStock = 0;
         $outOfStock = 0;
